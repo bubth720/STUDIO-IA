@@ -12,6 +12,7 @@ pytest -q -ra --junitxml=artifacts/pytest.xml
 python scripts/run_e2e.py --output artifacts/e2e
 python scripts/gui_smoke.py --output artifacts/gui
 python scripts/package.py
+python scripts/check_archive.py dist/ARCHIVE.zip --output DOSSIER_NEUF
 ```
 
 Sur un environnement limité sans X11, `QT_QPA_PLATFORM=offscreen` permet le rendu

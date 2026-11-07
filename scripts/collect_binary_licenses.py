@@ -3,10 +3,20 @@
 import ast
 import json
 import platform
+import re
 import shutil
 import subprocess
 from pathlib import Path
 from urllib.parse import quote
+
+
+def package_owner(output: str) -> str | None:
+    """Ignore dpkg diversion annotations, including Ubuntu's t64 transition."""
+    for line in output.splitlines():
+        name, separator, _ = line.partition(": /")
+        if separator and re.fullmatch(r"[a-z0-9][a-z0-9+.-]*(?::[a-z0-9][a-z0-9-]*)?", name):
+            return name
+    return None
 
 
 def collect(toc: Path, folder: Path) -> dict:
@@ -46,8 +56,9 @@ def collect(toc: Path, folder: Path) -> dict:
                 ["dpkg-query", "-S", candidate], text=True, capture_output=True, check=False
             )
             if match.returncode == 0:
-                owner = match.stdout.splitlines()[0].split(": /", 1)[0]
-                break
+                owner = package_owner(match.stdout)
+                if owner:
+                    break
         if not owner:
             raise RuntimeError(f"No package ownership found for distributed library: {source}")
         if owner not in packages:

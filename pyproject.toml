@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools==80.9.0", "wheel==0.45.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "studio-ia"
+version = "0.3.0a1"
+description = "Local verifiable video restoration desktop application"
+requires-python = ">=3.12,<3.14"
+license = "MIT"
+dependencies = []
+
+[project.optional-dependencies]
+gui = ["PySide6-Essentials==6.8.3", "shiboken6==6.8.3"]
+dev = ["pytest==8.3.5", "ruff==0.11.13", "mypy==1.15.0"]
+build = ["pyinstaller==6.13.0"]
+
+[project.scripts]
+studio-ia = "studio_ia.cli:main"
+
+[project.gui-scripts]
+studio-ia-gui = "studio_ia.ui:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["integration: invokes real media tools", "gui: exercises Qt widgets"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+check_untyped_defs = true
+ignore_missing_imports = true

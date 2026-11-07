@@ -1,0 +1,23 @@
+{
+  "archive_sha256": "06f2db51dcdf772d6b18695912d8c24cc7e434316a9fcb6e9234efdbeac29dfe",
+  "file_hashes_verified": 607,
+  "zip_integrity": "PASS",
+  "extracted_frozen_smoke": "PASS",
+  "build": {
+    "application": "STUDIO IA",
+    "version": "0.3.0a2",
+    "label": "ALPHA / EXPERIMENTAL",
+    "source_commit": "4d42029f3bdbf260b72a6f2f0f81ed01be1265a9",
+    "source_dirty": false,
+    "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+    "glibc": [
+      "glibc",
+      "2.39"
+    ],
+    "python": "3.12.16",
+    "packager": "PyInstaller 6.13.0",
+    "qt_binding": "6.8.3",
+    "ffmpeg_bundled": false,
+    "neural_models_bundled": false
+  }
+}

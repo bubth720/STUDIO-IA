@@ -1,0 +1,65 @@
+2026-11-07T21:59:10.0990234Z All checks passed!
+2026-11-07T21:59:10.1288975Z 31 files already formatted
+2026-11-07T21:59:12.6054190Z Success: no issues found in 4 source files
+2026-11-07T21:59:12.9544261Z Success: no issues found in 1 source file
+2026-11-07T21:59:12.9636407Z ##[group]Run xvfb-run -a python -m pytest -q -ra --junitxml=artifacts/pytest.xml
+2026-11-07T21:59:12.9637005Z [36;1mxvfb-run -a python -m pytest -q -ra --junitxml=artifacts/pytest.xml[0m
+2026-11-07T21:59:12.9657805Z shell: /usr/bin/bash -e {0}
+2026-11-07T21:59:12.9658044Z env:
+2026-11-07T21:59:12.9658340Z   STUDIO_IA_HOME: /home/runner/work/STUDIO-IA/STUDIO-IA/artifacts/state
+2026-11-07T21:59:12.9658843Z   STUDIO_IA_GUI_EVIDENCE: /home/runner/work/STUDIO-IA/STUDIO-IA/artifacts/gui
+2026-11-07T21:59:12.9659303Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T21:59:12.9659725Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T21:59:12.9660145Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T21:59:12.9660519Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T21:59:12.9660894Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T21:59:12.9661303Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib
+2026-11-07T21:59:12.9661620Z ##[endgroup]
+2026-11-07T21:59:18.5126399Z .......Fatal Python error: Aborted
+2026-11-07T21:59:18.5126787Z 
+2026-11-07T21:59:18.5127082Z Current thread 0x00007f1e24d38b80 (most recent call first):
+2026-11-07T21:59:18.5128306Z   File "/home/runner/work/STUDIO-IA/STUDIO-IA/tests/conftest.py", line 31 in qapp
+2026-11-07T21:59:18.5130085Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/fixtures.py", line 908 in call_fixture_func
+2026-11-07T21:59:18.5132245Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/fixtures.py", line 1202 in pytest_fixture_setup
+2026-11-07T21:59:18.5134579Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_execution.py", line 147 in _multicall
+2026-11-07T21:59:18.5135833Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_manager.py", line 183 in _hookexec
+2026-11-07T21:59:18.5136892Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_caller.py", line 197 in __call__
+2026-11-07T21:59:18.5137919Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/fixtures.py", line 1110 in execute
+2026-11-07T21:59:18.5138854Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/fixtures.py", line 627 in _get_active_fixturedef
+2026-11-07T21:59:18.5139767Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/fixtures.py", line 539 in getfixturevalue
+2026-11-07T21:59:18.5141009Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/fixtures.py", line 707 in _fillfixtures
+2026-11-07T21:59:18.5141861Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/python.py", line 1723 in setup
+2026-11-07T21:59:18.5143212Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/runner.py", line 523 in setup
+2026-11-07T21:59:18.5144697Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/runner.py", line 165 in pytest_runtest_setup
+2026-11-07T21:59:18.5146286Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_execution.py", line 147 in _multicall
+2026-11-07T21:59:18.5147796Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_manager.py", line 183 in _hookexec
+2026-11-07T21:59:18.5149130Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_caller.py", line 197 in __call__
+2026-11-07T21:59:18.5149942Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/runner.py", line 245 in <lambda>
+2026-11-07T21:59:18.5150744Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/runner.py", line 353 in from_call
+2026-11-07T21:59:18.5151800Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/runner.py", line 244 in call_and_report
+2026-11-07T21:59:18.5153093Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/runner.py", line 131 in runtestprotocol
+2026-11-07T21:59:18.5154081Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/runner.py", line 118 in pytest_runtest_protocol
+2026-11-07T21:59:18.5154995Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_execution.py", line 147 in _multicall
+2026-11-07T21:59:18.5155855Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_manager.py", line 183 in _hookexec
+2026-11-07T21:59:18.5156680Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_caller.py", line 197 in __call__
+2026-11-07T21:59:18.5157540Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/main.py", line 396 in pytest_runtestloop
+2026-11-07T21:59:18.5158415Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_execution.py", line 147 in _multicall
+2026-11-07T21:59:18.5159260Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_manager.py", line 183 in _hookexec
+2026-11-07T21:59:18.5160096Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_caller.py", line 197 in __call__
+2026-11-07T21:59:18.5160887Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/main.py", line 372 in _main
+2026-11-07T21:59:18.5161689Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/main.py", line 318 in wrap_session
+2026-11-07T21:59:18.5162748Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/main.py", line 365 in pytest_cmdline_main
+2026-11-07T21:59:18.5163749Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_execution.py", line 147 in _multicall
+2026-11-07T21:59:18.5164594Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_manager.py", line 183 in _hookexec
+2026-11-07T21:59:18.5165410Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pluggy/_caller.py", line 197 in __call__
+2026-11-07T21:59:18.5166246Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/config/__init__.py", line 199 in main
+2026-11-07T21:59:18.5167143Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/_pytest/config/__init__.py", line 223 in console_main
+2026-11-07T21:59:18.5168226Z   File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/pytest/__main__.py", line 9 in <module>
+2026-11-07T21:59:18.5168792Z   File "<frozen runpy>", line 88 in _run_code
+2026-11-07T21:59:18.5169155Z   File "<frozen runpy>", line 198 in _run_module_as_main
+2026-11-07T21:59:18.5169386Z 
+2026-11-07T21:59:18.5169747Z Extension modules: shiboken6.Shiboken, PySide6.QtCore, PySide6.QtGui, PySide6.QtWidgets, PySide6.QtTest (total: 5)
+2026-11-07T21:59:20.8641838Z Aborted (core dumped)
+2026-11-07T21:59:20.8689005Z ##[error]Process completed with exit code 134.
+2026-11-07T21:59:20.8762070Z ##[group]Run python -m pip freeze --exclude-editable > artifacts/dependencies.txt
+2026-11-07T21:59:20.8763004Z [36;1mpython -m pip freeze --exclude-editable > artifacts/dependencies.txt[0m

@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "machine": "Windows-2022Server-10.0.20348-SP0",
+  "source_commit": "4d42029f3bdbf260b72a6f2f0f81ed01be1265a9",
+  "source_dirty": false,
+  "request": {
+    "source": "D:\\a\\STUDIO-IA\\STUDIO-IA\\artifacts\\e2e\\F01_with_audio.mp4",
+    "destination": "D:\\a\\STUDIO-IA\\STUDIO-IA\\artifacts\\e2e\\result_cpu.mp4",
+    "profile": "preservation",
+    "denoise": "light",
+    "scale": 2,
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "saturation": 1.0,
+    "crf": 18,
+    "schema_version": 1
+  },
+  "assertions": {
+    "resolution": true,
+    "video_codec": true,
+    "pixel_format": true,
+    "audio_count": true,
+    "duration": true,
+    "audio_0_channels": true,
+    "audio_0_codec": true,
+    "audio_0_sample_rate": true,
+    "audio_0_sync": true,
+    "audio_0_duration": true,
+    "cadence": true,
+    "full_decode": true,
+    "source_unchanged": true
+  },
+  "source_sha256": "59eb933e6d9b22a5d9472f35d668c9e9102d219e78b120f4c1a36cee6823d3a4",
+  "output_sha256": "198b99393075c5dbe93f7cda35c99ae21fb4a00c42f09d1f920feb5e36452cdb",
+  "elapsed_seconds": 1.0319999999999823,
+  "engine_version": "ffmpeg version 7.1.1-essentials_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers"
+}

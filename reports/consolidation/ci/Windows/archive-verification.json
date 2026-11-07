@@ -1,0 +1,20 @@
+{
+  "archive_sha256": "d171d9b1b7ebcca3e733231f2f7e9d85445f8b58e33033ce1bec20807215ad2f",
+  "file_hashes_verified": 381,
+  "zip_integrity": "PASS",
+  "extracted_frozen_smoke": "PASS",
+  "build": {
+    "application": "STUDIO IA",
+    "version": "0.3.0a2",
+    "label": "ALPHA / EXPERIMENTAL",
+    "source_commit": "4d42029f3bdbf260b72a6f2f0f81ed01be1265a9",
+    "source_dirty": false,
+    "platform": "Windows-2022Server-10.0.20348-SP0",
+    "glibc": null,
+    "python": "3.12.10",
+    "packager": "PyInstaller 6.13.0",
+    "qt_binding": "6.8.3",
+    "ffmpeg_bundled": false,
+    "neural_models_bundled": false
+  }
+}

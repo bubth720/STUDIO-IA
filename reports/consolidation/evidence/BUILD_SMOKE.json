@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "frozen": true,
+  "module_location": "/app/dist/STUDIO-IA/_internal/studio_ia/smoke.pyc",
+  "qt_platform": "offscreen",
+  "source_sha256": "bb464c4ec6e87dffe856395c9b4a199850ddc3be36d93db42d894fe0f98b11c2",
+  "output_sha256": "0262572ab6b0cb59b12200f8f6ca879a7fb5b68194995696f03be9725680bba8",
+  "success_job": "713ea731-e1c3-4979-9071-b6e86441ffa0",
+  "cancel_job": "0d2aa680-eb8c-44f6-80a5-e85f9435a878",
+  "assertions": {
+    "resolution": true,
+    "video_codec": true,
+    "pixel_format": true,
+    "audio_count": true,
+    "duration": true,
+    "audio_0_channels": true,
+    "audio_0_codec": true,
+    "audio_0_sample_rate": true,
+    "audio_0_sync": true,
+    "audio_0_duration": true,
+    "cadence": true,
+    "full_decode": true,
+    "source_unchanged": true
+  },
+  "widget_clicks": [
+    "verify_plan",
+    "start",
+    "cancel"
+  ],
+  "gui_timer_ticks": 428,
+  "cancel_state": "CANCELLED",
+  "no_cancelled_output": true
+}

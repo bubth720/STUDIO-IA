@@ -1,0 +1,16 @@
+{
+  "action": "Create dedicated consolidation branch from unchanged main",
+  "exit": 1,
+  "headers": [
+    "HTTP/2.0 403 Forbidden",
+    "X-Accepted-Github-Permissions: contents=write; contents=write,workflows=write",
+    "X-Accepted-Oauth-Scopes: repo",
+    "X-Oauth-Scopes: "
+  ],
+  "body": {
+    "message": "Resource not accessible by integration",
+    "documentation_url": "https://docs.github.com/rest/git/refs#create-a-reference",
+    "status": "403"
+  },
+  "stderr": "gh: Resource not accessible by integration (HTTP 403)\n"
+}

@@ -51,12 +51,17 @@ L'installation des dépendances demande Internet ; l'utilisation fonctionne hors
 Pour éviter les commandes de création/activation du venv, les scripts
 `Installer-sources.sh` (Linux) et `Installer-sources.ps1` (Windows) installent
 uniquement dans `.venv` du dossier source. Ils nécessitent Python 3.12 préalable.
-Les lanceurs `Lancer-sources.sh` / `.ps1` ouvrent ensuite l'interface. Les scripts
-Windows restent à qualifier sur runner Windows ; ne pas désactiver globalement
-la politique d'exécution PowerShell pour les lancer.
-Pour une installation sans réseau, préparer les wheels à l'avance sur le même OS :
-`python -m pip download -r requirements-runtime.lock -d wheels` ; installer ensuite
-avec `--no-index --find-links wheels`. Pour le paquet portable Python est déjà fourni.
+Les lanceurs `Lancer-sources.sh` / `.ps1` ouvrent ensuite l'interface. Les scripts Windows ont été qualifiés sur un runner natif Windows Server 2022
+x64, y compris une installation dans un chemin japonais. Ils utilisent le mode
+UTF-8 de Python ; ne pas désactiver globalement la politique d'exécution
+PowerShell pour les lancer. Voir le bilan de clôture pour les preuves.
+Pour préparer une installation source sans réseau, construire aussi le wheel du
+projet sur le même OS et avec la même architecture :
+`python -m pip wheel ".[gui]" --wheel-dir wheels`. Sur la machine hors ligne,
+installer avec `python -m pip install --no-index --find-links wheels "studio-ia[gui]==0.3.0a2"`.
+Cette procédure de transfert des wheels reste à qualifier séparément ; les
+installateurs fournis sont testés avec réseau. L'exécution du paquet portable
+hors réseau est qualifiée et Python y est déjà fourni.
 
 ## Dépannage et limites
 

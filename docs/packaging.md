@@ -15,6 +15,10 @@ travail intermédiaire ; le paquet final doit être régénéré après commit p
 
 Pas de compilation croisée Windows depuis Linux. Le workflow Windows natif est
 fourni ; sans run Windows réussi, aucun `.exe` Windows n'est annoncé testé.
+Les constructions réellement exécutées et leurs empreintes sont maintenant
+répertoriées dans le [bilan de clôture](../reports/consolidation/CLOTURE-PUBLICATION.md).
+Le paquet Bookworm glibc 2.36 reste disponible pour une compatibilité Linux plus
+large que le paquet Ubuntu 24.04 glibc 2.39. Chaque ZIP garde son BUILD_INFO exact.
 FFmpeg/ffprobe et modèles sont externes, sans téléchargement automatique.
 Le ZIP Linux dépend de la glibc du système de construction ; il est expérimental,
 pas un AppImage universel. La distribution Qt reste dynamique et remplaçable.

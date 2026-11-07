@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "frozen": false,
+  "module_location": "D:\\a\\STUDIO-IA\\STUDIO-IA\\artifacts\\installation source \u65e5\u672c\u8a9e\\.venv\\Lib\\site-packages\\studio_ia\\smoke.py",
+  "qt_platform": "windows",
+  "source_sha256": "59eb933e6d9b22a5d9472f35d668c9e9102d219e78b120f4c1a36cee6823d3a4",
+  "output_sha256": "198b99393075c5dbe93f7cda35c99ae21fb4a00c42f09d1f920feb5e36452cdb",
+  "success_job": "29cf0940-8ee2-4008-bff6-347584f10331",
+  "cancel_job": "db66c0c4-0a4a-4c2f-b1fe-562f2735341c",
+  "assertions": {
+    "resolution": true,
+    "video_codec": true,
+    "pixel_format": true,
+    "audio_count": true,
+    "duration": true,
+    "audio_0_channels": true,
+    "audio_0_codec": true,
+    "audio_0_sample_rate": true,
+    "audio_0_sync": true,
+    "audio_0_duration": true,
+    "cadence": true,
+    "full_decode": true,
+    "source_unchanged": true
+  },
+  "widget_clicks": [
+    "verify_plan",
+    "start",
+    "cancel"
+  ],
+  "gui_timer_ticks": 726,
+  "cancel_state": "CANCELLED",
+  "no_cancelled_output": true
+}

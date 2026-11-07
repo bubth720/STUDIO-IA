@@ -8,10 +8,12 @@ Import → analyse → plan → traitement CPU réel → vérification complète
 
 Travail actuel sur `codex/studio-ia-consolidation-v1`, conservant les huit commits M003.
 Aucune fusion dans `main`.
-Les tests locaux sont réels. La publication GitHub/CI reste conditionnée aux droits
-d'écriture de la connexion ; voir le [rapport de livraison](reports/003/04-delivery.md)
-pour l'historique M003 et le [bilan de consolidation](reports/consolidation/README.md)
-pour les résultats et limitations actuels. Les archives initiales sont conservées.
+La branche est publiée et la [PR #1](https://github.com/bubth720/STUDIO-IA/pull/1)
+reste en brouillon. Le [bilan de clôture](reports/consolidation/CLOTURE-PUBLICATION.md)
+donne les commits, runs Linux/Windows réellement exécutés, distributions, résultats
+et limites. Le [rapport initial](reports/003/04-delivery.md) et le
+[bilan avant publication](reports/consolidation/BILAN-FINAL.md) sont historiques.
+Les huit commits et toutes les archives initiales sont conservés.
 
 | Fonction | Qualification |
 |---|---|

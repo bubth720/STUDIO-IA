@@ -1,5 +1,10 @@
 # STUDIO IA — consolidation V1 et préparation de la Mission 004
 
+> Instantané historique établi avant le rétablissement des écritures GitHub.
+> Les blocages de publication et de qualification Windows décrits ci-dessous ont
+> été traités ensuite. Consulter le [bilan actuel](CLOTURE-PUBLICATION.md) et ses
+> preuves pour le statut de livraison ; ce document conserve le constat initial.
+
 Date : 7 novembre 2026 UTC. Version livrée : **0.3.0a2 ALPHA CPU**.
 Statut : sauvegardes et qualification Linux terminées ; **publication GitHub et
 qualification Windows bloquées**, malgré la reconnexion confirmée par l'utilisateur.

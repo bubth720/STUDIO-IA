@@ -1,17 +1,39 @@
 {
-  "status": "BLOCKED",
+  "status": "PUBLISHED_AND_QUALIFIED",
   "main_unchanged": "61fe67ebb908da856964e88200e1220f83fc2bb8",
   "target_branch": "codex/studio-ia-consolidation-v1",
-  "git_push_http": 403,
-  "connector_create_branch_http": 403,
-  "user_confirmed_reconnection": true,
-  "retested_after_resume_utc": "2026-11-07 15:27 UTC",
-  "required_permissions": [
-    "contents:write",
-    "workflows:write"
-  ],
-  "installation_settings_url": "https://github.com/settings/installations/167943396",
-  "published_commit": null,
-  "pull_request": null,
-  "windows_native_run": null
+  "qualified_source_commit": "4d42029f3bdbf260b72a6f2f0f81ed01be1265a9",
+  "pull_request": "https://github.com/bubth720/STUDIO-IA/pull/1",
+  "pull_request_draft": true,
+  "run_url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42420338324",
+  "run_id": 42420338324,
+  "platforms": {
+    "Linux": {
+      "tests": 62,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 1,
+      "passed": 61,
+      "seconds": 43.261,
+      "skip_reasons": [
+        "Video2X et modèles absents ; aucun moteur neuronal qualifié."
+      ]
+    },
+    "Windows": {
+      "tests": 62,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 3,
+      "passed": 59,
+      "seconds": 65.413,
+      "skip_reasons": [
+        "POSIX directory permissions are not Windows ACLs",
+        "Linux renameat2 fallback qualification",
+        "Video2X et modèles absents ; aucun moteur neuronal qualifié."
+      ]
+    }
+  },
+  "neural_execution": "NOT_STARTED",
+  "personal_device_installation": false,
+  "final_documentation_commit": "See external delivery manifest; no runtime changes"
 }

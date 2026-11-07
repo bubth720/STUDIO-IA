@@ -35,7 +35,21 @@ def collect(toc: Path, folder: Path) -> dict:
     packages = {}
     for destination, source, _ in entries:
         actual = str(Path(source).resolve())
-        owner = subprocess.check_output(["dpkg-query", "-S", actual], text=True).split(": /", 1)[0]
+        candidates = [source, actual]
+        if actual.startswith("/usr/lib/"):
+            candidates.append(actual.removeprefix("/usr"))
+        if source.startswith("/lib/"):
+            candidates.append("/usr" + source)
+        owner = None
+        for candidate in dict.fromkeys(candidates):
+            match = subprocess.run(
+                ["dpkg-query", "-S", candidate], text=True, capture_output=True, check=False
+            )
+            if match.returncode == 0:
+                owner = match.stdout.splitlines()[0].split(": /", 1)[0]
+                break
+        if not owner:
+            raise RuntimeError(f"No package ownership found for distributed library: {source}")
         if owner not in packages:
             binary_name = owner.split(":", 1)[0]
             copyright_file = Path("/usr/share/doc") / binary_name / "copyright"

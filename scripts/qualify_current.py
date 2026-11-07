@@ -1,6 +1,7 @@
 """Repeatable CPU/Qt/frozen-package qualification; requires preinstalled dependencies."""
 
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -41,3 +42,7 @@ subprocess.run(
     env=env,
     check=True,
 )
+# The ZIP and its extracted-file verification are retained; avoid exporting two
+# extra copies of Qt/Python from a bounded build environment.
+for directory in (root / "dist/STUDIO-IA", artifacts / "extracted-package/STUDIO-IA"):
+    shutil.rmtree(directory)

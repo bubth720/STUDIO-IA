@@ -11,7 +11,7 @@ from dataclasses import asdict
 from datetime import UTC, datetime
 from pathlib import Path
 
-from studio_ia.core import Cancellation, Cancelled, StudioError, Tools
+from studio_ia.core import Cancellation, Cancelled, StudioError, Tools, build_identity
 from studio_ia.pipeline import Request, build_plan, run_plan
 
 TERMINAL = {"SUCCEEDED", "FAILED", "CANCELLED", "INTERRUPTED"}
@@ -53,7 +53,7 @@ class Store:
 
     def list(self) -> list[dict]:
         with self.connect() as db:
-            rows = db.execute("SELECT data FROM jobs ORDER BY rowid DESC LIMIT 200").fetchall()
+            rows = db.execute("SELECT data FROM jobs ORDER BY rowid DESC").fetchall()
         return [json.loads(row[0]) for row in rows]
 
     def remove(self, job_id: str) -> None:
@@ -133,6 +133,7 @@ class Manager:
                     "elapsed_seconds": 0,
                     "error": None,
                     "result": None,
+                    "application": build_identity(),
                 }
             )
             self.tokens[job_id] = Cancellation()

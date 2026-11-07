@@ -13,6 +13,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Callable
 
+from studio_ia import __version__
+
 
 class StudioError(Exception):
     """Actionable error, safe to show in the local UI."""
@@ -20,6 +22,31 @@ class StudioError(Exception):
 
 class Cancelled(StudioError):
     pass
+
+
+def build_identity() -> dict:
+    identity: dict = {
+        "version": __version__,
+        "source_sha": os.environ.get("GITHUB_SHA")
+        or os.environ.get("STUDIO_IA_SOURCE_SHA", "unknown"),
+    }
+    if getattr(sys, "frozen", False):
+        manifest = Path(sys.executable).parent / "BUILD_INFO.json"
+        if manifest.exists():
+            data = json.loads(manifest.read_text(encoding="utf-8"))
+            identity["source_sha"] = data["source_commit"]
+            identity["source_dirty"] = data["source_dirty"]
+    else:
+        git_dir = Path(__file__).resolve().parents[2] / ".git"
+        if git_dir.is_dir():
+            head = (git_dir / "HEAD").read_text().strip()
+            if head.startswith("ref: "):
+                reference = git_dir / head[5:]
+                if reference.is_file():
+                    identity["source_sha"] = reference.read_text().strip()
+            else:
+                identity["source_sha"] = head
+    return identity
 
 
 class Cancellation:
@@ -107,6 +134,7 @@ def capabilities(tools: Tools) -> dict:
     filters = [line.split()[1] for line in filters_text.splitlines() if len(line.split()) >= 2]
     return {
         "schema_version": 1,
+        "application": build_identity(),
         "platform": platform.platform(),
         "python": platform.python_version(),
         "tools": asdict(tools),

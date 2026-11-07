@@ -11,8 +11,8 @@ from pathlib import Path
 from typing import Callable
 
 from studio_ia import __version__
-from studio_ia.core import Cancellation, StudioError, Tools, capabilities, execute
-from studio_ia.media import MediaInfo, analyze, number, rate, sha256
+from studio_ia.core import Cancellation, StudioError, Tools, build_identity, capabilities, execute
+from studio_ia.media import MediaInfo, analyze, number, rate, sha256, timestamp
 
 
 @dataclass(frozen=True)
@@ -222,6 +222,19 @@ def verify_output(plan: Plan, output: Path, tools: Tools, cancel: Cancellation, 
         )
         expected_codec = before_audio.get("codec_name") if plan.audio_policy == "copy" else "aac"
         assertions[f"audio_{index}_codec"] = expected_codec == after_audio.get("codec_name")
+        assertions[f"audio_{index}_sample_rate"] = before_audio.get(
+            "sample_rate"
+        ) == after_audio.get("sample_rate")
+        starts = [
+            timestamp(stream.get("start_time"))
+            for stream in (before_audio, plan.media.video, after_audio, after.video)
+        ]
+        known_starts = [value for value in starts if value is not None]
+        if len(known_starts) == 4:
+            before_a, before_v, after_a, after_v = known_starts
+            assertions[f"audio_{index}_sync"] = (
+                abs((before_a - before_v) - (after_a - after_v)) <= 0.1
+            )
         for field in ("duration", "start_time"):
             before_value, after_value = (
                 number(before_audio.get(field)),
@@ -281,7 +294,7 @@ def run_plan(
         Path(plan.request.destination).expanduser().resolve(),
     )
     started = time.monotonic()
-    original_hash = sha256(source)
+    original_hash = sha256(source, cancel)
     cancel.check()
     # Same filesystem: atomic hard-link finalization without replacing existing files.
     temporary_dir = Path(tempfile.mkdtemp(prefix=".studio-ia-", dir=destination.parent))
@@ -298,17 +311,18 @@ def run_plan(
         if on_stage:
             on_stage("VERIFYING")
         verification = verify_output(plan, temporary, tools, cancel, log)
-        if sha256(source) != original_hash:
+        if sha256(source, cancel) != original_hash:
             raise StudioError("La source a changé pendant le traitement ; export non finalisé.")
         verification["assertions"]["source_unchanged"] = True
         result = {
             "schema_version": 1,
             "status": "PASS",
             "application_version": __version__,
+            "application": build_identity(),
             "engine_version": plan.engine_version,
             "plan": plan.to_dict(),
             "source_sha256": original_hash,
-            "output_sha256": sha256(temporary),
+            "output_sha256": sha256(temporary, cancel),
             "elapsed_seconds": time.monotonic() - started,
             **verification,
         }

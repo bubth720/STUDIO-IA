@@ -35,6 +35,7 @@ def e2e(root: Path) -> dict:
         "status": "PASS",
         "machine": platform.platform(),
         "source_commit": source_commit,
+        "source_dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], text=True)),
         "request": asdict(request),
         "assertions": result["assertions"],
         "source_sha256": before_hash,

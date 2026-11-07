@@ -7,7 +7,7 @@ from dataclasses import asdict, dataclass
 from fractions import Fraction
 from pathlib import Path
 
-from studio_ia.core import StudioError, Tools, capture
+from studio_ia.core import Cancellation, StudioError, Tools, capture
 
 
 def number(value) -> float | None:
@@ -25,10 +25,20 @@ def rate(value: str) -> float | None:
         return None
 
 
-def sha256(path: Path) -> str:
+def timestamp(value) -> float | None:
+    try:
+        result = float(value)
+        return result if math.isfinite(result) else None
+    except (ValueError, TypeError):
+        return None
+
+
+def sha256(path: Path, cancel: Cancellation | None = None) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            if cancel:
+                cancel.check()
             digest.update(chunk)
     return digest.hexdigest()
 
@@ -84,7 +94,16 @@ def analyze(path: Path, tools: Tools) -> MediaInfo:
     if not video.get("width") or not video.get("height"):
         raise StudioError("Dimensions vidéo inconnues.")
     transfer = video.get("color_transfer", "unknown")
-    hdr = transfer in ("smpte2084", "arib-std-b67") or video.get("color_primaries") == "bt2020"
+    hdr = (
+        transfer in ("smpte2084", "arib-std-b67")
+        or video.get("color_primaries") == "bt2020"
+        or video.get("color_space") in ("bt2020nc", "bt2020c")
+        or any(
+            side.get("side_data_type")
+            in ("Mastering display metadata", "Content light level metadata")
+            for side in video.get("side_data_list", [])
+        )
+    )
     rotation = float(video.get("tags", {}).get("rotate", 0))
     for side in video.get("side_data_list", []):
         rotation = float(side.get("rotation", rotation))

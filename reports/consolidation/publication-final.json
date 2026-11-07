@@ -1,0 +1,17 @@
+{
+  "status": "BLOCKED",
+  "main_unchanged": "61fe67ebb908da856964e88200e1220f83fc2bb8",
+  "target_branch": "codex/studio-ia-consolidation-v1",
+  "git_push_http": 403,
+  "connector_create_branch_http": 403,
+  "user_confirmed_reconnection": true,
+  "retested_after_resume_utc": "2026-11-07 15:27 UTC",
+  "required_permissions": [
+    "contents:write",
+    "workflows:write"
+  ],
+  "installation_settings_url": "https://github.com/settings/installations/167943396",
+  "published_commit": null,
+  "pull_request": null,
+  "windows_native_run": null
+}

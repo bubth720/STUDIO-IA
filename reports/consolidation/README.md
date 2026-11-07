@@ -17,12 +17,13 @@ Diagnostic GitHub : compte propriétaire accessible en lecture, installation
 L'en-tête serveur demande `contents=write` et, pour les workflows, `workflows=write`.
 L'utilisateur a confirmé la mise à jour/reconnexion ; les premières nouvelles
 requêtes sont encore refusées. Aucun changement de main ni contournement.
-Les résultats finaux de publication seront consignés seulement après preuve.
+Les nouvelles tentatives après reprise sont aussi refusées : publication non réalisée.
 
 Les trois régressions initiales ont été reproduites (3 FAIL avant correction) :
 destination ajoutée comme symlink après prévalidation, rapport PASS écrit avant
 publication effective, et nettoyage refusé transformant un export validé en erreur.
-Les correctifs et tests ciblés sont ajoutés ; qualification complète en cours.
+Les correctifs sont qualifiés : 54 tests PASS, 1 SKIP neuronal ; ZIP Bookworm et
+son exécution sur Debian 13 validés. Voir [BILAN-FINAL.md](BILAN-FINAL.md).
 
 Autres consolidations : JSON atomique UTF-8, rapports CLI qui refusent d'écraser
 les médias/fichiers existants, chemins canoniques figés, fermetures SQLite,
@@ -31,5 +32,5 @@ scripts d'installation source, lanceurs portables et contrôle du ZIP livré.
 
 La version `0.3.0a2` reste CPU. Aucun poids de modèle n'est téléchargé/exécuté.
 Le cahier technique M004 sera documentaire ; pas de développement neuronal lourd.
-Qualification Bookworm/Windows et bilan final : voir les rapports complémentaires
-qui seront ajoutés après leurs exécutions réelles, sans inventer de résultat.
+Bookworm et installation source Linux : PASS. Windows/CI GitHub : BLOCKED.
+[Cahier M004](../../docs/mission-004/CAHIER-TECHNIQUE.pdf) : préparation uniquement.

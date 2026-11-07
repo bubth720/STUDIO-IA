@@ -1,0 +1,29 @@
+[
+  {
+    "component": "qtbase",
+    "version": "6.8.3",
+    "url": "https://codeload.github.com/qt/qtbase/tar.gz/refs/tags/v6.8.3",
+    "sha256": "cea5c8f2c20d9cbd684f8a402721e63b87a2886e906f6ec7e0f7e1ff69c83206",
+    "use": "license and attribution extraction only; no remote script execution"
+  },
+  {
+    "component": "qtsvg",
+    "version": "6.8.3",
+    "url": "https://codeload.github.com/qt/qtsvg/tar.gz/refs/tags/v6.8.3",
+    "sha256": "fb53da582e98d23cbf6e8bedb71efb60720e61a982d31a741742c543e2f3838d",
+    "use": "license and attribution extraction only; no remote script execution"
+  },
+  {
+    "component": "qtwayland",
+    "version": "6.8.3",
+    "url": "https://codeload.github.com/qt/qtwayland/tar.gz/refs/tags/v6.8.3",
+    "sha256": "d720d5ec7ca0a25bb9ca45b881d7faee3565274802b0c068558f689155f46dd6",
+    "use": "license and attribution extraction only; no remote script execution"
+  },
+  {
+    "component": "ICU",
+    "version": "73.2",
+    "url": "https://raw.githubusercontent.com/unicode-org/icu/release-73-2/icu4c/LICENSE",
+    "license_sha256": "f3005e195ff74d8812cc1f182a1c446fab678d70a10e3dada497585befee5416"
+  }
+]

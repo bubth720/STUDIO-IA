@@ -18,3 +18,10 @@ fourni ; sans run Windows réussi, aucun `.exe` Windows n'est annoncé testé.
 FFmpeg/ffprobe et modèles sont externes, sans téléchargement automatique.
 Le ZIP Linux dépend de la glibc du système de construction ; il est expérimental,
 pas un AppImage universel. La distribution Qt reste dynamique et remplaçable.
+
+L'inventaire PyInstaller révèle aussi QtSvg/QtWayland et ICU dans les plugins.
+Leurs notices sont incluses. Sur Debian/Ubuntu, `collect_binary_licenses.py`
+résout chaque bibliothèque système effectivement copiée, récupère son copyright
+dpkg et sa version source, ajoute les textes communs et un lien aux sources
+correspondantes dans `BINARY_LICENSES.json`. Cette collecte doit réussir avant
+l'archivage. Le premier inventaire local compte 82 bibliothèques et 75 paquets.

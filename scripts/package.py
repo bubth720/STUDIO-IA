@@ -8,6 +8,7 @@ import platform
 import shutil
 import subprocess
 import sys
+import uuid
 import zipfile
 from pathlib import Path
 
@@ -54,6 +55,10 @@ def package():
     for name in ("INSTALLER.md", "LICENSE", "THIRD_PARTY_NOTICES.md", "requirements-runtime.lock"):
         shutil.copy2(ROOT / name, folder / name)
     shutil.copytree(ROOT / "licenses", folder / "licenses", dirs_exist_ok=True)
+    if platform.system() == "Linux":
+        from collect_binary_licenses import collect
+
+        collect(ROOT / "build/STUDIO-IA/Analysis-00.toc", folder)
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     dirty = bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True))
     manifest = {
@@ -71,7 +76,11 @@ def package():
     }
     (folder / "BUILD_INFO.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     executable = folder / ("STUDIO-IA.exe" if os.name == "nt" else "STUDIO-IA")
-    smoke = ROOT / "artifacts" / ("frozen-smoke-" + platform.system().lower())
+    smoke = (
+        ROOT
+        / "artifacts"
+        / (f"frozen-smoke-{platform.system().lower()}-{commit[:8]}-{uuid.uuid4().hex[:8]}")
+    )
     if smoke.exists():
         raise RuntimeError(f"Test output already exists: {smoke}; use a fresh worktree/output.")
     smoke.mkdir(parents=True)

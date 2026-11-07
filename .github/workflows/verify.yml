@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   verify-and-package:
     name: CPU + Qt + package (${{ matrix.os }})
@@ -28,7 +32,9 @@ jobs:
           python-version: '3.12'
       - name: Linux media and display dependencies
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg xvfb libxcb-cursor0 libegl1
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg xvfb libegl1 libgl1 libdbus-1-3 libfontconfig1 fonts-dejavu-core libxkbcommon-x11-0 libxcb-cursor0 libxcb-icccm4 libxcb-keysyms1 libxcb-image0 libxcb-render-util0 libxcb-xinerama0
       - name: Windows FFmpeg (external, not redistributed)
         if: runner.os == 'Windows'
         shell: pwsh
@@ -46,6 +52,11 @@ jobs:
           python -m ruff format --check src tests scripts
           python -m mypy src/studio_ia/core.py src/studio_ia/media.py src/studio_ia/pipeline.py src/studio_ia/jobs.py
           python -m mypy src/studio_ia/files.py
+      - name: Check the actual Qt X11 plugin before pytest capture
+        if: runner.os == 'Linux'
+        run: |
+          python -c "import pathlib, subprocess, PySide6; subprocess.run(['ldd', str(pathlib.Path(PySide6.__file__).parent / 'Qt/plugins/platforms/libqxcb.so')], check=True)"
+          xvfb-run -a python -u -c "from PySide6.QtWidgets import QApplication; app = QApplication([]); print('Qt platform:', app.platformName(), flush=True)"
       - name: Real tests with X11 (Linux)
         if: runner.os == 'Linux'
         run: xvfb-run -a python -m pytest -q -ra --junitxml=artifacts/pytest.xml
@@ -71,6 +82,20 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: python scripts/check_archive.py dist/STUDIO-IA-0.3.0a2-windows-AMD64-ALPHA.zip --output artifacts/extracted-package
+      - name: Test the supplied Windows source installer in a Unicode path
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $studioInstallRoot = Join-Path $env:GITHUB_WORKSPACE 'artifacts/installation source 日本語'
+          git archive HEAD --output artifacts/installer-source.zip
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          [IO.Compression.ZipFile]::ExtractToDirectory((Join-Path $env:GITHUB_WORKSPACE 'artifacts/installer-source.zip'), $studioInstallRoot)
+          & (Join-Path $studioInstallRoot 'Installer-sources.ps1')
+          $studioInstalledPython = Join-Path $studioInstallRoot '.venv/Scripts/python.exe'
+          & $studioInstalledPython -m studio_ia.cli doctor --json artifacts/installed-source-doctor.json
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $studioInstalledPython scripts/gui_smoke.py --output artifacts/installed-source-gui
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Upload test evidence (synthetic media only)
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -84,6 +109,8 @@ jobs:
             artifacts/dependencies.txt
             artifacts/extracted-package/gui/
             artifacts/extracted-package/archive-verification.json
+            artifacts/installed-source-doctor.json
+            artifacts/installed-source-gui/
           retention-days: 14
       - name: Upload verified experimental package
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

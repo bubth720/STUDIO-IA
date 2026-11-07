@@ -20,6 +20,10 @@ Seules les plateformes accompagnées d'une preuve sont qualifiées.
    Linux nécessite glibc au moins aussi récente que le système de construction
    (voir le champ `glibc` de BUILD_INFO), ainsi qu'un affichage X11/Wayland et les dépendances Qt du système.
    Le build de compatibilité Bookworm vise glibc 2.36 ; consulter ses preuves effectives.
+   Sous Debian/Ubuntu, les dépendances d'affichage peuvent être préparées avec
+   `sudo apt-get install libegl1 libgl1 libdbus-1-3 libfontconfig1 fonts-dejavu-core libxkbcommon-x11-0 libxcb-cursor0 libxcb-icccm4 libxcb-keysyms1 libxcb-image0 libxcb-render-util0 libxcb-xinerama0`.
+   Ces commandes sont des instructions pour l'utilisateur ; la mission ne les
+   exécute que dans les environnements de test gérés.
 5. Importer une vidéo, choisir Préservation, vérifier une destination nouvelle,
    cliquer « Vérifier le plan » puis « Démarrer ». Attendre la validation complète.
 6. Comparer source/export au même instant avec le curseur ; « Ouvrir l'export »

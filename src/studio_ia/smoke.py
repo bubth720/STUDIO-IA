@@ -62,6 +62,11 @@ def run_smoke(root: Path) -> dict:
                 raise AssertionError(f"Qt timeout: {window.status.text()}")
             QTest.qWait(20)
 
+    def click_setting(button):
+        window.settings_scroll.ensureWidgetVisible(button)
+        app.processEvents()
+        QTest.mouseClick(button, Qt.MouseButton.LeftButton)
+
     try:
         original = sha256(source)
         window.import_source(str(source))
@@ -70,9 +75,9 @@ def run_smoke(root: Path) -> dict:
         window.scale.setCurrentIndex(2)
         destination = root / "gui_verified_export.mp4"
         window.destination.setText(str(destination))
-        QTest.mouseClick(window.plan_button, Qt.MouseButton.LeftButton)
+        click_setting(window.plan_button)
         wait_for(lambda: window.plan is not None)
-        QTest.mouseClick(window.start_button, Qt.MouseButton.LeftButton)
+        click_setting(window.start_button)
         job_id = window.current_job
         assert job_id
         ticks_before = len(heartbeats)
@@ -89,9 +94,9 @@ def run_smoke(root: Path) -> dict:
         window.scale.setCurrentIndex(3)
         cancelled_output = root / "must_not_exist.mp4"
         window.destination.setText(str(cancelled_output))
-        QTest.mouseClick(window.plan_button, Qt.MouseButton.LeftButton)
+        click_setting(window.plan_button)
         wait_for(lambda: window.plan is not None)
-        QTest.mouseClick(window.start_button, Qt.MouseButton.LeftButton)
+        click_setting(window.start_button)
         cancel_id = window.current_job
         assert cancel_id
         wait_for(lambda: window.manager.store.get(cancel_id)["state"] == "RUNNING")

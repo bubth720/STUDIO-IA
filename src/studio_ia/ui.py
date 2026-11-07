@@ -18,12 +18,15 @@ from PySide6.QtWidgets import (
     QGroupBox,
     QHBoxLayout,
     QLabel,
+    QLayout,
     QLineEdit,
     QListWidget,
     QMainWindow,
     QMessageBox,
     QProgressBar,
     QPushButton,
+    QScrollArea,
+    QSizePolicy,
     QSlider,
     QSpinBox,
     QSplitter,
@@ -194,6 +197,8 @@ class Window(QMainWindow):
         splitter.addWidget(left)
         settings = QGroupBox("Traitement proposé")
         form = QFormLayout(settings)
+        form.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
+        settings.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
         self.profile = QComboBox()
         self.profile.addItems(
             ["AUTO · Préservation", "AVANCÉ · Personnalisé", "Témoin · Réencodage seul"]
@@ -239,7 +244,12 @@ class Window(QMainWindow):
         )
         limitation.setWordWrap(True)
         form.addRow(limitation)
-        splitter.addWidget(settings)
+        self.settings_scroll = QScrollArea()
+        self.settings_scroll.setWidgetResizable(True)
+        self.settings_scroll.setMinimumWidth(350)
+        self.settings_scroll.setWidget(settings)
+        self.settings_scroll.setAccessibleName("Réglages du traitement, défilement vertical")
+        splitter.addWidget(self.settings_scroll)
         splitter.setStretchFactor(0, 3)
         splitter.setStretchFactor(1, 2)
         layout.addWidget(splitter, 1)

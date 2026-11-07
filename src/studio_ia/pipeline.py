@@ -1,0 +1,325 @@
+"""Validated CPU plans, complete verification and no-clobber atomic export."""
+
+import json
+import math
+import os
+import shutil
+import tempfile
+import time
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Callable
+
+from studio_ia import __version__
+from studio_ia.core import Cancellation, StudioError, Tools, capabilities, execute
+from studio_ia.media import MediaInfo, analyze, number, rate, sha256
+
+
+@dataclass(frozen=True)
+class Request:
+    source: str
+    destination: str
+    profile: str = "preservation"
+    denoise: str = "light"
+    scale: float = 1.0
+    brightness: float = 0.0
+    contrast: float = 1.0
+    saturation: float = 1.0
+    crf: int = 18
+    schema_version: int = 1
+
+
+@dataclass
+class Plan:
+    request: Request
+    media: MediaInfo
+    width: int
+    height: int
+    filters: list[str]
+    audio_policy: str
+    warnings: list[str]
+    engine_version: str
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
+def build_plan(request: Request, tools: Tools, caps: dict | None = None) -> Plan:
+    if request.schema_version != 1 or request.profile not in ("preservation", "custom", "control"):
+        raise StudioError("Profil ou version du schéma inconnu.")
+    if request.denoise not in ("off", "light", "moderate"):
+        raise StudioError("Débruitage inconnu.")
+    for value, low, high, label in (
+        (request.scale, 0.25, 4, "Échelle"),
+        (request.brightness, -0.1, 0.1, "Luminosité"),
+        (request.contrast, 0.8, 1.2, "Contraste"),
+        (request.saturation, 0.8, 1.2, "Saturation"),
+        (request.crf, 12, 28, "CRF"),
+    ):
+        if not math.isfinite(value) or not low <= value <= high:
+            raise StudioError(f"{label} hors limites ({low}–{high}).")
+    if int(request.crf) != request.crf:
+        raise StudioError("CRF doit être entier.")
+    try:
+        source = Path(request.source).expanduser().resolve(strict=True)
+        destination = Path(request.destination).expanduser().absolute()
+        if destination.is_symlink() or destination.exists():
+            raise StudioError(
+                "La destination existe déjà : choisir un nouveau nom. Aucun écrasement."
+            )
+        destination = destination.resolve()
+        if source == destination:
+            raise StudioError("Source et destination identiques.")
+        if not destination.parent.is_dir():
+            raise StudioError("Le dossier de destination doit exister.")
+        if destination.suffix.lower() not in (".mp4", ".mkv"):
+            raise StudioError("Export MVP : choisir .mp4 ou .mkv.")
+        info = analyze(source, tools)
+        if shutil.disk_usage(destination.parent).free < max(64 * 1024**2, info.size * 2):
+            raise StudioError("Espace disque insuffisant (minimum 64 Mio et deux fois la source).")
+    except OSError as exc:
+        raise StudioError(f"Chemin inaccessible : {exc}") from exc
+    if info.hdr or info.rotation:
+        raise StudioError("HDR/BT.2020 ou rotation : export non qualifié dans ce MVP.")
+    if info.video.get("sample_aspect_ratio", "1:1") not in ("1:1", "N/A", "0:1"):
+        raise StudioError("Pixels non carrés : export non qualifié.")
+    if info.video.get("field_order", "progressive") not in ("progressive", "unknown"):
+        raise StudioError("Vidéo entrelacée : désentrelacement non qualifié.")
+    if (
+        any(s.get("codec_type") not in ("video", "audio") for s in info.streams)
+        or sum(s.get("codec_type") == "video" for s in info.streams) != 1
+    ):
+        raise StudioError(
+            "Sous-titres/données/multi-vidéo : export refusé pour éviter leur suppression."
+        )
+    pix = info.video.get("pix_fmt", "unknown")
+    if any(depth in pix for depth in ("10", "12", "14", "16", "f32")):
+        raise StudioError("Source supérieure à 8 bits : conversion non qualifiée.")
+    width = max(2, round(info.video["width"] * request.scale / 2) * 2)
+    height = max(2, round(info.video["height"] * request.scale / 2) * 2)
+    if max(width, height) > 7680 or width * height > 3840 * 2160:
+        raise StudioError("Limite CPU : 8,3 millions de pixels et dimension maximale 7680.")
+    filters = []
+    if request.denoise != "off":
+        filters.append("hqdn3d=" + ("1.5:1.5:6:6" if request.denoise == "light" else "3:3:6:6"))
+    if (request.brightness, request.contrast, request.saturation) != (0, 1, 1):
+        filters.append(
+            f"eq=brightness={request.brightness}:contrast={request.contrast}"
+            f":saturation={request.saturation}"
+        )
+    if (width, height) != (info.video["width"], info.video["height"]):
+        filters.extend([f"scale={width}:{height}:flags=lanczos", "setsar=1"])
+    caps = caps or capabilities(tools)
+    for encoder in ("libx264", "aac"):
+        if encoder not in caps["encoders"]:
+            raise StudioError(f"Encodeur requis absent : {encoder}. Utiliser un FFmpeg compatible.")
+    for item in filters:
+        if item.split("=", 1)[0] not in caps["filters"]:
+            raise StudioError(f"Filtre absent : {item.split('=', 1)[0]}.")
+    copy_audio = destination.suffix.lower() == ".mkv" or all(
+        stream.get("codec_name") == "aac" for stream in info.audio
+    )
+    warnings = list(info.warnings)
+    if info.audio and not copy_audio:
+        warnings.append("Audio réencodé en AAC 192 kbit/s par piste pour compatibilité MP4.")
+    warnings.append("CPU classique : aucun nouveau détail neuronal garanti.")
+    return Plan(
+        request,
+        info,
+        width,
+        height,
+        filters,
+        "copy" if copy_audio else "aac",
+        warnings,
+        caps["ffmpeg_version"],
+    )
+
+
+def command(plan: Plan, tools: Tools, temporary: Path) -> list[str]:
+    args = [
+        tools.ffmpeg,
+        "-hide_banner",
+        "-loglevel",
+        "warning",
+        "-n",
+        "-threads",
+        "2",
+        "-filter_threads",
+        "2",
+        "-protocol_whitelist",
+        "file,pipe",
+        "-i",
+        plan.media.path,
+        "-map",
+        "0:v:0",
+        "-map",
+        "0:a?",
+        "-map_metadata",
+        "0",
+        "-map_chapters",
+        "0",
+    ]
+    if plan.filters:
+        args += ["-vf", ",".join(plan.filters)]
+    args += [
+        "-c:v",
+        "libx264",
+        "-threads",
+        "2",
+        "-preset",
+        "medium",
+        "-crf",
+        str(plan.request.crf),
+        "-pix_fmt",
+        "yuv420p",
+        "-fps_mode",
+        "passthrough",
+        "-c:a",
+        plan.audio_policy,
+    ]
+    if plan.audio_policy == "aac":
+        args += ["-b:a", "192k"]
+    for key, flag in (
+        ("color_primaries", "-color_primaries"),
+        ("color_transfer", "-color_trc"),
+        ("color_space", "-colorspace"),
+        ("color_range", "-color_range"),
+    ):
+        value = plan.media.video.get(key)
+        if value and value not in ("unknown", "unspecified", "reserved"):
+            args += [flag, value]
+    if temporary.suffix.lower() == ".mp4":
+        args += ["-movflags", "+faststart"]
+    return args + ["-progress", "pipe:1", "-nostats", str(temporary)]
+
+
+def verify_output(plan: Plan, output: Path, tools: Tools, cancel: Cancellation, log: Path) -> dict:
+    cancel.check()
+    after = analyze(output, tools)
+    if output.stat().st_size == 0:
+        raise StudioError("Export vide.")
+    assertions = {
+        "resolution": (after.video["width"], after.video["height"]) == (plan.width, plan.height),
+        "video_codec": after.video.get("codec_name") == "h264",
+        "pixel_format": after.video.get("pix_fmt") == "yuv420p",
+        "audio_count": len(after.audio) == len(plan.media.audio),
+        "duration": after.duration is not None
+        and (
+            not plan.media.duration
+            or abs(after.duration - plan.media.duration)
+            <= max(0.25, 2 / (rate(plan.media.video.get("avg_frame_rate", "0/0")) or 25))
+        ),
+    }
+    for key in ("color_primaries", "color_transfer", "color_space", "color_range"):
+        original = plan.media.video.get(key)
+        if original and original not in ("unknown", "unspecified", "reserved"):
+            assertions[key] = original == after.video.get(key)
+    for index, (before_audio, after_audio) in enumerate(
+        zip(plan.media.audio, after.audio, strict=False)
+    ):
+        assertions[f"audio_{index}_channels"] = before_audio.get("channels") == after_audio.get(
+            "channels"
+        )
+        expected_codec = before_audio.get("codec_name") if plan.audio_policy == "copy" else "aac"
+        assertions[f"audio_{index}_codec"] = expected_codec == after_audio.get("codec_name")
+        for field in ("duration", "start_time"):
+            before_value, after_value = (
+                number(before_audio.get(field)),
+                number(after_audio.get(field)),
+            )
+            if before_value and after_value:
+                assertions[f"audio_{index}_{field}"] = abs(before_value - after_value) <= 0.25
+    before_rate, after_rate = (
+        rate(plan.media.video.get("avg_frame_rate", "0/0")),
+        rate(after.video.get("avg_frame_rate", "0/0")),
+    )
+    if before_rate and after_rate and not plan.media.possible_vfr:
+        assertions["cadence"] = abs(before_rate - after_rate) < 0.05
+    if not all(assertions.values()):
+        raise StudioError(f"Vérification export refusée : {assertions}")
+    execute(
+        [
+            tools.ffmpeg,
+            "-hide_banner",
+            "-v",
+            "error",
+            "-xerror",
+            "-threads",
+            "2",
+            "-protocol_whitelist",
+            "file,pipe",
+            "-i",
+            str(output),
+            "-map",
+            "0:v",
+            "-map",
+            "0:a?",
+            "-f",
+            "null",
+            "-",
+        ],
+        log,
+        cancel,
+    )
+    assertions["full_decode"] = True
+    return {"assertions": assertions, "ffprobe_after": after.raw}
+
+
+def run_plan(
+    plan: Plan,
+    tools: Tools,
+    job_dir: Path,
+    cancel: Cancellation | None = None,
+    on_progress: Callable[[float | None], None] | None = None,
+    on_stage: Callable[[str], None] | None = None,
+) -> dict:
+    cancel = cancel or Cancellation()
+    job_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+    log = job_dir / "pipeline.log"
+    source, destination = (
+        Path(plan.media.path),
+        Path(plan.request.destination).expanduser().resolve(),
+    )
+    started = time.monotonic()
+    original_hash = sha256(source)
+    cancel.check()
+    # Same filesystem: atomic hard-link finalization without replacing existing files.
+    temporary_dir = Path(tempfile.mkdtemp(prefix=".studio-ia-", dir=destination.parent))
+    temporary = temporary_dir / ("export" + destination.suffix.lower())
+    try:
+        args = command(plan, tools, temporary)
+        (job_dir / "plan.json").write_text(json.dumps(plan.to_dict(), ensure_ascii=False, indent=2))
+        (job_dir / "command.json").write_text(json.dumps(args, ensure_ascii=False, indent=2))
+        if on_stage:
+            on_stage("RUNNING")
+        execute(
+            args, log, cancel, on_progress, None if plan.media.possible_vfr else plan.media.duration
+        )
+        if on_stage:
+            on_stage("VERIFYING")
+        verification = verify_output(plan, temporary, tools, cancel, log)
+        if sha256(source) != original_hash:
+            raise StudioError("La source a changé pendant le traitement ; export non finalisé.")
+        verification["assertions"]["source_unchanged"] = True
+        result = {
+            "schema_version": 1,
+            "status": "PASS",
+            "application_version": __version__,
+            "engine_version": plan.engine_version,
+            "plan": plan.to_dict(),
+            "source_sha256": original_hash,
+            "output_sha256": sha256(temporary),
+            "elapsed_seconds": time.monotonic() - started,
+            **verification,
+        }
+        (job_dir / "result.json").write_text(json.dumps(result, ensure_ascii=False, indent=2))
+        with cancel.lock:
+            cancel.check()
+            # Fails if destination appeared, including symlinks; never replaces existing bytes.
+            os.link(temporary, destination)
+            cancel.committed = True
+        return result
+    except OSError as exc:
+        raise StudioError(f"Stockage/finalisation impossible (aucun écrasement) : {exc}") from exc
+    finally:
+        shutil.rmtree(temporary_dir)

@@ -1,6 +1,7 @@
 """Qt test driven by real widget clicks and real FFmpeg, also used by frozen builds."""
 
 import json
+import sys
 import time
 from pathlib import Path
 
@@ -104,6 +105,8 @@ def run_smoke(root: Path) -> dict:
         QTest.qWait(250)
         report = {
             "status": "PASS",
+            "frozen": bool(getattr(sys, "frozen", False)),
+            "module_location": __file__,
             "qt_platform": app.platformName(),
             "source_sha256": original,
             "output_sha256": sha256(destination),

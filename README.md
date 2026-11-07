@@ -1,15 +1,17 @@
 # STUDIO-IA
 
-Application de bureau locale de restauration vidéo — **0.3.0a1, ALPHA expérimentale**.
+Application de bureau locale de restauration vidéo — **0.3.0a2, ALPHA expérimentale consolidée**.
 Import → analyse → plan → traitement CPU réel → vérification complète → comparaison
 → export. Interface Qt française, sans compte, crédits, serveur ou télémétrie.
 
 ![Capture réelle de STUDIO IA après un export synthétique](reports/003/evidence/gui-success.png)
 
-Travail sur `codex/studio-ia-m003-first-verifiable-build`, aucune fusion dans `main`.
+Travail actuel sur `codex/studio-ia-consolidation-v1`, conservant les huit commits M003.
+Aucune fusion dans `main`.
 Les tests locaux sont réels. La publication GitHub/CI reste conditionnée aux droits
 d'écriture de la connexion ; voir le [rapport de livraison](reports/003/04-delivery.md)
-pour les SHA, résultats, artefacts et limitations effectivement vérifiés.
+pour l'historique M003 et le [bilan de consolidation](reports/consolidation/README.md)
+pour les résultats et limitations actuels. Les archives initiales sont conservées.
 
 | Fonction | Qualification |
 |---|---|
@@ -55,6 +57,10 @@ studio-ia verify "chemin_du_job/plan.json" "nouvelle_sortie.mp4"
 
 Les deux binaires sont trouvés dans le PATH ou configurés via « Chemins FFmpeg… » /
 `STUDIO_IA_FFMPEG`, `STUDIO_IA_FFPROBE`. Aucune installation automatique au lancement.
+Option simple : placer FFmpeg et ffprobe dans `ffmpeg/bin/` à côté de l'application.
+Choisir seulement FFmpeg dans l'interface suffit si ffprobe est dans le même dossier.
+Pour une installation source guidée, utiliser `Installer-sources.sh` / `.ps1`,
+puis `Lancer-sources.sh` / `.ps1` ; Python 3.12 préalable, venv local uniquement.
 Les tests ne téléchargent aucun média ou modèle. `pytest -q -ra` puis
 `python scripts/run_e2e.py --output artifacts/e2e` reproduisent les preuves CPU.
 Linux sans affichage : `QT_QPA_PLATFORM=offscreen pytest -q -ra`, ou Xvfb pour X11.

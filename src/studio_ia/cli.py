@@ -9,14 +9,16 @@ from pathlib import Path
 
 from studio_ia import __version__
 from studio_ia.core import Cancellation, StudioError, Tools, capabilities, state_dir
+from studio_ia.files import write_json
 from studio_ia.media import MediaInfo, analyze
 from studio_ia.pipeline import Plan, Request, build_plan, run_plan, verify_output
 
 
 def emit(value: dict, output: str | None) -> None:
-    payload = json.dumps(value, ensure_ascii=False, indent=2)
+    # JSON escapes keep redirected Windows/ASCII consoles usable with Unicode paths.
+    payload = json.dumps(value, ensure_ascii=True, indent=2)
     if output:
-        Path(output).write_text(payload, encoding="utf-8")
+        write_json(Path(output).expanduser().absolute(), value, replace=False)
     else:
         print(payload)
 
@@ -51,6 +53,17 @@ def main() -> None:
         gui_main()
         return
     try:
+        if getattr(args, "json_output", None):
+            report_path = Path(args.json_output).expanduser().absolute()
+            if report_path.exists() or report_path.is_symlink():
+                raise StudioError("Le rapport existe déjà ; choisir un nouveau fichier JSON.")
+            protected = [
+                Path(getattr(args, key)).expanduser().resolve()
+                for key in ("source", "destination")
+                if hasattr(args, key)
+            ]
+            if report_path.resolve() in protected:
+                raise StudioError("Le rapport JSON doit être distinct des médias source et sortie.")
         tools = Tools.discover()
         if args.command == "doctor":
             from studio_ia.engines import neural_status

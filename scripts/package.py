@@ -55,6 +55,10 @@ def package():
     for name in ("INSTALLER.md", "LICENSE", "THIRD_PARTY_NOTICES.md", "requirements-runtime.lock"):
         shutil.copy2(ROOT / name, folder / name)
     shutil.copytree(ROOT / "licenses", folder / "licenses", dirs_exist_ok=True)
+    for extra in ("Lancer-STUDIO-IA.sh", "Lancer-STUDIO-IA.cmd", "PREMIER-LANCEMENT.txt"):
+        shutil.copy2(ROOT / "packaging" / extra, folder / extra)
+    if os.name != "nt":
+        (folder / "Lancer-STUDIO-IA.sh").chmod(0o755)
     if platform.system() == "Linux":
         from collect_binary_licenses import collect
 
@@ -68,6 +72,7 @@ def package():
         "source_commit": commit,
         "source_dirty": dirty,
         "platform": platform.platform(),
+        "glibc": platform.libc_ver() if platform.system() == "Linux" else None,
         "python": platform.python_version(),
         "packager": "PyInstaller " + importlib.metadata.version("pyinstaller"),
         "qt_binding": importlib.metadata.version("PySide6-Essentials"),
@@ -111,9 +116,9 @@ def package():
     )
     (smoke / "gui-launch.log").write_text(completed.stdout + completed.stderr, encoding="utf-8")
     completed.check_returncode()
-    smoke_report = json.loads((smoke / "gui/gui-smoke.json").read_text())
-    assert smoke_report["status"] == "PASS"
-    assert smoke_report["frozen"], "Smoke must execute the frozen application"
+    smoke_report = json.loads((smoke / "gui/gui-smoke.json").read_text(encoding="utf-8"))
+    if smoke_report["status"] != "PASS" or not smoke_report["frozen"]:
+        raise RuntimeError("A real successful frozen application smoke is required")
     shutil.copy2(smoke / "gui/gui-smoke.json", folder / "BUILD_SMOKE.json")
     # Inventory every distributed binary/data file; archive checksum is emitted separately.
     files = {

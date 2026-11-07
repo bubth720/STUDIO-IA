@@ -1,0 +1,70 @@
+{
+  "utc": "2026-11-07T10:16:57.705519+00:00",
+  "base_head": "61dc911ac105be2fb8b7259114a6516e125466c6",
+  "original_commits": 8,
+  "original_deliverables": [
+    {
+      "path": "STUDIO-IA-capture.png",
+      "size": 157067,
+      "sha256": "a840d4f2a8cca5287e191b15d32150e1925d118ad99fb91f71e2d40fab2fedcc"
+    },
+    {
+      "path": "STUDIO-IA-resultat-synthetique.mp4",
+      "size": 1020440,
+      "sha256": "dfab7a182d6497169e1e0a154a10eefc5483d1c0a5f16fdece592cda30b3f3f6"
+    },
+    {
+      "path": "STUDIO-IA-0.3.0a1-linux-x86_64-ALPHA.zip.sha256",
+      "size": 107,
+      "sha256": "3cdb763e00880cdedc421bd8d63d8b947c04ff5102312bc2b4dccceb8f882d0d"
+    },
+    {
+      "path": "STUDIO-IA-0.3.0a1-linux-x86_64-ALPHA.zip",
+      "size": 96352665,
+      "sha256": "36d66a6482844b8ae6016a12808420fd436f413b659f699d1315e26d5f42e0a8"
+    },
+    {
+      "path": "STUDIO-IA-INSTALLER.md",
+      "size": 4232,
+      "sha256": "6e0b674c32d7a490fb95b6a4595a9aacef878b0013b7e45f7c5536fb28bcb77b"
+    },
+    {
+      "path": "DELIVERY-MANIFEST.json",
+      "size": 2372,
+      "sha256": "7664767c7db8301798f4a2addfb271813c8f18cb2418c2665928acc36556ab64"
+    },
+    {
+      "path": "STUDIO-IA-M003-sources-et-commits.zip",
+      "size": 1494870,
+      "sha256": "79e30d9aaf0169230e049d4a9f49d30ea51d530567e46ccec88a8baafcf44c03"
+    },
+    {
+      "path": "STUDIO-IA-M003-preuves.zip",
+      "size": 4524578,
+      "sha256": "b7f2e7ec2a34f9bd444c7aad5dbca7b06a8c623c596459385cd31a2179861b49"
+    },
+    {
+      "path": "SHA256SUMS.txt",
+      "size": 963,
+      "sha256": "c67b6a434c5f3587a9d6a5ce40ff70c019726198b95d4f7fe6d4ab02ca53b22e"
+    },
+    {
+      "path": "STUDIO-IA-M003.bundle",
+      "size": 906301,
+      "sha256": "ccef420666a88f2da2d37d96dc29a29e4110b662639475d95ea54c82f70677d1"
+    },
+    {
+      "path": "STUDIO-IA-M003-BILAN.md",
+      "size": 12187,
+      "sha256": "daa1b16d345dc0de314f291aac250fe37829df7bd1e2b6d9495545f387ede2cd"
+    }
+  ],
+  "full_snapshot": {
+    "name": "STUDIO-IA-M003-sauvegarde-integrale.tar.gz",
+    "size": 439235362,
+    "sha256": "6d9db1f47b31af99116184fd63da6f8a693a01d636ddbf9e3ee71b8a1405d94a",
+    "regular_members_read": 12021,
+    "gzip_tar_integrity": "PASS",
+    "scope": "Entire project including .git, venv, tests, artifacts, dist; initial delivered files and original mission PDF. Local backup; never publish this whole archive to GitHub."
+  }
+}

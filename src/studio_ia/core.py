@@ -24,6 +24,20 @@ class Cancelled(StudioError):
     pass
 
 
+def application_dir() -> Path:
+    return (
+        Path(sys.executable).resolve().parent
+        if getattr(sys, "frozen", False)
+        else Path(__file__).resolve().parents[2]
+    )
+
+
+def sibling_probe(ffmpeg: str) -> str | None:
+    path = Path(ffmpeg).expanduser().resolve()
+    name = "ffprobe.exe" if path.suffix.lower() == ".exe" else "ffprobe"
+    return shutil.which(str(path.with_name(name)))
+
+
 def build_identity() -> dict:
     identity: dict = {
         "version": __version__,
@@ -88,13 +102,33 @@ class Tools:
     def discover(cls) -> "Tools":
         config_path = state_dir() / "config.json"
         try:
-            config = json.loads(config_path.read_text()) if config_path.exists() else {}
+            config = (
+                json.loads(config_path.read_text(encoding="utf-8")) if config_path.exists() else {}
+            )
+            if not isinstance(config, dict) or any(
+                key in config and (not isinstance(config[key], str) or not config[key])
+                for key in ("ffmpeg", "ffprobe")
+            ):
+                raise ValueError("Expected nonempty local binary paths")
         except (OSError, ValueError) as exc:
             raise StudioError("Configuration illisible ; corriger config.json.") from exc
-        found = []
+        found: list[str] = []
         for name in ("ffmpeg", "ffprobe"):
             configured = os.environ.get(f"STUDIO_IA_{name.upper()}") or config.get(name)
-            candidate = shutil.which(configured or name)
+            candidate = shutil.which(configured) if configured else None
+            if configured and not candidate:
+                raise StudioError(
+                    f"{name} absent (chemin configuré introuvable) ; corriger le chemin."
+                )
+            if not candidate and not configured:
+                if name == "ffprobe" and found:
+                    candidate = sibling_probe(found[0])
+                binary = name + (".exe" if sys.platform == "win32" else "")
+                for relative in ("ffmpeg/bin", "ffmpeg", "tools/ffmpeg/bin", "bin"):
+                    if candidate:
+                        break
+                    candidate = shutil.which(str(application_dir() / relative / binary))
+                candidate = candidate or shutil.which(name)
             if not candidate:
                 raise StudioError(f"{name} absent. Installer localement ou configurer son chemin.")
             found.append(str(Path(candidate).resolve()))
@@ -107,6 +141,18 @@ def process_options() -> dict:
     return {"start_new_session": True}
 
 
+def external_process_env() -> dict[str, str]:
+    env = dict(os.environ)
+    if getattr(sys, "frozen", False):
+        for key in ("LD_LIBRARY_PATH", "DYLD_LIBRARY_PATH"):
+            original = env.get(key + "_ORIG")
+            if original is None:
+                env.pop(key, None)
+            else:
+                env[key] = original
+    return env
+
+
 def capture(args: list[str], timeout: float = 30) -> str:
     try:
         result = subprocess.run(
@@ -116,6 +162,7 @@ def capture(args: list[str], timeout: float = 30) -> str:
             encoding="utf-8",
             errors="replace",
             timeout=timeout,
+            env=external_process_env(),
             **process_options(),
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
@@ -130,6 +177,8 @@ def capabilities(tools: Tools) -> dict:
     ffprobe = capture([tools.ffprobe, "-version"])
     encoders_text = capture([tools.ffmpeg, "-hide_banner", "-encoders"])
     filters_text = capture([tools.ffmpeg, "-hide_banner", "-filters"])
+    help_text = capture([tools.ffmpeg, "-hide_banner", "-h", "full"])
+    supports_fps_mode = "-fps_mode" in help_text
     encoders = [line.split()[1] for line in encoders_text.splitlines() if len(line.split()) >= 2]
     filters = [line.split()[1] for line in filters_text.splitlines() if len(line.split()) >= 2]
     return {
@@ -143,7 +192,9 @@ def capabilities(tools: Tools) -> dict:
         "ffmpeg_build": ffmpeg,
         "encoders": encoders,
         "filters": filters,
-        "cpu_ready": all(x in encoders for x in ("libx264", "aac"))
+        "supports_fps_mode": supports_fps_mode,
+        "cpu_ready": supports_fps_mode
+        and all(x in encoders for x in ("libx264", "aac"))
         and all(x in filters for x in ("hqdn3d", "scale", "eq", "setsar")),
         "neural_validated": False,
     }
@@ -199,6 +250,7 @@ def execute(
                 text=True,
                 encoding="utf-8",
                 errors="replace",
+                env=external_process_env(),
                 **process_options(),
             )
             failures: list[Exception] = []

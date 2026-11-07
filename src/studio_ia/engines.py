@@ -66,7 +66,7 @@ def inspect_model(path: Path, manifest: dict) -> dict:
 
 def save_model_record(path: Path, manifest: dict, registry: Path) -> dict:
     record = inspect_model(path, manifest)
-    data = json.loads(registry.read_text()) if registry.exists() else []
+    data = json.loads(registry.read_text(encoding="utf-8")) if registry.exists() else []
     data.append(record)
-    registry.write_text(json.dumps(data, indent=2))
+    registry.write_text(json.dumps(data, indent=2), encoding="utf-8")
     return record

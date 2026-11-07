@@ -22,3 +22,11 @@ def source(tmp_path_factory, tools):
 @pytest.fixture(autouse=True)
 def isolated_state(tmp_path, monkeypatch):
     monkeypatch.setenv("STUDIO_IA_HOME", str(tmp_path / "state"))
+
+
+@pytest.fixture(scope="session")
+def qapp():
+    from PySide6.QtWidgets import QApplication
+
+    application = QApplication.instance() or QApplication([])
+    yield application

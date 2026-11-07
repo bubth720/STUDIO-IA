@@ -1,17 +1,16 @@
 """Validated CPU plans, complete verification and no-clobber atomic export."""
 
-import json
 import math
-import os
 import shutil
 import tempfile
 import time
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Callable
 
 from studio_ia import __version__
 from studio_ia.core import Cancellation, StudioError, Tools, build_identity, capabilities, execute
+from studio_ia.files import publish_no_replace, write_json
 from studio_ia.media import MediaInfo, analyze, number, rate, sha256, timestamp
 
 
@@ -62,12 +61,12 @@ def build_plan(request: Request, tools: Tools, caps: dict | None = None) -> Plan
         raise StudioError("CRF doit être entier.")
     try:
         source = Path(request.source).expanduser().resolve(strict=True)
-        destination = Path(request.destination).expanduser().absolute()
+        entered_destination = Path(request.destination).expanduser().absolute()
+        destination = entered_destination.parent.resolve() / entered_destination.name
         if destination.is_symlink() or destination.exists():
             raise StudioError(
                 "La destination existe déjà : choisir un nouveau nom. Aucun écrasement."
             )
-        destination = destination.resolve()
         if source == destination:
             raise StudioError("Source et destination identiques.")
         if not destination.parent.is_dir():
@@ -110,6 +109,8 @@ def build_plan(request: Request, tools: Tools, caps: dict | None = None) -> Plan
     if (width, height) != (info.video["width"], info.video["height"]):
         filters.extend([f"scale={width}:{height}:flags=lanczos", "setsar=1"])
     caps = caps or capabilities(tools)
+    if not caps.get("supports_fps_mode"):
+        raise StudioError("FFmpeg ne fournit pas fps_mode ; utiliser FFmpeg 5.1 ou plus récent.")
     for encoder in ("libx264", "aac"):
         if encoder not in caps["encoders"]:
             raise StudioError(f"Encodeur requis absent : {encoder}. Utiliser un FFmpeg compatible.")
@@ -124,7 +125,7 @@ def build_plan(request: Request, tools: Tools, caps: dict | None = None) -> Plan
         warnings.append("Audio réencodé en AAC 192 kbit/s par piste pour compatibilité MP4.")
     warnings.append("CPU classique : aucun nouveau détail neuronal garanti.")
     return Plan(
-        request,
+        replace(request, source=str(source), destination=str(destination)),
         info,
         width,
         height,
@@ -291,7 +292,7 @@ def run_plan(
     log = job_dir / "pipeline.log"
     source, destination = (
         Path(plan.media.path),
-        Path(plan.request.destination).expanduser().resolve(),
+        Path(plan.request.destination),
     )
     started = time.monotonic()
     original_hash = sha256(source, cancel)
@@ -299,10 +300,11 @@ def run_plan(
     # Same filesystem: atomic hard-link finalization without replacing existing files.
     temporary_dir = Path(tempfile.mkdtemp(prefix=".studio-ia-", dir=destination.parent))
     temporary = temporary_dir / ("export" + destination.suffix.lower())
+    result = None
     try:
         args = command(plan, tools, temporary)
-        (job_dir / "plan.json").write_text(json.dumps(plan.to_dict(), ensure_ascii=False, indent=2))
-        (job_dir / "command.json").write_text(json.dumps(args, ensure_ascii=False, indent=2))
+        write_json(job_dir / "plan.json", plan.to_dict())
+        write_json(job_dir / "command.json", args)
         if on_stage:
             on_stage("RUNNING")
         execute(
@@ -324,16 +326,30 @@ def run_plan(
             "source_sha256": original_hash,
             "output_sha256": sha256(temporary, cancel),
             "elapsed_seconds": time.monotonic() - started,
+            "warnings": [],
             **verification,
         }
-        (job_dir / "result.json").write_text(json.dumps(result, ensure_ascii=False, indent=2))
+        write_json(job_dir / "verification.json", {**result, "status": "VERIFIED_NOT_COMMITTED"})
         with cancel.lock:
             cancel.check()
-            # Fails if destination appeared, including symlinks; never replaces existing bytes.
-            os.link(temporary, destination)
+            result["finalization"] = publish_no_replace(temporary, destination)
             cancel.committed = True
+        try:
+            write_json(job_dir / "result.json", result)
+        except OSError:
+            result["warnings"].append("Export validé ; écriture du rapport local impossible.")
         return result
     except OSError as exc:
         raise StudioError(f"Stockage/finalisation impossible (aucun écrasement) : {exc}") from exc
     finally:
-        shutil.rmtree(temporary_dir)
+        try:
+            shutil.rmtree(temporary_dir)
+        except OSError:
+            if result is not None and cancel.committed:
+                result["warnings"].append(
+                    "Export validé ; nettoyage du dossier temporaire impossible."
+                )
+                try:
+                    write_json(job_dir / "result.json", result)
+                except OSError:
+                    pass

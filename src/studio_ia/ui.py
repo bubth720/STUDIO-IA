@@ -33,7 +33,8 @@ from PySide6.QtWidgets import (
 )
 
 from studio_ia import __version__
-from studio_ia.core import StudioError, Tools, capabilities, state_dir
+from studio_ia.core import StudioError, Tools, capabilities, sibling_probe, state_dir
+from studio_ia.files import write_json
 from studio_ia.jobs import TERMINAL, Manager
 from studio_ia.media import MediaInfo, analyze, sha256
 from studio_ia.pipeline import Request, build_plan
@@ -119,6 +120,7 @@ class Window(QMainWindow):
         version = self.versions.get(name, 0) + 1
         self.versions[name] = version
         future = self.pool.submit(function)
+        self.futures = [pending for pending in self.futures if not pending.done()]
         self.futures.append(future)
 
         def complete(done):
@@ -389,6 +391,10 @@ class Window(QMainWindow):
         try:
             self.current_job = self.manager.submit(self.plan.request)
             self.last_result = None
+            self.comparison.after = QPixmap()
+            self.comparison.update()
+            self.versions["preview"] = self.versions.get("preview", 0) + 1
+            self.versions["history_result"] = self.versions.get("history_result", 0) + 1
             self.open_button.setEnabled(False)
             self.invalidate()
         except StudioError as exc:
@@ -464,6 +470,7 @@ class Window(QMainWindow):
             )
             self.details.setPlainText(json.dumps(value, ensure_ascii=False, indent=2))
         elif name == "history_result":
+            self.invalidate()
             self.last_result = value
             self.source = MediaInfo(**value["plan"]["media"])
             self.metadata.setText(
@@ -472,6 +479,22 @@ class Window(QMainWindow):
             self.open_button.setEnabled(True)
             self.timestamp.setMaximum(max(0, (self.source.duration or 1) - 0.1))
             self.preview()
+        elif name == "configured_tools":
+            tools, report = value
+            if not report["cpu_ready"]:
+                self.status.setText(
+                    "Capacités FFmpeg incomplètes ; configuration précédente conservée."
+                )
+                return
+            try:
+                write_json(
+                    state_dir() / "config.json", {"ffmpeg": tools.ffmpeg, "ffprobe": tools.ffprobe}
+                )
+            except OSError as exc:
+                self.status.setText(f"Enregistrement de la configuration impossible : {exc}")
+                return
+            self.invalidate()
+            self.background("doctor", lambda: capabilities(Tools.discover()))
 
     def refresh(self):
         rows = self.manager.store.list()
@@ -517,6 +540,8 @@ class Window(QMainWindow):
                         f"{self.source.duration or '?'} s"
                     )
                     self.open_button.setEnabled(True)
+                    if row["result"].get("warnings"):
+                        self.status.setText("Export validé. " + " ".join(row["result"]["warnings"]))
                     self.preview()
                 self.current_job = None
         for control in (
@@ -528,6 +553,15 @@ class Window(QMainWindow):
             self.destination,
         ):
             control.setEnabled(not busy)
+        for control in (
+            self.denoise,
+            self.scale,
+            self.brightness,
+            self.contrast,
+            self.saturation,
+            self.crf,
+        ):
+            control.setEnabled(not busy and self.profile.currentIndex() == 1)
 
     def selected_job(self):
         item = self.history.currentItem()
@@ -550,6 +584,9 @@ class Window(QMainWindow):
             )
 
     def retry(self):
+        if any(row["state"] not in TERMINAL for row in self.manager.store.list()):
+            self.status.setText("Attendre la tâche active avant de relancer depuis l'historique.")
+            return
         job_id = self.selected_job()
         if not job_id:
             return
@@ -581,6 +618,9 @@ class Window(QMainWindow):
             self.status.setText("Cette tâche n'a pas de résultat validé ; utiliser Relancer.")
             return
         result = row["result"]
+        self.invalidate()
+        self.versions["source"] = self.versions.get("source", 0) + 1
+        self.versions["preview"] = self.versions.get("preview", 0) + 1
 
         def confirm_files():
             request = result["plan"]["request"]
@@ -616,14 +656,18 @@ class Window(QMainWindow):
                 self.status.setText(f"Export du diagnostic impossible : {exc}")
 
     def configure_tools(self):
-        config = {}
-        for name in ("ffmpeg", "ffprobe"):
-            path, _ = QFileDialog.getOpenFileName(self, f"Choisir le binaire local {name}")
-            if not path:
-                return
-            config[name] = path
-        (state_dir() / "config.json").write_text(json.dumps(config), encoding="utf-8")
-        self.background("doctor", lambda: capabilities(Tools.discover()))
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Choisir FFmpeg local (ffprobe sera détecté à côté)"
+        )
+        if not path:
+            return
+        probe = sibling_probe(path)
+        if not probe:
+            probe, _ = QFileDialog.getOpenFileName(self, "Choisir ffprobe local")
+        if not probe:
+            return
+        tools = Tools(str(Path(path).resolve()), str(Path(probe).resolve()))
+        self.background("configured_tools", lambda: (tools, capabilities(tools)))
 
     def closeEvent(self, event):
         active = [row for row in self.manager.store.list() if row["state"] not in TERMINAL]

@@ -166,7 +166,7 @@ def test_disk_exhaustion_and_write_failure(source, tmp_path, tools, monkeypatch)
     def disk_full(*_):
         raise OSError(28, "No space left on device")
 
-    monkeypatch.setattr(pipeline.os, "link", disk_full)
+    monkeypatch.setattr(pipeline, "publish_no_replace", disk_full)
     with pytest.raises(StudioError, match="Stockage"):
         run_plan(plan, tools, tmp_path / "job")
     assert not (tmp_path / "out.mp4").exists()

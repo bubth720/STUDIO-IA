@@ -1,4 +1,4 @@
-# STUDIO IA 0.3.0a1 — ALPHA expérimentale
+# STUDIO IA 0.3.0a2 — ALPHA expérimentale consolidée
 
 Application de bureau Windows x64 / Linux x64. Cette archive n'est pas une APK.
 Consulter BUILD_INFO.json et BUILD_SMOKE.json pour la plateforme et l'essai réel.
@@ -9,14 +9,17 @@ Seules les plateformes accompagnées d'une preuve sont qualifiées.
 1. Télécharger le ZIP et son fichier `.sha256`. Windows : `Get-FileHash fichier.zip -Algorithm SHA256`.
    Linux : `sha256sum -c fichier.zip.sha256`.
 2. Extraire tout le dossier, en conservant `_internal` et `licenses`.
-3. FFmpeg **et ffprobe** doivent être disponibles localement. Aucun binaire n'est
+3. FFmpeg **et ffprobe** 5.1 ou plus récents doivent être disponibles localement. Aucun binaire n'est
    téléchargé automatiquement. Si nécessaire, obtenir une compilation depuis
    https://ffmpeg.org/download.html, vérifier ses empreintes puis indiquer les deux
-   binaires dans « Chemins FFmpeg… » ; aucune installation personnelle n'a été faite
+   binaires dans `ffmpeg/bin/` à côté de l'application, ou sélectionner FFmpeg
+   dans « Chemins FFmpeg… » (ffprobe sera détecté à côté) ; aucune installation personnelle n'a été faite
    par cette mission. Les builds CPU requièrent libx264, AAC, hqdn3d, scale, eq.
-4. Windows : lancer `STUDIO-IA.exe`. Linux : `chmod +x STUDIO-IA` puis `./STUDIO-IA`.
+4. Windows : lancer `STUDIO-IA.exe` ou `Lancer-STUDIO-IA.cmd`. Linux :
+   `chmod +x STUDIO-IA Lancer-STUDIO-IA.sh` puis `./Lancer-STUDIO-IA.sh`.
    Linux nécessite glibc au moins aussi récente que le système de construction
-   (voir BUILD_INFO), ainsi qu'un affichage X11/Wayland et les dépendances Qt du système.
+   (voir le champ `glibc` de BUILD_INFO), ainsi qu'un affichage X11/Wayland et les dépendances Qt du système.
+   Le build de compatibilité Bookworm vise glibc 2.36 ; consulter ses preuves effectives.
 5. Importer une vidéo, choisir Préservation, vérifier une destination nouvelle,
    cliquer « Vérifier le plan » puis « Démarrer ». Attendre la validation complète.
 6. Comparer source/export au même instant avec le curseur ; « Ouvrir l'export »
@@ -41,6 +44,12 @@ studio-ia-gui
 ```
 
 L'installation des dépendances demande Internet ; l'utilisation fonctionne hors ligne.
+Pour éviter les commandes de création/activation du venv, les scripts
+`Installer-sources.sh` (Linux) et `Installer-sources.ps1` (Windows) installent
+uniquement dans `.venv` du dossier source. Ils nécessitent Python 3.12 préalable.
+Les lanceurs `Lancer-sources.sh` / `.ps1` ouvrent ensuite l'interface. Les scripts
+Windows restent à qualifier sur runner Windows ; ne pas désactiver globalement
+la politique d'exécution PowerShell pour les lancer.
 Pour une installation sans réseau, préparer les wheels à l'avance sur le même OS :
 `python -m pip download -r requirements-runtime.lock -d wheels` ; installer ensuite
 avec `--no-index --find-links wheels`. Pour le paquet portable Python est déjà fourni.
@@ -58,8 +67,11 @@ avec `--no-index --find-links wheels`. Pour le paquet portable Python est déjà
   la tâche devient INTERROMPUE et peut être relancée depuis l'original vers un nouveau
   nom ; aucune reprise au dernier frame. Des dossiers `.studio-ia-*` orphelins peuvent
   subsister après un arrêt brutal ; ne pas supprimer un dossier d'une instance active.
-- FAT/exFAT et partages sans liens durs : finalisation refusée ; utiliser NTFS/ext4
-  ou un système acceptant les liens durs dans le dossier de destination.
+- Finalisation sans remplacement : lien dur, ou renommage Windows / Linux
+  `renameat2(RENAME_NOREPLACE)` si disponible. Le repli Linux est testé par injection
+  d'indisponibilité des liens, sur un vrai système local ; les supports physiques
+  FAT/exFAT et les partages réseau restent non qualifiés. Aucun repli vers un
+  renommage POSIX qui écraserait la destination.
 - Historique/journaux locaux : `%LOCALAPPDATA%\STUDIO-IA` sur Windows,
   `$XDG_STATE_HOME/studio-ia` ou `~/.local/state/studio-ia` sur Linux.
   `STUDIO_IA_HOME` permet un dossier différent. Les chemins sont privés : relire

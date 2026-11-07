@@ -1,0 +1,14 @@
+STUDIO IA — ALPHA expérimentale
+
+1. Extraire tout le ZIP, sans séparer le dossier _internal.
+2. Lancer STUDIO-IA.exe sur Windows ou Lancer-STUDIO-IA.sh sur Linux.
+3. Fournir FFmpeg et ffprobe 5.1 ou plus récents, sans téléchargement automatique.
+   Option simple : placer leurs binaires dans le sous-dossier ffmpeg/bin/.
+   Autre option : « Chemins FFmpeg… », choisir FFmpeg ; ffprobe sera cherché à côté.
+4. Importer une vidéo, choisir Préservation, vérifier une nouvelle destination,
+   puis cliquer Vérifier le plan et Démarrer.
+5. Attendre la vérification complète avant d'ouvrir l'export.
+
+Voir INSTALLER.md pour les plateformes réellement testées et les limites.
+Cette application de bureau ne s'installe pas sur Android. Rien n'est installé
+sur un appareil personnel par la création de cette archive.

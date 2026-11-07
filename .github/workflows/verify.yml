@@ -45,6 +45,7 @@ jobs:
           python -m ruff check src tests scripts
           python -m ruff format --check src tests scripts
           python -m mypy src/studio_ia/core.py src/studio_ia/media.py src/studio_ia/pipeline.py src/studio_ia/jobs.py
+          python -m mypy src/studio_ia/files.py
       - name: Real tests with X11 (Linux)
         if: runner.os == 'Linux'
         run: xvfb-run -a python -m pytest -q -ra --junitxml=artifacts/pytest.xml
@@ -62,6 +63,14 @@ jobs:
       - name: Record installed dependency versions
         if: always()
         run: python -m pip freeze --exclude-editable > artifacts/dependencies.txt
+      - name: Verify the delivered archive after extraction (Linux X11)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: xvfb-run -a python scripts/check_archive.py dist/STUDIO-IA-0.3.0a2-linux-x86_64-ALPHA.zip --output artifacts/extracted-package
+      - name: Verify the delivered archive after extraction (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: python scripts/check_archive.py dist/STUDIO-IA-0.3.0a2-windows-AMD64-ALPHA.zip --output artifacts/extracted-package
       - name: Upload test evidence (synthetic media only)
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -73,6 +82,8 @@ jobs:
             artifacts/frozen-smoke-*/
             artifacts/pytest.xml
             artifacts/dependencies.txt
+            artifacts/extracted-package/gui/
+            artifacts/extracted-package/archive-verification.json
           retention-days: 14
       - name: Upload verified experimental package
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

@@ -7,6 +7,7 @@ import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 from dataclasses import asdict
 from datetime import UTC, datetime
 from pathlib import Path
@@ -31,11 +32,16 @@ class Store:
             db.execute("CREATE TABLE IF NOT EXISTS jobs (id TEXT PRIMARY KEY, data TEXT NOT NULL)")
             db.execute("PRAGMA user_version=1")
 
+    @contextmanager
     def connect(self):
         db = sqlite3.connect(self.path, timeout=10)
-        db.execute("PRAGMA journal_mode=WAL")
-        db.execute("PRAGMA synchronous=FULL")
-        return db
+        try:
+            db.execute("PRAGMA journal_mode=WAL")
+            db.execute("PRAGMA synchronous=FULL")
+            with db:
+                yield db
+        finally:
+            db.close()
 
     def put(self, data: dict) -> None:
         with self.connect() as db:
@@ -109,6 +115,10 @@ class Manager:
             row.update(changes)
             row["updated_at"] = datetime.now(UTC).isoformat()
             self.store.put(row)
+            if row["state"] in TERMINAL:
+                self.tokens.pop(job_id, None)
+            if row["state"] in TERMINAL:
+                self.tokens.pop(job_id, None)
 
     def submit(self, request: Request) -> str:
         with self.lock:

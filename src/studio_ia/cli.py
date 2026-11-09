@@ -10,8 +10,8 @@ from pathlib import Path
 from studio_ia import __version__
 from studio_ia.core import Cancellation, StudioError, Tools, capabilities, state_dir
 from studio_ia.files import write_json
-from studio_ia.media import MediaInfo, analyze
-from studio_ia.pipeline import Plan, Request, build_plan, run_plan, verify_output
+from studio_ia.media import analyze
+from studio_ia.pipeline import Request, build_plan, run_plan, verify_output
 
 
 def emit(value: dict, output: str | None) -> None:
@@ -29,6 +29,37 @@ def main() -> None:
     sub = parser.add_subparsers(dest="command", required=True)
     doctor = sub.add_parser("doctor", help="Diagnostic réel FFmpeg et moteurs locaux")
     doctor.add_argument("--json", dest="json_output")
+    doctor.add_argument("scope", nargs="?", choices=["neural"])
+    doctor.add_argument("--binary", help="Binaire NCNN local explicitement choisi")
+    models = sub.add_parser(
+        "model-check", help="Vérifier un manifeste local sans charger les poids"
+    )
+    models.add_argument("manifest")
+    models.add_argument("root")
+    models.add_argument("--register", metavar="REGISTRY_JSON")
+    models.add_argument("--json", dest="json_output")
+    neural_plan = sub.add_parser(
+        "neural-plan", help="Figer le plan ×2 NCNN, sans exécuter de modèle"
+    )
+    neural_plan.add_argument("source")
+    neural_plan.add_argument("destination")
+    neural_plan.add_argument("--manifest", required=True)
+    neural_plan.add_argument("--model-root", required=True)
+    neural_plan.add_argument("--binary", required=True)
+    neural_plan.add_argument("--tile", type=int, default=64)
+    neural_plan.add_argument("--workspace-mib", type=int, default=2048)
+    neural_plan.add_argument("--json", dest="json_output")
+    neural_run = sub.add_parser("process-neural", help="Qualifier puis exécuter un plan v2 local")
+    neural_run.add_argument("plan")
+    neural_run.add_argument("--json", dest="json_output")
+    neural_preview = sub.add_parser(
+        "preview-neural", help="Vrai segment court, paramètres du plan v2"
+    )
+    neural_preview.add_argument("plan")
+    neural_preview.add_argument("directory")
+    neural_preview.add_argument("--seconds", type=float, default=0)
+    neural_preview.add_argument("--duration", type=float, default=1)
+    neural_preview.add_argument("--json", dest="json_output")
     inspect = sub.add_parser("analyze", help="Analyser via ffprobe")
     inspect.add_argument("source")
     inspect.add_argument("--json", dest="json_output")
@@ -62,6 +93,14 @@ def main() -> None:
                 for key in ("source", "destination")
                 if hasattr(args, key)
             ]
+            if args.command in ("process-neural", "preview-neural"):
+                from studio_ia.plans_v2 import load_plan
+
+                frozen = load_plan(json.loads(Path(args.plan).read_text(encoding="utf-8")))
+                protected += [Path(frozen.request.source), Path(frozen.request.destination)]
+            for key in ("manifest", "plan", "register"):
+                if getattr(args, key, None):
+                    protected.append(Path(getattr(args, key)).expanduser().resolve())
             if report_path.resolve() in protected:
                 raise StudioError("Le rapport JSON doit être distinct des médias source et sortie.")
         tools = Tools.discover()
@@ -70,6 +109,16 @@ def main() -> None:
 
             report = capabilities(tools)
             report["video2x"] = neural_status()
+            if args.scope == "neural":
+                from studio_ia.hardware import hardware_report
+                from studio_ia.neural import probe
+
+                report["neural"] = hardware_report()
+                report["ncnn"] = (
+                    probe(Path(args.binary))
+                    if args.binary
+                    else {"status": "NOT_CONFIGURED", "real_video_validated": False}
+                )
             emit(report, args.json_output)
             if not report["cpu_ready"]:
                 sys.exit(1)
@@ -94,13 +143,71 @@ def main() -> None:
             report["job_directory"] = str(directory)
             emit(report, args.json_output)
         elif args.command == "verify":
+            from studio_ia.plans_v2 import compare_timing, frame_table, load_plan
+
             data = json.loads(Path(args.plan).read_text(encoding="utf-8"))
-            data["request"] = Request(**data["request"])
-            data["media"] = MediaInfo(**data["media"])
+            envelope = load_plan(data)
             report = verify_output(
-                Plan(**data), Path(args.output), tools, Cancellation(), state_dir() / "verify.log"
+                envelope.cpu_plan(),
+                Path(args.output),
+                tools,
+                Cancellation(),
+                state_dir() / "verify.log",
             )
+            if envelope.data["kind"] == "neural-ncnn":
+                compare_timing(envelope.data["timing"], frame_table(Path(args.output), tools))
             emit(report, None)
+        elif args.command == "model-check":
+            from studio_ia.models import inspect, read_manifest, register
+
+            manifest = read_manifest(Path(args.manifest))
+            record = inspect(Path(args.root), manifest)
+            report = {
+                "status": "VERIFIED_LOCAL_FILES",
+                "manifest_sha256": record.identity,
+                "real_video_validated": False,
+                "hardware": "NOT_TESTED",
+            }
+            if args.register:
+                registry = Path(args.register).expanduser().absolute()
+                registry.parent.mkdir(parents=True, exist_ok=True)
+                register(Path(args.root), manifest, registry)
+            emit(report, args.json_output)
+        elif args.command == "neural-plan":
+            from studio_ia.models import inspect, read_manifest
+            from studio_ia.neural import build_neural_plan
+
+            model = inspect(Path(args.model_root), read_manifest(Path(args.manifest)))
+            plan = build_neural_plan(
+                Request(args.source, args.destination, scale=2, denoise="off"),
+                tools,
+                model,
+                Path(args.binary),
+                tile=args.tile,
+                workspace_budget=args.workspace_mib * 1024**2,
+            )
+            emit(plan.to_dict(), args.json_output)
+        elif args.command in ("process-neural", "preview-neural"):
+            from studio_ia.neural import preview_neural, run_neural_plan
+            from studio_ia.plans_v2 import load_plan
+
+            plan = load_plan(json.loads(Path(args.plan).read_text(encoding="utf-8")))
+            cancel = Cancellation()
+            signal.signal(signal.SIGINT, lambda *_: cancel.request())
+            if args.command == "preview-neural":
+                report = preview_neural(
+                    plan,
+                    tools,
+                    Path(args.directory),
+                    seconds=args.seconds,
+                    duration=args.duration,
+                    cancel=cancel,
+                )
+            else:
+                directory = state_dir() / "jobs" / str(uuid.uuid4())
+                report = run_neural_plan(plan, tools, directory, cancel)
+                report["job_directory"] = str(directory)
+            emit(report, args.json_output)
     except (StudioError, OSError, ValueError) as exc:
         print(f"STUDIO IA : {exc}", file=sys.stderr)
         sys.exit(1)

@@ -1,0 +1,583 @@
+{
+  "source_commit": "000a9801f16da9a855442eab7d864384570cf5c2",
+  "cases": [
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_unicode_inspection_snapshot_and_immutable_identity",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_missing_model_and_mutation_after_validation",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_separate_licenses_are_mandatory[code]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_separate_licenses_are_mandatory[weights]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_separate_licenses_are_mandatory[shaders]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_traversal_is_refused[../escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_traversal_is_refused[/tmp/escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_traversal_is_refused[C:/escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_traversal_is_refused[..\\\\escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_traversal_is_refused[a/../escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_symlink_and_linked_root_refused",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_registry_duplicate_id_preserves_first_record",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_duplicate_json_and_unsafe_loader_refused",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_archive_rejects_traversal_and_code_without_extraction[../escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_archive_rejects_traversal_and_code_without_extraction[a/../../escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_archive_rejects_traversal_and_code_without_extraction[C:/escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_archive_rejects_traversal_and_code_without_extraction[evil.py]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_archive_rejects_traversal_and_code_without_extraction[model.pth]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_corrupt_archive_and_budget",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_models::test_archive_inspection_never_extracts",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_failures::test_transport_double_8_seconds_two_audio_exact_pts_offline",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_failures::test_registered_model_swap_is_refused_before_export",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_failures::test_binary_swap_or_loss_does_not_requalify_silently",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_failures::test_second_neural_task_and_stale_lock_are_refused",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_failures::test_cancellation_stops_real_child_without_final_output",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_failures::test_injected_oom_exit_is_not_a_real_gpu_oom_or_success",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_failures::test_disk_shortage_refused_before_processing",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_failures::test_destination_race_does_not_overwrite",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_failures::test_gpu_absence_never_exports_or_invents_preview",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_integration::test_unknown_binary_is_refused_without_executing_it",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_integration::test_cli_doctor_has_no_qt_dependency_or_gpu_promotion",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_integration::test_manager_neural_failure_never_falls_back_to_cpu",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_integration::test_preview_rejects_source_change_before_any_inference",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_integration::test_preview_uses_current_segment_and_records_actual_timestamp",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_neural_integration::test_ui_cpu_default_neural_disabled_and_stale_preview_refused",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_plans_v2::test_legacy_plan_replay_without_filter_reinterpretation",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_plans_v2::test_plan_does_not_share_mutable_caller_data",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_plans_v2::test_future_schema_refused[0]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_plans_v2::test_future_schema_refused[3]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_plans_v2::test_future_schema_refused[100]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Linux",
+      "test": "tests.test_plans_v2::test_real_frame_table_and_exact_comparison",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_unicode_inspection_snapshot_and_immutable_identity",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_missing_model_and_mutation_after_validation",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_separate_licenses_are_mandatory[code]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_separate_licenses_are_mandatory[weights]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_separate_licenses_are_mandatory[shaders]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_traversal_is_refused[../escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_traversal_is_refused[/tmp/escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_traversal_is_refused[C:/escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_traversal_is_refused[..\\\\escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_traversal_is_refused[a/../escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_symlink_and_linked_root_refused",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_registry_duplicate_id_preserves_first_record",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_duplicate_json_and_unsafe_loader_refused",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_archive_rejects_traversal_and_code_without_extraction[../escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_archive_rejects_traversal_and_code_without_extraction[a/../../escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_archive_rejects_traversal_and_code_without_extraction[C:/escape.bin]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_archive_rejects_traversal_and_code_without_extraction[evil.py]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_archive_rejects_traversal_and_code_without_extraction[model.pth]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_corrupt_archive_and_budget",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_models::test_archive_inspection_never_extracts",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_failures::test_transport_double_8_seconds_two_audio_exact_pts_offline",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_failures::test_registered_model_swap_is_refused_before_export",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_failures::test_binary_swap_or_loss_does_not_requalify_silently",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_failures::test_second_neural_task_and_stale_lock_are_refused",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_failures::test_cancellation_stops_real_child_without_final_output",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_failures::test_injected_oom_exit_is_not_a_real_gpu_oom_or_success",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_failures::test_disk_shortage_refused_before_processing",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_failures::test_destination_race_does_not_overwrite",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_failures::test_gpu_absence_never_exports_or_invents_preview",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_integration::test_unknown_binary_is_refused_without_executing_it",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_integration::test_cli_doctor_has_no_qt_dependency_or_gpu_promotion",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_integration::test_manager_neural_failure_never_falls_back_to_cpu",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_integration::test_preview_rejects_source_change_before_any_inference",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_integration::test_preview_uses_current_segment_and_records_actual_timestamp",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_neural_integration::test_ui_cpu_default_neural_disabled_and_stale_preview_refused",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_plans_v2::test_legacy_plan_replay_without_filter_reinterpretation",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_plans_v2::test_plan_does_not_share_mutable_caller_data",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_plans_v2::test_future_schema_refused[0]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_plans_v2::test_future_schema_refused[3]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_plans_v2::test_future_schema_refused[100]",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    },
+    {
+      "os": "Windows",
+      "test": "tests.test_plans_v2::test_real_frame_table_and_exact_comparison",
+      "status": "PASS",
+      "scope": "NON_NEURAL_CONTRACT_OR_TRANSPORT",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2"
+    }
+  ],
+  "actual_gpu_oom": "SKIP_NO_GPU",
+  "actual_native_gpu_cancellation": "BLOCKED_NO_GPU",
+  "native_neural_inference": "NOT_RUN",
+  "m005_allowed": false
+}

@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "mission": "M004",
+  "source_commit": "000a9801f16da9a855442eab7d864384570cf5c2",
+  "observed_at_utc": "2026-11-09T19:46:55.706736+00:00",
+  "records": [
+    {
+      "mission": "M004",
+      "task_id": "M4.08-Linux",
+      "status": "PASS",
+      "scope": "CPU_UI_CONTRACTS_NOT_GPU_QUALIFICATION",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2",
+      "os_arch": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+      "hardware": {
+        "cpu": "AMD EPYC 9V74 80-Core Processor",
+        "gpu": {
+          "status": "BLOCKED",
+          "reason": "VULKAN_INSTANCE_FAILED",
+          "vk_result": -9,
+          "devices": []
+        }
+      },
+      "engine": {
+        "name": "FFmpeg CPU",
+        "version": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+        "model_sha256": null
+      },
+      "source_sha256": "1be57e051c6cbd088c4d0e7d0a96c25480d447d139dd39918b893b67fdce23f0",
+      "output_sha256": "67e7fa911f41368bd3332d6197d17bf6128868e10da38e50da12f647e72e3006",
+      "tests": {
+        "passed": 102,
+        "failed": 0,
+        "skipped": 1
+      },
+      "evidence_paths": [
+        "evidence/final-Linux-pytest.xml",
+        "evidence/Linux-e2e_e2e-summary.json",
+        "evidence/Linux-extracted-package_archive-verification.json"
+      ],
+      "limitations": [
+        "41 new tests are contracts/transport, not real neural inference",
+        "No physical personal-device acceptance"
+      ],
+      "ci_run_url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42644689519",
+      "measured_at_utc": "2026-11-09T15:28:26.551021+00:00"
+    },
+    {
+      "mission": "M004",
+      "task_id": "M4.08-Windows",
+      "status": "PASS",
+      "scope": "CPU_UI_CONTRACTS_NOT_GPU_QUALIFICATION",
+      "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2",
+      "os_arch": "Windows-2022Server-10.0.20348-SP0",
+      "hardware": {
+        "cpu": "AMD64 Family 25 Model 17 Stepping 1, AuthenticAMD",
+        "gpu": {
+          "status": "BLOCKED",
+          "reason": "VULKAN_UNAVAILABLE",
+          "error": "Could not find module 'vulkan-1.dll' (or one of its dependencies). Try using the full path with constructor syntax.",
+          "devices": []
+        }
+      },
+      "engine": {
+        "name": "FFmpeg CPU",
+        "version": "ffmpeg version 7.1.1-essentials_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers",
+        "model_sha256": null
+      },
+      "source_sha256": "7fb3196e86a5bfda051da15e856a5bd09da3d33adb3b092e2015ace9f861d828",
+      "output_sha256": "95d576781a80a5819d614c80904d405a99c2791039feb5b4f3d9249ebde46b7d",
+      "tests": {
+        "passed": 100,
+        "failed": 0,
+        "skipped": 3
+      },
+      "evidence_paths": [
+        "evidence/final-Windows-pytest.xml",
+        "evidence/Windows-e2e_e2e-summary.json",
+        "evidence/Windows-extracted-package_archive-verification.json"
+      ],
+      "limitations": [
+        "41 new tests are contracts/transport, not real neural inference",
+        "No physical personal-device acceptance"
+      ],
+      "ci_run_url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42644689519",
+      "measured_at_utc": "2026-11-09T15:28:05.059491+00:00"
+    }
+  ],
+  "evidence_sha256": {
+    "evidence/FINAL-VERIFICATION.json": "ec3b0975714840f3fc86c1922e05d862738d7c29454a67c2e37ce5c258104f00",
+    "evidence/Linux-e2e_doctor-report.json": "627b86be8010134490e5f3ee9bfc3cd06f724cd2fd1ba0c24e358f54b0055118",
+    "evidence/Linux-e2e_e2e-summary.json": "a2d03a5694324a3c19bef008dbd64b02a2b07514702438ecf1056cf19cd088c2",
+    "evidence/Linux-e2e_ffprobe-after.json": "d678af0e3756235a8474d1d59abb82cdada6d975120f1aa10a833fb461809292",
+    "evidence/Linux-e2e_ffprobe-before.json": "4eba703c9d4c1419887e63cbb8f74c4985a80673015c1afa3bf454ff27b57638",
+    "evidence/Linux-e2e_job_command.json": "21de33d9072ea20fd046e768f689060e29189ce220a71aa200f856e774678768",
+    "evidence/Linux-e2e_job_plan.json": "1ec0d9a802954744f84f2ad5050bf6788c6e07aa3ae7d7ae71baf68fef540f63",
+    "evidence/Linux-e2e_job_result.json": "8c231dc610c5e7e45fa165ce2e50c4d205a7a92abac23afce8deb1ddfe30db33",
+    "evidence/Linux-e2e_job_verification.json": "a51c9a3a824da8783e9d2069c2ba73f86b1838b5fa80fe0e7df3ea3ca34dbc4d",
+    "evidence/Linux-extracted-package_archive-verification.json": "c1af4fc387b6e5d70af18fe4654b2243ed72520742dcdfd314d109616a910220",
+    "evidence/Linux-frozen-smoke-linux-000a9801-851505a3_doctor.json": "17223294011f540c03102127bdcf70bccc8b2e3f867c79f8499325bb103e280b",
+    "evidence/Linux-frozen-smoke-linux-000a9801-851505a3_gui_gui-smoke.json": "fc63134d9dc11f83aed404c96791d066e9884cecae549df0d91d8b850a408420",
+    "evidence/Linux-frozen-smoke-linux-000a9801-851505a3_gui_state_jobs_6efa3fb2-738f-4604-9f6e-9ec286ac9bc7_command.json": "c058495fc4536ea123e72b1766ffdb59f42a61a97e7869526bb1d984561c5d03",
+    "evidence/Linux-frozen-smoke-linux-000a9801-851505a3_gui_state_jobs_6efa3fb2-738f-4604-9f6e-9ec286ac9bc7_plan.json": "ccc869092c068651217502abba2c851909e9007259a1d829bb6162d053ac212c",
+    "evidence/Linux-frozen-smoke-linux-000a9801-851505a3_gui_state_jobs_6efa3fb2-738f-4604-9f6e-9ec286ac9bc7_result.json": "723e0c845f765879d16d5041e5f32b8b286e8893beaada466b8a62c5851d6f52",
+    "evidence/Linux-frozen-smoke-linux-000a9801-851505a3_gui_state_jobs_6efa3fb2-738f-4604-9f6e-9ec286ac9bc7_verification.json": "7e8d92f5043b8dab250bf6c9426e94fc07e5873b624cb50842f64c6048edacde",
+    "evidence/Linux-frozen-smoke-linux-000a9801-851505a3_gui_state_jobs_d61498a7-ef19-4179-acf8-5225617b6fb8_command.json": "7ee196d06f50df359d1abf43f2b2faa1445c90a73a687d3d27529959972ff33e",
+    "evidence/Linux-frozen-smoke-linux-000a9801-851505a3_gui_state_jobs_d61498a7-ef19-4179-acf8-5225617b6fb8_plan.json": "1183585fe0d85ba5a517b578f1bded18e1fc9eedd718f57227bd39c90f140a83",
+    "evidence/Linux-neural-selector.png": "26ab6a5172e998b5e1e7004d3a9cef8c0d183e11dca505861fd4f4e02184227a",
+    "evidence/Windows-e2e_doctor-report.json": "33b283706c877efb1e4aa0bd7429d7a88443ee1f729ead43cc9beaefcf84c21c",
+    "evidence/Windows-e2e_e2e-summary.json": "d457cea2037625e7e378f089500146dc84d4a6bc21fef81fddcf480f1cbd858c",
+    "evidence/Windows-e2e_ffprobe-after.json": "a1fbaa71204a1548f69358bbb31b7d4c3990bbd8e6963d986c4aad121aec7f1b",
+    "evidence/Windows-e2e_ffprobe-before.json": "cd81e72da19605d99819136f0d1a4c4e75f25ac90e50dca71b94d6c934cf98e3",
+    "evidence/Windows-e2e_job_command.json": "f4b6499e22be9c7f535252766fd66d4000b256a1dac3de71532d5623459518df",
+    "evidence/Windows-e2e_job_plan.json": "517ce5720ad73f0ccf712f83a083f13f6ad44ac4541525a8efbbf447c717469d",
+    "evidence/Windows-e2e_job_result.json": "9be0861b8175e8e3bf9d92d4b156752ed3350971d9c93bee89a425dff29ce740",
+    "evidence/Windows-e2e_job_verification.json": "b970c68dc85d73c56c1b78ff4ac51b640055a330ed2978ce5e62e83e24babe19",
+    "evidence/Windows-extracted-package_archive-verification.json": "dc7c8f6990b74f087626251151db6081e4908b2c1a6d224454cdf34991f1546c",
+    "evidence/Windows-frozen-smoke-windows-000a9801-dbf5ce92_doctor.json": "268f0714b3d9327f07d58c571156b75b1be078f4e2669706e64befdd30a914a0",
+    "evidence/Windows-frozen-smoke-windows-000a9801-dbf5ce92_gui_gui-smoke.json": "6a0a33bb01aa53be17228c589280ecaf551d71916bf21d01f40da3984d5d3879",
+    "evidence/Windows-frozen-smoke-windows-000a9801-dbf5ce92_gui_state_jobs_13edb5a4-f8d5-49ad-a689-07fe26efea41_command.json": "cdc17ff2fe8132d55b27adbc2408287fe3f4b94c3c5f63367eb03151686391ea",
+    "evidence/Windows-frozen-smoke-windows-000a9801-dbf5ce92_gui_state_jobs_13edb5a4-f8d5-49ad-a689-07fe26efea41_plan.json": "1910287b1d094dd02a86fdaa4cad429f2628228b6c9242133f79991574a3cfbd",
+    "evidence/Windows-frozen-smoke-windows-000a9801-dbf5ce92_gui_state_jobs_13edb5a4-f8d5-49ad-a689-07fe26efea41_result.json": "0fa80fd4e7a72023b6126cf4c9d7fa84780f2c7c7e44cbd882dffe72ecd556e2",
+    "evidence/Windows-frozen-smoke-windows-000a9801-dbf5ce92_gui_state_jobs_13edb5a4-f8d5-49ad-a689-07fe26efea41_verification.json": "d0f81ad9e6feb1906cc86f4464571583e5d8101e9c487ce7efffe335f210301d",
+    "evidence/Windows-frozen-smoke-windows-000a9801-dbf5ce92_gui_state_jobs_8761a40a-0dc7-4361-b671-6d1a9637da1b_command.json": "26ef1ea98ea1589d01a7aae8d6bbed67514e538f51dc266941b01472a03b9e96",
+    "evidence/Windows-frozen-smoke-windows-000a9801-dbf5ce92_gui_state_jobs_8761a40a-0dc7-4361-b671-6d1a9637da1b_plan.json": "a4a7465105a9274566c0b15004dbfa155489c24a6fc8bf1e0527b0789ef64e1a",
+    "evidence/Windows-installed-source-doctor.json": "be492eb7d3c0b6dec9bb1c3b941964f24a5541858a1f020ed0d504e71390df85",
+    "evidence/Windows-installed-source-gui_gui-smoke.json": "ac72466df94c39d98e85525070daacf8c8bb82a3a6c2a2cec27126e2abf712f5",
+    "evidence/Windows-installed-source-gui_state_jobs_885cb0ec-7cae-42b8-b598-3a6357d0f2f9_command.json": "399b2f38244fa3847e2c94ad22f51214b1e4212ea3c000059723982fb1d503bd",
+    "evidence/Windows-installed-source-gui_state_jobs_885cb0ec-7cae-42b8-b598-3a6357d0f2f9_plan.json": "6afa4185a6e903fb387d864edf2d14b0201158b0ada63ea5ef141c16bb3addcd",
+    "evidence/Windows-installed-source-gui_state_jobs_885cb0ec-7cae-42b8-b598-3a6357d0f2f9_result.json": "737d5cdd27bfcff6f2c0830bc1ed9b2554d32b7ca59d9782320efc988812aa73",
+    "evidence/Windows-installed-source-gui_state_jobs_885cb0ec-7cae-42b8-b598-3a6357d0f2f9_verification.json": "835927d5107a97c1ef9908049a16ea34a43f8cb073b49ea2515a2fa7334a2f39",
+    "evidence/Windows-installed-source-gui_state_jobs_dc57398a-55e4-4e6a-a8c6-ffed8e9ad92b_command.json": "fe7f5a236d7df550c2a5238fe390b568d4cfbe55c3900cb0fa233e08eb42211f",
+    "evidence/Windows-installed-source-gui_state_jobs_dc57398a-55e4-4e6a-a8c6-ffed8e9ad92b_plan.json": "af0f5ce7d39fd7e6c9df259fd575b82583f1e81e9529d19791feb40cb9ebba7a",
+    "evidence/Windows-neural-selector.png": "6a428c2d4b89af2b1f47cb08507748a6a1ea52479dcfa79e4b91a46b9799a2d4",
+    "evidence/baseline-cpu-e2e.txt": "5a09c7f262f9d16369bfc38d05abc4ed48f39c15388313337e55b08bfd4d9df8",
+    "evidence/baseline-local.xml": "6e25c641528b59b63d834c943b1836357ebbf9814c0bcee7622848703469cabd",
+    "evidence/baseline-native.json": "fd66ac83aa00555cf1005348813027815f153d4218353313aa0f07c0555ee9de",
+    "evidence/baseline.json": "c6ad2daef468031b2d7f387be9c00fc25117ee08ced4124a3c881c7841b2d7da",
+    "evidence/ci-artifacts.json": "03a07c6f3ca56e3d2a1c55b21e5d7fddb4deb99d68466835213b0fa8814295cb",
+    "evidence/doctor-neural-working-tree.json": "1896d60850e8f85fc7c0a0a29a489de06a5b25dbd2f16fe368a09b600bccbb52",
+    "evidence/final-Linux-pytest.xml": "3af555eaec21ee72949e7cbf28238db656471f9d3dc74ee21a204bcb270b9e38",
+    "evidence/final-Windows-pytest.xml": "8dcae41f51e03de045571c20bbeb4fad90832946824c8e5af2a8a152fd8a2389",
+    "evidence/ncnn-help.txt": "aa1e3398afbc9a1adf5a3e14953a139eb6c0860b5ecb00e9994cbd9a536fd1e1",
+    "evidence/previous-backups.json": "a13b1e138d2884af4051628d99a55b4e50ec7e9dcef433b4a91782ee52596031",
+    "evidence/readiness-13685724466.json": "84152d5699f4365960b31e4c575e6a6e399ff6fd1a7631cd243eeb251397f78a",
+    "evidence/readiness-13687600573.json": "a2453dff8b78e8f86a1fd46992f971333dd9b58ae95b78fae9593c34cd5ef162",
+    "hardware.json": "1f58072a5b2b97dbc6a4506741bf7bd11fbe998f89abc56cba6f90e38c62b645",
+    "nn-e2e-001.json": "f9ee275045177d5fc493786d3c9ad882d976893716d4565367612f86e94551fd",
+    "faults.json": "7ea3fbe13b652a24d2b67cd98495584f53a90592b753f94423fad41560c2b63e"
+  },
+  "acceptance": {
+    "AC-004-01": "BLOCKED",
+    "AC-004-02": "PASS",
+    "AC-004-03": "BLOCKED"
+  },
+  "m005_allowed": false,
+  "real_neural_e2e": "NOT_RUN",
+  "weights_license_separately_established": false
+}

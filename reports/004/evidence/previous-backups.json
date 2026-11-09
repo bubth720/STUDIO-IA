@@ -1,0 +1,134 @@
+[
+  {
+    "path": "ARCHIVE-VERIFICATION.json",
+    "expected": "51e9802e3a5aec33915e55299e66668e6009b9e9f334ce43865819cfcf57b72d",
+    "actual": "51e9802e3a5aec33915e55299e66668e6009b9e9f334ce43865819cfcf57b72d",
+    "pass": true
+  },
+  {
+    "path": "INSTALLER.md",
+    "expected": "8ee3e42cea27d094e02919ca3007496a656fc2f9329bdb4b71e1171bc43e5547",
+    "actual": "8ee3e42cea27d094e02919ca3007496a656fc2f9329bdb4b71e1171bc43e5547",
+    "pass": true
+  },
+  {
+    "path": "LIRE-DABORD.md",
+    "expected": "4f2d5647029d3f1a7f0d0f6cf3ce074407d87678e2c51a64bf3482593580973d",
+    "actual": "4f2d5647029d3f1a7f0d0f6cf3ce074407d87678e2c51a64bf3482593580973d",
+    "pass": true
+  },
+  {
+    "path": "LIVRAISON-MANIFEST.json",
+    "expected": "8e80f1c4ec58a9d48f7640fbc1e6ca91b4f376568e85cec645f2802aac5c53c1",
+    "actual": "8e80f1c4ec58a9d48f7640fbc1e6ca91b4f376568e85cec645f2802aac5c53c1",
+    "pass": true
+  },
+  {
+    "path": "PUBLICATION-ASSETS.json",
+    "expected": "0e6a274db1c37d3f13ccb2b7b10e5970a783f9438b1673182d7c842578d5dded",
+    "actual": "0e6a274db1c37d3f13ccb2b7b10e5970a783f9438b1673182d7c842578d5dded",
+    "pass": true
+  },
+  {
+    "path": "RECOVERY-VERIFICATION.json",
+    "expected": "fec069d0c2ef7b72090dad87dab7485017b7709e74e7c118b972bcde856b239f",
+    "actual": "fec069d0c2ef7b72090dad87dab7485017b7709e74e7c118b972bcde856b239f",
+    "pass": true
+  },
+  {
+    "path": "REMOTE-REFS.txt",
+    "expected": "14baa469d059f64e4efc19b668693127608143b2cb69037ab12ec12cacd16c02",
+    "actual": "14baa469d059f64e4efc19b668693127608143b2cb69037ab12ec12cacd16c02",
+    "pass": true
+  },
+  {
+    "path": "SHA256SUMS-CONTENU.txt",
+    "expected": "717c2b81c6f39391b73c3ec22edcb8f5adef22ae69285bb4f44f2e8b441b3dcb",
+    "actual": "717c2b81c6f39391b73c3ec22edcb8f5adef22ae69285bb4f44f2e8b441b3dcb",
+    "pass": true
+  },
+  {
+    "path": "STUDIO-IA-0.3.0a2-linux-bookworm-x86_64-ALPHA.zip",
+    "expected": "16b4c3e3796c2a3edffa2477fdef790875078f246d848d2893f4614ceabbb494",
+    "actual": "16b4c3e3796c2a3edffa2477fdef790875078f246d848d2893f4614ceabbb494",
+    "pass": true
+  },
+  {
+    "path": "STUDIO-IA-0.3.0a2-linux-bookworm-x86_64-ALPHA.zip.sha256",
+    "expected": "b06975bc04450de70fc57ee017afa23d02bfbada673ef581c66272fb4d75e92e",
+    "actual": "b06975bc04450de70fc57ee017afa23d02bfbada673ef581c66272fb4d75e92e",
+    "pass": true
+  },
+  {
+    "path": "STUDIO-IA-0.3.0a2-linux-ubuntu24-x86_64-ALPHA.zip",
+    "expected": "06f2db51dcdf772d6b18695912d8c24cc7e434316a9fcb6e9234efdbeac29dfe",
+    "actual": "06f2db51dcdf772d6b18695912d8c24cc7e434316a9fcb6e9234efdbeac29dfe",
+    "pass": true
+  },
+  {
+    "path": "STUDIO-IA-0.3.0a2-linux-ubuntu24-x86_64-ALPHA.zip.sha256",
+    "expected": "efc0d3bf48fe7fe9adf741cf5a477c517800d236c33855eb659b0360fe8f3abd",
+    "actual": "efc0d3bf48fe7fe9adf741cf5a477c517800d236c33855eb659b0360fe8f3abd",
+    "pass": true
+  },
+  {
+    "path": "STUDIO-IA-0.3.0a2-windows-AMD64-ALPHA.zip",
+    "expected": "d171d9b1b7ebcca3e733231f2f7e9d85445f8b58e33033ce1bec20807215ad2f",
+    "actual": "d171d9b1b7ebcca3e733231f2f7e9d85445f8b58e33033ce1bec20807215ad2f",
+    "pass": true
+  },
+  {
+    "path": "STUDIO-IA-0.3.0a2-windows-AMD64-ALPHA.zip.sha256",
+    "expected": "d568a2d27821656d8b4733195c4068e89b98af939e5fefb935a431a82479313f",
+    "actual": "d568a2d27821656d8b4733195c4068e89b98af939e5fefb935a431a82479313f",
+    "pass": true
+  },
+  {
+    "path": "STUDIO-IA-BILAN.md",
+    "expected": "717a5a162525f28337ad1bdc944adb3914ceedfe3aef80ce8d15c2337fd0978e",
+    "actual": "717a5a162525f28337ad1bdc944adb3914ceedfe3aef80ce8d15c2337fd0978e",
+    "pass": true
+  },
+  {
+    "path": "STUDIO-IA-Mission-004-Cahier-technique.md",
+    "expected": "6eba59b21aac45b6a867e1b11956efcc2e1ec3031b5986e6e3eab430701a119b",
+    "actual": "6eba59b21aac45b6a867e1b11956efcc2e1ec3031b5986e6e3eab430701a119b",
+    "pass": true
+  },
+  {
+    "path": "STUDIO-IA-Mission-004-Cahier-technique.pdf",
+    "expected": "c7183fa06f8a87d2003589a325051cec68910541f1e0e7911ff2b44efcf44c93",
+    "actual": "c7183fa06f8a87d2003589a325051cec68910541f1e0e7911ff2b44efcf44c93",
+    "pass": true
+  },
+  {
+    "path": "STUDIO-IA-cloture.bundle",
+    "expected": "ffe5f582b208e28fe304155c45ee5cf556a416de9ae054ea3308dfb97c8b9f82",
+    "actual": "ffe5f582b208e28fe304155c45ee5cf556a416de9ae054ea3308dfb97c8b9f82",
+    "pass": true
+  },
+  {
+    "path": "STUDIO-IA-livraison-complete.zip",
+    "expected": "59debbdbae01963d6d5ccb13b94e60771a63e97efa4c0f4e492c6344b03e4aba",
+    "actual": "59debbdbae01963d6d5ccb13b94e60771a63e97efa4c0f4e492c6344b03e4aba",
+    "pass": true
+  },
+  {
+    "path": "STUDIO-IA-preuves-completes.zip",
+    "expected": "4fad7d3444d7b0ee84ae169d67fe9e8894806923e565c59b69cb49cef2ddae07",
+    "actual": "4fad7d3444d7b0ee84ae169d67fe9e8894806923e565c59b69cb49cef2ddae07",
+    "pass": true
+  },
+  {
+    "path": "STUDIO-IA-sources-et-commits.zip",
+    "expected": "6a5ab5dd4b0828f13c7886b8c434e351adb498c7d82c71f5f2f0ad9899a89dbd",
+    "actual": "6a5ab5dd4b0828f13c7886b8c434e351adb498c7d82c71f5f2f0ad9899a89dbd",
+    "pass": true
+  },
+  {
+    "path": "VERIFIER-LIVRAISON.py",
+    "expected": "ed5a19349f938a19e650e82bbb1cfe0c988c6b508e3260763d7038ca68cf3faa",
+    "actual": "ed5a19349f938a19e650e82bbb1cfe0c988c6b508e3260763d7038ca68cf3faa",
+    "pass": true
+  }
+]

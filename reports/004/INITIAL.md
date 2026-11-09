@@ -1,0 +1,15 @@
+# M004 — préflight du 9 novembre 2026 UTC
+
+Référence lue intégralement : docs/roadmap-m004-m017-complete au SHA 8db491635b572314744ee7afd1e3339ebd6ad85b, CODEX-START-HERE, EXECUTION_PROTOCOL, INDEX et missions/M004.md. Ancien cahier docs/mission-004/CAHIER-TECHNIQUE.md, README, PR1 et clôture de consolidation relus. La feuille de route place RIFE dans M005 : aucune interpolation lancée sous M004.
+
+Développement depuis codex/studio-ia-consolidation-v1, base 24f5c211cc96d7d6956d9e7452c4dc025693caa4, branche neuve codex/studio-ia-m004-neural-local. La branche documentaire est consultée et laissée intacte ; PR future vers la branche de développement, pas main. Main initiale 61fe67ebb908da856964e88200e1220f83fc2bb8 ; PR1 brouillon inchangée. Trois branches initiales, aucun tag/release publié ; 18 commits du socle conservés. Les runs CPU de la consolidation et de la feuille de route sont verts ; les anciennes applications et archives restent disponibles dans la sauvegarde de clôture.
+
+Socle local avant modification : 61 PASS, 1 SKIP, zéro échec, E2E CPU FFmpeg réel PASS. Python 3.12, FFmpeg 7.1.5, Qt offscreen, Linux x86_64/glibc2.41. L'interpréteur et les dépendances existants du projet sont réutilisés, PYTHONPATH pointe vers ce checkout. Premier essai : 45 erreurs de setup dues au dossier d'état par défaut en lecture seule ; relance avec STUDIO_IA_HOME de laboratoire, sans correctif applicatif ni suppression des logs initiaux.
+
+La CI historique inchangée est rejouée sur la branche dédiée baseline au commit 21b11b355e34309ad7c43a9bcc3696d18f17af66, arbre strictement identique à 24f5c21. Ce commit vide est nécessaire car le message d'origine porte skip ci. Run réel 42638932666 : Windows Server 2022 et Ubuntu24.04 SUCCESS, tests, E2E, build et archive extraits. La branche baseline est distincte pour ne pas interrompre cette qualification pendant les lots M004.
+
+Matériel observé : Intel Xeon Platinum8370C, AVX2 présent, aucun /dev/dri. Le chargeur Vulkan existe, mais vkCreateInstance retourne -9, VK_ERROR_INCOMPATIBLE_DRIVER. Aucun pilote installé. Aucun GPU physique ou logiciel fonctionnel détecté ; inférence NOT_RUN et E2E NN BLOCKED. Pas de provisionnement payant, appareil personnel ou autre projet.
+
+Le binaire officiel NCNN v0.2.0 est téléchargé dans le laboratoire, aide exécutée et dépendances ldd inspectées. Les flags viennent de cette aide réelle, non de Video2X. Le binaire n'expose pas de version dédiée : le contrat et l'origine de release ne sont pas présentés comme une version auto-déclarée. Les modèles x2 officiels sont inspectés sans être chargés. Licence des poids non établie séparément : aucun manifeste productif approuvé, aucune intégrité assimilée à une preuve de sécurité ou de droits.
+
+Les lots indépendants sont exécutables/testables sans GPU : registre sûr, plans v2/migration explicite, diagnostic, transport et pannes avec doubles étiquetés, UI conservant CPU et CI. Leurs statuts seront distingués de la qualification GPU. Aucune autorisation M005 ne découle de ces seuls développements.

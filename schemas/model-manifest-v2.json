@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://studio-ia.local/schemas/model-manifest-v2.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "name",
+    "version",
+    "backend",
+    "loader",
+    "scale",
+    "source",
+    "licenses",
+    "files"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9._-]{1,80}$"
+    },
+    "name": {
+      "const": "realesr-animevideov3"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "backend": {
+      "const": "realesrgan-ncnn-vulkan/0.2.0"
+    },
+    "loader": {
+      "const": "ncnn-param-bin"
+    },
+    "scale": {
+      "const": 2
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "origin",
+        "source_ref"
+      ],
+      "properties": {
+        "origin": {
+          "type": "string",
+          "pattern": "^https://github.com/xinntao/Real-ESRGAN(/|-ncnn-vulkan/)"
+        },
+        "source_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "licenses": {
+      "type": "object",
+      "required": [
+        "code",
+        "weights",
+        "shaders"
+      ],
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/license"
+        },
+        "weights": {
+          "$ref": "#/$defs/license"
+        },
+        "shaders": {
+          "$ref": "#/$defs/license"
+        }
+      }
+    },
+    "files": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "role",
+          "bytes",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "enum": [
+              "realesr-animevideov3-x2.param",
+              "realesr-animevideov3-x2.bin"
+            ]
+          },
+          "role": {
+            "enum": [
+              "param",
+              "weights"
+            ]
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 536870912
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "license": {
+      "type": "object",
+      "required": [
+        "spdx",
+        "source",
+        "reviewed"
+      ],
+      "properties": {
+        "spdx": {
+          "type": "string",
+          "minLength": 1,
+          "not": {
+            "enum": [
+              "UNKNOWN",
+              "UNVERIFIED"
+            ]
+          }
+        },
+        "source": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "reviewed": {
+          "const": true
+        }
+      }
+    }
+  }
+}

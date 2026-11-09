@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "primary": {
+    "backend": "realesrgan-ncnn-vulkan",
+    "cli_contract": "0.2.0",
+    "source_ref": "https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan/releases/tag/v0.2.0",
+    "binary_sha256_observed_linux_x86_64": "22c2296a39b40cc43ac92615c827ab6d4b60b7142e8cee59f718e3f8e2cdbda9",
+    "release_zip_sha256_observed": "d0e8e1cf954f5cde11be4745dd912cc3774bef36f71c5b1cb8f74c4112b6e919",
+    "code_license": "MIT",
+    "help_exit_code": 255,
+    "self_reported_version": null,
+    "authenticity": "OFFICIAL_HTTPS_RELEASE_NO_VENDOR_DIGEST_OR_SIGNATURE",
+    "models_origin": "https://github.com/xinntao/Real-ESRGAN/releases/tag/v0.2.5.0",
+    "models_archive_sha256_observed": "e5aa6eb131234b87c0c51f82b89390f5e3e642b7b70f2b9bbe95b6a285a40c96",
+    "model_files": [
+      {
+        "name": "realesr-animevideov3-x2.bin",
+        "bytes": 1247368,
+        "sha256_observed": "548a36f9c3f4ab8da56cd3b13badf23968bee207b396dad14d04b830e5f2ab2d",
+        "publisher_signature": null,
+        "weights_license": "NOT_ESTABLISHED_SEPARATELY"
+      },
+      {
+        "name": "realesr-animevideov3-x2.param",
+        "bytes": 3173,
+        "sha256_observed": "b88ff4f00ebf019a7fdac17fdd45a7fd3665d37509efc5baf2e4da2e24420a04",
+        "publisher_signature": null,
+        "weights_license": "NOT_ESTABLISHED_SEPARATELY"
+      }
+    ],
+    "state": "DETECTED_NOT_INFERENCE_QUALIFIED"
+  },
+  "alternative": {
+    "backend": "Video2X",
+    "reference_version": "6.4.0",
+    "installed": false,
+    "code_license": "AGPL-3.0",
+    "state": "NOT_SELECTED"
+  },
+  "anime4k": {
+    "installed": false,
+    "state": "ABSENT_NOT_QUALIFIED",
+    "technique": "VARIANT_DEPENDENT_NEVER_ASSUME_NEURAL"
+  },
+  "rife": {
+    "state": "NOT_STARTED_M005_GATE_CLOSED"
+  }
+}

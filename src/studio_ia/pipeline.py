@@ -106,9 +106,7 @@ def build_plan(request: Request, tools: Tools, caps: dict | None = None) -> Plan
         filters.append("hqdn3d=" + ("1.5:1.5:6:6" if request.denoise == "light" else "3:3:6:6"))
     # CPU gradient debanding only, not neural detail restoration. Keep OFF by default.
     if request.deband != "off":
-        threshold, radius = (
-            ("0.012", 8) if request.deband == "light" else ("0.020", 12)
-        )
+        threshold, radius = (("0.012", 8) if request.deband == "light" else ("0.020", 12))
         filters.append(
             f"deband=1thr={threshold}:2thr={threshold}:3thr={threshold}:"
             f"4thr={threshold}:range={radius}:blur=1"

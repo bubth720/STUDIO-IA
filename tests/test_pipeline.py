@@ -51,9 +51,7 @@ def test_cpu_deband_real_export(source, tmp_path, tools, strength):
     """Real FFmpeg output; classical filter only, not neuronal inference."""
     original = sha256(source)
     dest = tmp_path / f"bandes-{strength}.mp4"
-    plan = build_plan(
-        Request(str(source), str(dest), denoise="off", deband=strength), tools
-    )
+    plan = build_plan(Request(str(source), str(dest), denoise="off", deband=strength), tools)
     assert any(item.startswith("deband=1thr=") for item in plan.filters)
     assert any("peut lisser" in warning for warning in plan.warnings)
     result = run_plan(plan, tools, tmp_path / f"job-{strength}")

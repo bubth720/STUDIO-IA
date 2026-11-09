@@ -1,0 +1,36 @@
+{
+  "mission": "M004",
+  "task_id": "NN01",
+  "status": "BLOCKED",
+  "tested_commit_sha": "000a9801f16da9a855442eab7d864384570cf5c2",
+  "tested_source_dirty": false,
+  "os_arch": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+  "hardware": {
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "gpu": {
+      "status": "BLOCKED",
+      "reason": "VULKAN_INSTANCE_FAILED",
+      "vk_result": -9,
+      "devices": []
+    }
+  },
+  "engine": {
+    "name": "Real-ESRGAN NCNN Vulkan",
+    "version": null,
+    "model_sha256": null
+  },
+  "source_sha256": null,
+  "output_sha256": null,
+  "tests": {
+    "passed": 0,
+    "failed": 0,
+    "skipped": 1
+  },
+  "evidence_paths": [],
+  "limitations": [
+    "NO_COMPATIBLE_PHYSICAL_GPU: VULKAN_INSTANCE_FAILED"
+  ],
+  "ci_run_url": null,
+  "measured_at_utc": "2026-11-09T15:26:30.046274+00:00",
+  "m005_allowed": false
+}

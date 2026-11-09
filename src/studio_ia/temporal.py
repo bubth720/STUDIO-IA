@@ -58,8 +58,7 @@ class FrameTimeline:
     @property
     def nonuniform_pts_deltas(self) -> bool:
         gaps = [
-            right.pts - left.pts
-            for left, right in zip(self.frames, self.frames[1:], strict=False)
+            right.pts - left.pts for left, right in zip(self.frames, self.frames[1:], strict=False)
         ]
         return len(set(gaps)) > 1
 
@@ -174,16 +173,21 @@ def probe_frame_timeline(path: Path, tools: Tools, *, max_frames: int = 3000) ->
     output = capture(
         [
             tools.ffprobe,
-            "-v", "error",
-            "-protocol_whitelist", "file,pipe",
-            "-select_streams", "v:0",
-            "-read_intervals", f"%+#{max_frames + 1}",
+            "-v",
+            "error",
+            "-protocol_whitelist",
+            "file,pipe",
+            "-select_streams",
+            "v:0",
+            "-read_intervals",
+            f"%+#{max_frames + 1}",
             "-show_frames",
             "-show_streams",
             "-show_entries",
             "frame=best_effort_timestamp,duration,pkt_duration,key_frame:"
             "stream=time_base,nb_frames",
-            "-of", "json",
+            "-of",
+            "json",
             str(source),
         ],
         timeout=120,

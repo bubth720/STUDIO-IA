@@ -45,6 +45,38 @@ def test_silent_and_portrait(tmp_path, tools, size, audio):
     )
 
 
+
+@pytest.mark.parametrize("strength", ["light", "moderate"])
+def test_cpu_deband_real_export(source, tmp_path, tools, strength):
+    """Real FFmpeg output; classical filter only, not neuronal inference."""
+    original = sha256(source)
+    dest = tmp_path / f"bandes-{strength}.mp4"
+    plan = build_plan(
+        Request(str(source), str(dest), denoise="off", deband=strength), tools
+    )
+    assert any(item.startswith("deband=1thr=") for item in plan.filters)
+    assert any("peut lisser" in warning for warning in plan.warnings)
+    result = run_plan(plan, tools, tmp_path / f"job-{strength}")
+    assert result["status"] == "PASS"
+    assert all(result["assertions"].values())
+    assert sha256(source) == original
+    assert analyze(dest, tools).video["codec_name"] == "h264"
+
+
+def test_cpu_deband_is_opt_in_and_requires_available_filter(source, tmp_path, tools):
+    from studio_ia.core import capabilities
+
+    dest = tmp_path / "out.mp4"
+    basic = build_plan(Request(str(source), str(dest), denoise="off"), tools)
+    assert not any(item.startswith("deband=") for item in basic.filters)
+    with pytest.raises(StudioError, match="Anti-banding"):
+        build_plan(Request(str(source), str(dest), deband="untrusted"), tools)
+    caps = capabilities(tools)
+    missing = {**caps, "filters": [f for f in caps["filters"] if f != "deband"]}
+    with pytest.raises(StudioError, match="Filtre absent : deband"):
+        build_plan(Request(str(source), str(dest), deband="light"), tools, missing)
+
+
 def test_color_controls(source, tmp_path, tools):
     plan = build_plan(
         Request(

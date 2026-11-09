@@ -242,10 +242,11 @@ def build_neural_plan(
     if (
         request.scale != 2
         or request.denoise != "off"
+        or request.deband != "off"
         or (request.brightness, request.contrast, request.saturation) != (0, 1, 1)
     ):
         raise StudioError(
-            "NN initial : ×2 natif, débruitage désactivé, couleurs neutres obligatoires."
+            "NN initial : ×2 natif, débruitage et anti-banding désactivés, couleurs neutres obligatoires."
         )
     cpu = build_plan(request, tools)
     if Path(cpu.request.destination).suffix.lower() != ".mp4":

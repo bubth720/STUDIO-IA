@@ -91,7 +91,11 @@ def parse_frame_timeline(payload: dict, *, max_frames: int = 3000) -> FrameTimel
     equidistant timestamps. The final frame duration remains unknown if ffprobe
     does not report it. It never invents a last-frame interval.
     """
-    if isinstance(max_frames, bool) or not isinstance(max_frames, int) or not 1 <= max_frames <= 10000:
+    if (
+        isinstance(max_frames, bool)
+        or not isinstance(max_frames, int)
+        or not 1 <= max_frames <= 10000
+    ):
         raise StudioError("Budget de frames invalide (1 à 10000).")
     if not isinstance(payload, dict):
         raise StudioError("Rapport ffprobe invalide.")
@@ -155,7 +159,11 @@ def parse_frame_timeline(payload: dict, *, max_frames: int = 3000) -> FrameTimel
 
 
 def probe_frame_timeline(path: Path, tools: Tools, *, max_frames: int = 3000) -> FrameTimeline:
-    if isinstance(max_frames, bool) or not isinstance(max_frames, int) or not 1 <= max_frames <= 10000:
+    if (
+        isinstance(max_frames, bool)
+        or not isinstance(max_frames, int)
+        or not 1 <= max_frames <= 10000
+    ):
         raise StudioError("Budget de frames invalide (1 à 10000).")
     source = path.expanduser().resolve(strict=True)
     if not source.is_file():
@@ -170,7 +178,8 @@ def probe_frame_timeline(path: Path, tools: Tools, *, max_frames: int = 3000) ->
             "-show_frames",
             "-show_streams",
             "-show_entries",
-            "frame=best_effort_timestamp,duration,pkt_duration,key_frame:stream=time_base,nb_frames",
+            "frame=best_effort_timestamp,duration,pkt_duration,key_frame:"
+            "stream=time_base,nb_frames",
             "-of", "json",
             str(source),
         ],

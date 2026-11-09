@@ -57,7 +57,10 @@ class FrameTimeline:
 
     @property
     def nonuniform_pts_deltas(self) -> bool:
-        gaps = [right.pts - left.pts for left, right in zip(self.frames, self.frames[1:], strict=False)]
+        gaps = [
+            right.pts - left.pts
+            for left, right in zip(self.frames, self.frames[1:], strict=False)
+        ]
         return len(set(gaps)) > 1
 
     def summary(self) -> dict:

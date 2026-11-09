@@ -68,7 +68,9 @@ def main() -> None:
     process.add_argument("destination")
     process.add_argument("--denoise", choices=["off", "light", "moderate"], default="light")
     process.add_argument(
-        "--deband", choices=["off", "light", "moderate"], default="off",
+        "--deband",
+        choices=["off", "light", "moderate"],
+        default="off",
         help="Anti-banding CPU conservateur (désactivé par défaut)",
     )
     process.add_argument("--scale", type=float, default=1)

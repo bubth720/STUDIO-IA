@@ -26,6 +26,7 @@ class Request:
     saturation: float = 1.0
     crf: int = 18
     schema_version: int = 1
+    deband: str = "off"  # Explicit opt-in; backward compatible with CPU v1 plans.
 
 
 @dataclass
@@ -48,6 +49,8 @@ def build_plan(request: Request, tools: Tools, caps: dict | None = None) -> Plan
         raise StudioError("Profil ou version du schéma inconnu.")
     if request.denoise not in ("off", "light", "moderate"):
         raise StudioError("Débruitage inconnu.")
+    if request.deband not in ("off", "light", "moderate"):
+        raise StudioError("Anti-banding inconnu.")
     for value, low, high, label in (
         (request.scale, 0.25, 4, "Échelle"),
         (request.brightness, -0.1, 0.1, "Luminosité"),
@@ -101,6 +104,13 @@ def build_plan(request: Request, tools: Tools, caps: dict | None = None) -> Plan
     filters = []
     if request.denoise != "off":
         filters.append("hqdn3d=" + ("1.5:1.5:6:6" if request.denoise == "light" else "3:3:6:6"))
+    # CPU gradient debanding only, not neural detail restoration. Keep OFF by default.
+    if request.deband != "off":
+        threshold, radius = (("0.012", 8) if request.deband == "light" else ("0.020", 12))
+        filters.append(
+            f"deband=1thr={threshold}:2thr={threshold}:3thr={threshold}:"
+            f"4thr={threshold}:range={radius}:blur=1"
+        )
     if (request.brightness, request.contrast, request.saturation) != (0, 1, 1):
         filters.append(
             f"eq=brightness={request.brightness}:contrast={request.contrast}"
@@ -121,6 +131,8 @@ def build_plan(request: Request, tools: Tools, caps: dict | None = None) -> Plan
         stream.get("codec_name") == "aac" for stream in info.audio
     )
     warnings = list(info.warnings)
+    if request.deband != "off":
+        warnings.append("Anti-banding CPU activé : peut lisser certains dégradés ou détails fins.")
     if info.audio and not copy_audio:
         warnings.append("Audio réencodé en AAC 192 kbit/s par piste pour compatibilité MP4.")
     warnings.append("CPU classique : aucun nouveau détail neuronal garanti.")

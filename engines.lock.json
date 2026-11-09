@@ -28,7 +28,10 @@
         "weights_license": "NOT_ESTABLISHED_SEPARATELY"
       }
     ],
-    "state": "DETECTED_NOT_INFERENCE_QUALIFIED"
+    "state": "DETECTED_NOT_INFERENCE_QUALIFIED",
+    "binary_sha256_observed_windows_x86_64": "07e49f7cbb4ede01ae4dd4c399d3a7e5846e3d2085c3128eff881e55cb7b1a0c",
+    "windows_release_zip_sha256_observed": "1bbbdb12d470af80b035c773682e144c6c2f6ece9210832a289af0a48ce3fa9a",
+    "windows_binary_execution": "NOT_RUN_LOCAL"
   },
   "alternative": {
     "backend": "Video2X",

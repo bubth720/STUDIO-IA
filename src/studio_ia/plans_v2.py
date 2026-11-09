@@ -100,7 +100,7 @@ def frame_table(path: Path, tools: Tools, *, max_frames: int = 10000) -> dict:
     tb = Fraction(time_base)
     if tb <= 0:
         raise StudioError("Timebase invalide.")
-    frames = []
+    frames: list[dict] = []
     for index, row in enumerate(rows):
         try:
             pts = int(row["best_effort_timestamp"])

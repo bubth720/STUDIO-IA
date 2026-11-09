@@ -36,7 +36,7 @@ from PySide6.QtWidgets import (
 )
 
 from studio_ia import __version__
-from studio_ia.core import StudioError, Tools, capabilities, sibling_probe, state_dir
+from studio_ia.core import Cancellation, StudioError, Tools, capabilities, sibling_probe, state_dir
 from studio_ia.files import write_json
 from studio_ia.jobs import TERMINAL, Manager
 from studio_ia.media import MediaInfo, analyze, sha256
@@ -107,6 +107,9 @@ class Window(QMainWindow):
         self.plan = None
         self.current_job = None
         self.last_result = None
+        self.neural_configuration = None
+        self.neural_cancel = Cancellation()
+        self.last_neural_preview = None
         self.closing = False
         self.preview_temp = tempfile.TemporaryDirectory(prefix="preview-", dir=self.root)
         self.setWindowTitle(f"STUDIO IA · {__version__} · ALPHA")
@@ -199,6 +202,36 @@ class Window(QMainWindow):
         form = QFormLayout(settings)
         form.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         settings.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        self.engine = QComboBox()
+        self.engine.addItems(
+            [
+                "CPU classique · disponible",
+                "Real-ESRGAN NCNN ×2 · non qualifié",
+                "Anime4K · aucun shader qualifié",
+                "RIFE · mission M005, non activé",
+            ]
+        )
+        for index in (1, 2, 3):
+            self.engine.model().item(index).setEnabled(False)
+        form.addRow("Moteur", self.engine)
+        self.model_label = QLabel("Aucun modèle neuronal sélectionné ou validé.")
+        self.model_label.setWordWrap(True)
+        form.addRow("Modèle local", self.model_label)
+        self.configure_neural_button = QPushButton("Choisir et diagnostiquer un modèle NCNN…")
+        self.configure_neural_button.clicked.connect(self.configure_neural)
+        form.addRow(self.configure_neural_button)
+        self.neural_preview_button = QPushButton("Aperçu neuronal réel · 1 s")
+        self.neural_preview_button.setEnabled(False)
+        self.neural_preview_button.clicked.connect(self.neural_preview)
+        form.addRow(self.neural_preview_button)
+        self.cancel_neural_button = QPushButton("Annuler diagnostic / aperçu neuronal")
+        self.cancel_neural_button.clicked.connect(lambda: self.neural_cancel.request())
+        form.addRow(self.cancel_neural_button)
+        self.compare_neural_cpu = QPushButton("Comparaison CPU / neuronal du dernier aperçu")
+        self.compare_neural_cpu.setCheckable(True)
+        self.compare_neural_cpu.setEnabled(False)
+        self.compare_neural_cpu.clicked.connect(self.show_neural_comparison)
+        form.addRow(self.compare_neural_cpu)
         self.profile = QComboBox()
         self.profile.addItems(
             ["AUTO · Préservation", "AVANCÉ · Personnalisé", "Témoin · Réencodage seul"]
@@ -239,7 +272,7 @@ class Window(QMainWindow):
         self.start_button.clicked.connect(self.start_job)
         form.addRow(self.start_button)
         limitation = QLabel(
-            "FFmpeg classique, sans IA neuronale.\n"
+            "CPU classique par défaut ; neuronal après qualification réelle.\n"
             "HDR/rotation/sous-titres : export refusé.\nL'original reste intact."
         )
         limitation.setWordWrap(True)
@@ -295,6 +328,7 @@ class Window(QMainWindow):
         history_row.addLayout(history_actions)
         layout.addLayout(history_row)
         self.profile.currentIndexChanged.connect(self.apply_profile)
+        self.engine.currentIndexChanged.connect(self.apply_engine)
         for control in (self.denoise, self.scale):
             control.currentIndexChanged.connect(self.invalidate)
         for control in (self.brightness, self.contrast, self.saturation, self.crf):
@@ -318,6 +352,86 @@ class Window(QMainWindow):
         self.plan = None
         self.versions["plan"] = self.versions.get("plan", 0) + 1
         self.start_button.setEnabled(False)
+        self.neural_preview_button.setEnabled(False)
+        self.compare_neural_cpu.setEnabled(False)
+        self.last_neural_preview = None
+        self.versions["neural_preview"] = self.versions.get("neural_preview", 0) + 1
+        self.neural_cancel.request()
+
+    def apply_engine(self, *_):
+        if self.engine.currentIndex() == 1:
+            self.profile.setCurrentIndex(1)
+            self.denoise.setCurrentIndex(0)
+            self.scale.setCurrentIndex(2)
+            self.brightness.setValue(0)
+            self.contrast.setValue(1)
+            self.saturation.setValue(1)
+        self.invalidate()
+
+    def configure_neural(self):
+        manifest_path, _ = QFileDialog.getOpenFileName(
+            self, "Manifeste local model-manifest-v2", filter="JSON (*.json)"
+        )
+        if not manifest_path:
+            return
+        binary_path, _ = QFileDialog.getOpenFileName(
+            self, "Binaire officiel Real-ESRGAN NCNN local"
+        )
+        if not binary_path:
+            return
+        # Invalidate readiness immediately, including a previous successful configuration.
+        self.engine.setCurrentIndex(0)
+        self.engine.model().item(1).setEnabled(False)
+        self.neural_configuration = None
+        self.invalidate()
+        self.neural_cancel.request()
+        self.neural_cancel = Cancellation()
+        cancel = self.neural_cancel
+        directory = self.root / "neural-qualification" / str(uuid.uuid4())
+
+        def check():
+            from studio_ia.models import inspect, read_manifest
+            from studio_ia.neural import probe, qualify
+
+            manifest = Path(manifest_path)
+            model = inspect(manifest.parent, read_manifest(manifest))
+            engine = probe(Path(binary_path))
+            receipt = qualify(engine, model, Tools.discover(), directory, cancel)
+            return {"model": model, "engine": engine, "receipt": receipt}
+
+        self.background("neural_configuration", check)
+
+    def neural_preview(self):
+        from studio_ia.plans_v2 import PlanV2
+
+        if not isinstance(self.plan, PlanV2):
+            return
+        frozen, seconds = self.plan, self.timestamp.value()
+        self.neural_cancel.request()
+        self.neural_cancel = Cancellation()
+        cancel = self.neural_cancel
+        directory = self.root / "neural-previews" / str(uuid.uuid4())
+        from studio_ia.neural import preview_neural
+
+        self.background(
+            "neural_preview",
+            lambda: preview_neural(
+                frozen, Tools.discover(), directory, seconds=seconds, duration=1, cancel=cancel
+            ),
+        )
+
+    def show_neural_comparison(self, *_):
+        value = self.last_neural_preview
+        if value is None:
+            return
+        reference = "cpu" if self.compare_neural_cpu.isChecked() else "source"
+        self.comparison.before = QPixmap(value["frames"][reference])
+        self.comparison.after = QPixmap(value["frames"]["neural"])
+        self.comparison_label.setText(
+            f"{reference.upper()} / NEURONAL · aperçu réel à "
+            f"{value['actual_sample_source_seconds_rational']} s de la source"
+        )
+        self.comparison.update()
 
     def apply_profile(self, *_):
         custom = self.profile.currentIndex() == 1
@@ -375,6 +489,10 @@ class Window(QMainWindow):
     def request(self):
         if self.source is None:
             raise StudioError("Importer une vidéo et attendre son analyse.")
+        if self.engine.currentIndex() not in (0, 1) or (
+            self.engine.currentIndex() == 1 and self.neural_configuration is None
+        ):
+            raise StudioError("Ce moteur n'est pas qualifié ; choisir CPU ou vérifier le modèle.")
         return Request(
             self.source.path,
             self.destination.text(),
@@ -391,7 +509,20 @@ class Window(QMainWindow):
         try:
             request = self.request()
             self.status.setText("Vérification des chemins, capacités et espace disque…")
-            self.background("plan", lambda: build_plan(request, Tools.discover()))
+            if self.engine.currentIndex() == 1:
+                from studio_ia.neural import build_neural_plan
+
+                config = self.neural_configuration
+                if config is None:
+                    raise StudioError("Modèle neuronal non qualifié.")
+                self.background(
+                    "plan",
+                    lambda: build_neural_plan(
+                        request, Tools.discover(), config["model"], Path(config["engine"]["path"])
+                    ),
+                )
+            else:
+                self.background("plan", lambda: build_plan(request, Tools.discover()))
         except StudioError as exc:
             self.status.setText(str(exc))
 
@@ -399,7 +530,12 @@ class Window(QMainWindow):
         if not self.plan:
             return
         try:
-            self.current_job = self.manager.submit(self.plan.request)
+            from studio_ia.plans_v2 import PlanV2
+
+            self.current_job = self.manager.submit(
+                self.plan.request,
+                neural_plan=(self.plan.to_dict() if isinstance(self.plan, PlanV2) else None),
+            )
             self.last_result = None
             self.comparison.after = QPixmap()
             self.comparison.update()
@@ -457,6 +593,22 @@ class Window(QMainWindow):
             self.preview()
         elif name == "plan":
             self.plan = value
+            from studio_ia.plans_v2 import PlanV2
+
+            if isinstance(value, PlanV2):
+                cpu = value.cpu_plan()
+                estimate_mib = value.data["budgets"]["estimated_bytes"] / 1024**2
+                self.details.setPlainText(
+                    f"Real-ESRGAN ×2 · {cpu.width}×{cpu.height}, audio {cpu.audio_policy}\n"
+                    f"Modèle : {value.data['model']['manifest']['id']}\n"
+                    f"Frames : {len(value.data['timing']['frames'])}, PTS exacts\n"
+                    f"Stockage estimé : {estimate_mib:.1f} Mio\n"
+                    "VRAM non garantie ; détails plausibles et scintillement possibles."
+                )
+                self.start_button.setEnabled(True)
+                self.neural_preview_button.setEnabled(True)
+                self.status.setText("Plan neuronal expérimental prêt ; aperçu court conseillé.")
+                return
             self.details.setPlainText(
                 f"{value.width}×{value.height}, H.264, audio {value.audio_policy}\n"
                 f"Filtres : {', '.join(value.filters) or 'aucun'}\n" + "\n".join(value.warnings)
@@ -479,6 +631,34 @@ class Window(QMainWindow):
                 + " · IA neuronale non qualifiée"
             )
             self.details.setPlainText(json.dumps(value, ensure_ascii=False, indent=2))
+        elif name == "neural_configuration":
+            receipt = value["receipt"]
+            manifest = value["model"].manifest
+            self.model_label.setText(
+                f"{manifest['id']} · {manifest['version']} · "
+                f"{sum(f['bytes'] for f in manifest['files']) / 1024**2:.1f} Mio\n"
+                f"{receipt['status']} : {receipt.get('reason', 'inférence courte réussie')}"
+            )
+            self.details.setPlainText(json.dumps(receipt, ensure_ascii=False, indent=2))
+            ready = receipt["status"] == "PASS_SHORT_INFERENCE"
+            self.engine.model().item(1).setEnabled(ready)
+            if ready:
+                self.neural_configuration = value
+                self.engine.setItemText(1, "Real-ESRGAN NCNN ×2 · essai court PASS, expérimental")
+            self.status.setText(
+                "Inférence courte validée ; vidéo complète encore non qualifiée."
+                if ready
+                else "BLOCKED : GPU/modèle non qualifié. CPU conservé."
+            )
+        elif name == "neural_preview":
+            self.last_neural_preview = value
+            self.compare_neural_cpu.setEnabled(True)
+            self.compare_neural_cpu.setChecked(False)
+            self.show_neural_comparison()
+            self.details.setPlainText(json.dumps(value, ensure_ascii=False, indent=2))
+            self.status.setText(
+                "Aperçu et comparaison issus du segment courant ; voir le dossier local."
+            )
         elif name == "history_result":
             self.invalidate()
             self.last_result = value
@@ -561,6 +741,8 @@ class Window(QMainWindow):
             self.destination_button,
             self.profile,
             self.destination,
+            self.engine,
+            self.configure_neural_button,
         ):
             control.setEnabled(not busy)
         for control in (
@@ -571,7 +753,12 @@ class Window(QMainWindow):
             self.saturation,
             self.crf,
         ):
-            control.setEnabled(not busy and self.profile.currentIndex() == 1)
+            control.setEnabled(
+                not busy
+                and self.profile.currentIndex() == 1
+                and (self.engine.currentIndex() == 0 or control is self.crf)
+            )
+        self.profile.setEnabled(not busy and self.engine.currentIndex() == 0)
 
     def selected_job(self):
         item = self.history.currentItem()
@@ -680,6 +867,7 @@ class Window(QMainWindow):
         self.background("configured_tools", lambda: (tools, capabilities(tools)))
 
     def closeEvent(self, event):
+        self.neural_cancel.request()
         active = [row for row in self.manager.store.list() if row["state"] not in TERMINAL]
         if active:
             answer = QMessageBox.question(

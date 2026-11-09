@@ -120,10 +120,17 @@ class Manager:
             if row["state"] in TERMINAL:
                 self.tokens.pop(job_id, None)
 
-    def submit(self, request: Request) -> str:
+    def submit(self, request: Request, *, neural_plan: dict | None = None) -> str:
         with self.lock:
             if self.closed:
                 raise StudioError("Gestionnaire fermé.")
+            if neural_plan is not None:
+                from studio_ia.plans_v2 import load_plan
+
+                frozen = load_plan(neural_plan)
+                if frozen.data["kind"] != "neural-ncnn" or frozen.request != request:
+                    raise StudioError("Plan neuronal et requête différents.")
+                neural_plan = frozen.to_dict()
             destination = Path(request.destination).expanduser().resolve()
             for job_id in self.tokens:
                 row = self.store.get(job_id)
@@ -144,13 +151,14 @@ class Manager:
                     "error": None,
                     "result": None,
                     "application": build_identity(),
+                    **({"neural_plan": neural_plan} if neural_plan is not None else {}),
                 }
             )
             self.tokens[job_id] = Cancellation()
-            self.pool.submit(self._run, job_id, request)
+            self.pool.submit(self._run, job_id, request, neural_plan)
             return job_id
 
-    def _run(self, job_id: str, request: Request) -> None:
+    def _run(self, job_id: str, request: Request, neural_plan: dict | None = None) -> None:
         token = self.tokens[job_id]
         started = time.monotonic()
         last_update = 0.0
@@ -158,9 +166,14 @@ class Manager:
             token.check()
             self.update(job_id, state="VALIDATING")
             tools = self.tools or Tools.discover()
-            plan = build_plan(request, tools)
+            if neural_plan is None:
+                plan = build_plan(request, tools)
+            else:
+                from studio_ia.plans_v2 import load_plan
+
+                plan = load_plan(neural_plan).cpu_plan()
             token.check()
-            self.update(job_id, state="QUEUED", plan=plan.to_dict())
+            self.update(job_id, state="QUEUED", plan=neural_plan or plan.to_dict())
 
             def progress(value: float | None) -> None:
                 nonlocal last_update
@@ -169,14 +182,27 @@ class Manager:
                     self.update(job_id, progress=value, elapsed_seconds=now - started)
                     last_update = now
 
-            result = run_plan(
-                plan,
-                tools,
-                self.store.root / "jobs" / job_id,
-                token,
-                progress,
-                lambda state: self.update(job_id, state=state),
-            )
+            if neural_plan is None:
+                result = run_plan(
+                    plan,
+                    tools,
+                    self.store.root / "jobs" / job_id,
+                    token,
+                    progress,
+                    lambda state: self.update(job_id, state=state),
+                )
+            else:
+                from studio_ia.neural import run_neural_plan
+                from studio_ia.plans_v2 import load_plan
+
+                result = run_neural_plan(
+                    load_plan(neural_plan),
+                    tools,
+                    self.store.root / "jobs" / job_id,
+                    token,
+                    progress,
+                    lambda state: self.update(job_id, state=state),
+                )
             self.update(
                 job_id,
                 state="SUCCEEDED",
@@ -210,6 +236,26 @@ class Manager:
         row = self.store.get(job_id)
         if row["state"] not in TERMINAL:
             raise StudioError("Attendre la fin de la tâche avant relancement.")
+        if row.get("neural_plan"):
+            from studio_ia.media import sha256
+            from studio_ia.models import inspect
+            from studio_ia.neural import build_neural_plan
+
+            old = row["neural_plan"]
+            if sha256(Path(old["engine"]["path"])) != old["engine"]["sha256"]:
+                raise StudioError("Moteur remplacé : nouvelle sélection explicite requise.")
+            model = inspect(Path(old["model"]["root"]), old["model"]["manifest"])
+            request = Request(**{**row["request"], "destination": destination})
+            frozen = build_neural_plan(
+                request,
+                self.tools or Tools.discover(),
+                model,
+                Path(old["engine"]["path"]),
+                tile=old["budgets"]["tile"],
+                max_frames=old["budgets"]["max_frames"],
+                workspace_budget=old["budgets"]["workspace_bytes"],
+            )
+            return self.submit(request, neural_plan=frozen.to_dict())
         return self.submit(Request(**{**row["request"], "destination": destination}))
 
     def close(self) -> None:

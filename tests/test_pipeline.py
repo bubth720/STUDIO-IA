@@ -45,7 +45,6 @@ def test_silent_and_portrait(tmp_path, tools, size, audio):
     )
 
 
-
 @pytest.mark.parametrize("strength", ["light", "moderate"])
 def test_cpu_deband_real_export(source, tmp_path, tools, strength):
     """Real FFmpeg output; classical filter only, not neuronal inference."""

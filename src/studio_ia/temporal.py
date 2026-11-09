@@ -57,7 +57,7 @@ class FrameTimeline:
 
     @property
     def nonuniform_pts_deltas(self) -> bool:
-        gaps = [right.pts - left.pts for left, right in zip(self.frames, self.frames[1:])]
+        gaps = [right.pts - left.pts for left, right in zip(self.frames, self.frames[1:], strict=False)]
         return len(set(gaps)) > 1
 
     def summary(self) -> dict:
@@ -133,7 +133,7 @@ def parse_frame_timeline(payload: dict, *, max_frames: int = 3000) -> FrameTimel
             raise StudioError("Durée de frame non positive.")
         raw_durations.append(duration)
         keyflags.append(row.get("key_frame") in (1, "1"))
-    if any(b <= a for a, b in zip(pts_list, pts_list[1:])):
+    if any(b <= a for a, b in zip(pts_list, pts_list[1:], strict=False)):
         raise StudioError("PTS dupliqués ou non monotones : analyse refusée.")
 
     frames = []

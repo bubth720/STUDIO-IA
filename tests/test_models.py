@@ -155,3 +155,70 @@ def test_archive_inspection_never_extracts(tmp_path):
         z.writestr("model.bin", b"fixture")
     assert inspect_archive(p) == ["model.bin"]
     assert not (tmp_path / "model.bin").exists()
+
+
+@pytest.mark.parametrize("raw", ["[{}]", "[null]", "{}", "null", '[{"manifest":[]}]', "broken"])
+def test_corrupt_registry_is_never_replaced(model, tmp_path, raw):
+    root, manifest = model
+    registry = tmp_path / "registry.json"
+    registry.write_text(raw, encoding="utf-8")
+    before = registry.read_bytes()
+    with pytest.raises(StudioError):
+        register(root, manifest, registry)
+    assert registry.read_bytes() == before
+
+
+def test_registry_serializes_real_processes_and_releases_crash_lock(model, tmp_path):
+    import json
+    import subprocess
+    import sys
+
+    from studio_ia.models import _registry_lock
+
+    root, manifest = model
+    path = tmp_path / "manifest.json"
+    path.write_text(json.dumps(manifest), encoding="utf-8")
+    registry = tmp_path / "registry.json"
+    code = (
+        "import json,sys; from pathlib import Path; from studio_ia.models import register; "
+        'm=json.loads(Path(sys.argv[2]).read_text(encoding="utf-8")); m["id"]=sys.argv[4]; '
+        "register(Path(sys.argv[1]),m,Path(sys.argv[3]))"
+    )
+    with _registry_lock(registry):
+        children = [
+            subprocess.Popen(
+                [sys.executable, "-c", code, str(root), str(path), str(registry), name],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            for name in ("first", "second")
+        ]
+    try:
+        for child in children:
+            _, stderr = child.communicate(timeout=15)
+            assert child.returncode == 0, stderr
+    finally:
+        for child in children:
+            if child.poll() is None:
+                child.kill()
+                child.wait(timeout=5)
+    assert {r["manifest"]["id"] for r in json.loads(registry.read_text(encoding="utf-8"))} == {
+        "first",
+        "second",
+    }
+    lock_code = (
+        "import sys,time; from pathlib import Path; from studio_ia.models import _registry_lock; "
+        "ctx=_registry_lock(Path(sys.argv[1])); ctx.__enter__(); "
+        'print("READY",flush=True); time.sleep(20)'
+    )
+    child = subprocess.Popen(
+        [sys.executable, "-c", lock_code, str(registry)], stdout=subprocess.PIPE
+    )
+    try:
+        assert child.stdout.readline().strip() == b"READY"
+    finally:
+        child.kill()
+        child.wait(timeout=5)
+    manifest["id"] = "after-crash"
+    register(root, manifest, registry)
+    assert len(json.loads(registry.read_text(encoding="utf-8"))) == 3

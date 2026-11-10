@@ -38,8 +38,17 @@ class PlanV2:
 
 
 def load_plan(data: dict) -> PlanV2:
+    if not isinstance(data, dict):
+        raise StudioError("Plan mal typé : objet JSON requis.")
     version = data.get("schema_version")
-    if version is None and data.get("request", {}).get("schema_version") == 1:
+    request = data.get("request", {})
+    if not isinstance(request, dict):
+        raise StudioError("Plan : requête héritée mal typée.")
+    if (
+        version is None
+        and type(request.get("schema_version")) is int
+        and request["schema_version"] == 1
+    ):
         # Explicit envelope migration, no DB migration and no regenerated CPU filters.
         data = {
             "schema_version": 2,
@@ -47,19 +56,23 @@ def load_plan(data: dict) -> PlanV2:
             "cpu_plan": data,
             "migration": {"from": 1, "filter_graph_reinterpreted": False},
         }
-    if data.get("schema_version") != 2 or data.get("kind") not in ("cpu-v1", "neural-ncnn"):
+    if (
+        type(data.get("schema_version")) is not int
+        or data.get("schema_version") != 2
+        or data.get("kind") not in ("cpu-v1", "neural-ncnn")
+    ):
         raise StudioError("Plan : schéma futur ou moteur inconnu, aucune réinterprétation.")
     try:
         plan = PlanV2(canonical(data))
         cpu = plan.cpu_plan()
-        if cpu.request.schema_version != 1:
+        if type(cpu.request.schema_version) is not int or cpu.request.schema_version != 1:
             raise StudioError("Plan CPU hérité non compatible.")
         if data["kind"] == "neural-ncnn":
             required = {"source_sha256", "engine", "model", "timing", "budgets", "policies"}
             if not required <= data.keys() or cpu.filters:
                 raise StudioError("Plan neuronal incomplet ou filtre CPU d'agrandissement présent.")
         return plan
-    except (TypeError, KeyError) as exc:
+    except (TypeError, KeyError, ValueError) as exc:
         raise StudioError("Plan incomplet.") from exc
 
 

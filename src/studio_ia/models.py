@@ -2,9 +2,13 @@
 
 import hashlib
 import json
+import os
 import re
 import stat
+import sys
+import time
 import zipfile
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath, PureWindowsPath
 
@@ -160,11 +164,86 @@ def inspect(root: Path, manifest: dict) -> ModelRecord:
     return record
 
 
+@contextmanager
+def _registry_lock(registry: Path):
+    """OS-owned lock survives neither process exit nor crash; the marker is preserved."""
+    lock = registry.with_name(registry.name + ".lock")
+    if lock.is_symlink() or (hasattr(lock, "is_junction") and lock.is_junction()):
+        raise StudioError("Lien de verrou de registre interdit.")
+    flags = os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+    try:
+        fd = os.open(lock, flags, 0o600)
+        with os.fdopen(fd, "r+b") as owner:
+            opened, named = os.fstat(owner.fileno()), lock.lstat()
+            if (
+                not stat.S_ISREG(opened.st_mode)
+                or stat.S_ISLNK(named.st_mode)
+                or opened.st_ino != named.st_ino
+            ):
+                raise StudioError("Verrou de registre non régulier ou remplacé.")
+            if opened.st_size == 0:
+                owner.write(b"0")
+                owner.flush()
+            deadline = time.monotonic() + 5
+            while True:
+                try:
+                    if sys.platform == "win32":
+                        import msvcrt
+
+                        owner.seek(0)
+                        msvcrt.locking(owner.fileno(), msvcrt.LK_NBLCK, 1)
+                    else:
+                        import fcntl
+
+                        fcntl.flock(owner.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    break
+                except OSError:
+                    if time.monotonic() >= deadline:
+                        raise StudioError(
+                            "Registre utilisé par un autre processus ; réessayer."
+                        ) from None
+                    time.sleep(0.02)
+            yield
+    except OSError as exc:
+        raise StudioError("Verrou de registre inaccessible.") from exc
+
+
+def _registry_rows(registry: Path) -> tuple[list, bytes | None]:
+    if registry.is_symlink() or (hasattr(registry, "is_junction") and registry.is_junction()):
+        raise StudioError("Lien de registre interdit.")
+    if not registry.exists():
+        return [], None
+    try:
+        with registry.open("rb") as handle:
+            raw = handle.read(16 * 1024**2 + 1)
+        if len(raw) > 16 * 1024**2:
+            raise StudioError("Registre hors budget.")
+        rows = json.loads(raw.decode("utf-8"), object_pairs_hook=unique_pairs)
+        if not isinstance(rows, list):
+            raise StudioError("Registre invalide.")
+        identities = set()
+        for row in rows:
+            if (
+                not isinstance(row, dict)
+                or row.get("schema_version") != 2
+                or not isinstance(row.get("root"), str)
+                or not row["root"]
+                or type(row.get("real_video_validated")) is not bool
+            ):
+                raise StudioError("Entrée de registre invalide.")
+            validate_manifest(row["manifest"])
+            expected = hashlib.sha256(canonical(row["manifest"]).encode()).hexdigest()
+            if row.get("manifest_sha256") != expected or row["manifest"]["id"] in identities:
+                raise StudioError("Identité de registre incohérente ou dupliquée.")
+            identities.add(row["manifest"]["id"])
+        return rows, raw
+    except (ValueError, KeyError, TypeError, OSError) as exc:
+        raise StudioError("Registre illisible ou mal typé ; aucune modification.") from exc
+
+
 def register(root: Path, manifest: dict, registry: Path) -> dict:
     record = inspect(root, manifest)
-    rows = json.loads(registry.read_text(encoding="utf-8")) if registry.exists() else []
-    if not isinstance(rows, list) or any(r["manifest"]["id"] == manifest["id"] for r in rows):
-        raise StudioError("Registre invalide ou identifiant dupliqué.")
+    registry = registry.expanduser().absolute()
     result = {
         "schema_version": 2,
         "root": record.root,
@@ -174,7 +253,13 @@ def register(root: Path, manifest: dict, registry: Path) -> dict:
         "hardware": "NOT_TESTED",
         "real_video_validated": False,
     }
-    write_json(registry, [*rows, result])
+    with _registry_lock(registry):
+        rows, original = _registry_rows(registry)
+        if any(r["manifest"]["id"] == manifest["id"] for r in rows):
+            raise StudioError("Identifiant de registre dupliqué.")
+        if (registry.read_bytes() if registry.exists() else None) != original:
+            raise StudioError("Registre modifié en dehors du verrou ; aucune écriture.")
+        write_json(registry, [*rows, result])
     return result
 
 

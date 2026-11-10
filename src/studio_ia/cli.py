@@ -60,6 +60,24 @@ def main() -> None:
     neural_preview.add_argument("--seconds", type=float, default=0)
     neural_preview.add_argument("--duration", type=float, default=1)
     neural_preview.add_argument("--json", dest="json_output")
+    temporal = sub.add_parser(
+        "temporal-audit", help="Diagnostic CPU réel des coupes, PTS, mouvement et audio"
+    )
+    temporal.add_argument("source")
+    temporal.add_argument("--threshold", default="10")
+    temporal.add_argument("--cut", type=int, action="append", default=[])
+    temporal.add_argument("--ignore-cut", type=int, action="append", default=[])
+    temporal.add_argument("--max-frames", type=int, default=10000)
+    temporal.add_argument("--motion", action="store_true")
+    temporal.add_argument("--audio", action="store_true")
+    temporal.add_argument("--json", dest="json_output")
+    schedule = sub.add_parser(
+        "interpolation-plan", help="Planning ×2 seulement ; aucun backend RIFE activé"
+    )
+    schedule.add_argument("source")
+    schedule.add_argument("--x2", action="store_true", help="Consentement explicite au planning ×2")
+    schedule.add_argument("--cut", type=int, action="append", default=[])
+    schedule.add_argument("--json", dest="json_output")
     inspect = sub.add_parser("analyze", help="Analyser via ffprobe")
     inspect.add_argument("source")
     inspect.add_argument("--json", dest="json_output")
@@ -128,6 +146,38 @@ def main() -> None:
             emit(report, args.json_output)
             if not report["cpu_ready"]:
                 sys.exit(1)
+        elif args.command in ("temporal-audit", "interpolation-plan"):
+            from studio_ia.interpolate import plan_x2
+            from studio_ia.motion import TranslationTracker
+            from studio_ia.scene_detect import scan_scenes
+            from studio_ia.temporal_audio import audit_audio
+
+            if args.command == "interpolation-plan" and not args.x2:
+                raise StudioError("Le planning exige --x2 ; aucune interpolation automatique.")
+            cancel = Cancellation()
+            signal.signal(signal.SIGINT, lambda *_: cancel.request())
+            tracker = TranslationTracker() if getattr(args, "motion", False) else None
+            scan = scan_scenes(
+                Path(args.source),
+                tools,
+                cancel=cancel,
+                threshold=getattr(args, "threshold", "10"),
+                manual_boundaries=tuple(args.cut),
+                ignored_boundaries=tuple(getattr(args, "ignore_cut", [])),
+                max_frames=getattr(args, "max_frames", 10000),
+                sample_observer=tracker.feed if tracker else None,
+            )
+            if args.command == "interpolation-plan":
+                report = plan_x2(scan, explicit_opt_in=args.x2)
+            else:
+                report = scan.to_dict()
+                if tracker:
+                    report["motion"] = tracker.report(scan)
+                if args.audio:
+                    report["audio"] = audit_audio(
+                        Path(args.source), tools, timeline=scan.timeline, cancel=cancel
+                    )
+            emit(report, args.json_output)
         elif args.command == "analyze":
             emit(analyze(Path(args.source), tools).to_dict(), args.json_output)
         elif args.command == "process":

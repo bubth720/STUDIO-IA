@@ -9,6 +9,7 @@ import tempfile
 from dataclasses import asdict, dataclass
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
+from typing import Callable
 
 from studio_ia.analysis_io import capture_local
 from studio_ia.core import Cancellation, StudioError, Tools
@@ -178,6 +179,7 @@ def scan_scenes(
     ignored_boundaries: tuple[int, ...] = (),
     max_frames: int = 10000,
     cancel: Cancellation | None = None,
+    sample_observer: Callable[[int, bytes], None] | None = None,
 ) -> SceneScan:
     cancel = cancel or Cancellation()
     cancel.check()
@@ -247,9 +249,11 @@ def scan_scenes(
             raise StudioError("Décodage d'analyse incomplet ou nombre de frames modifié.")
         hashes, means = [], []
         with raw.open("rb") as stream:
-            for _ in timeline.frames:
+            for index, _ in enumerate(timeline.frames):
                 cancel.check()
                 frame = stream.read(SAMPLE_SIZE**2)
+                if sample_observer is not None:
+                    sample_observer(index, frame)
                 hashes.append(hashlib.sha256(frame).hexdigest())
                 means.append(Decimal(sum(frame)) / Decimal(len(frame)))
     if sha256(source, cancel) != before:

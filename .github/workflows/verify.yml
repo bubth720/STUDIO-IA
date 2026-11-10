@@ -66,6 +66,8 @@ jobs:
       - name: Real tests with Windows Qt
         if: runner.os == 'Windows'
         run: python -m pytest -q -ra --junitxml=artifacts/pytest.xml
+      - name: M005 real CPU temporal controls (no neural inference)
+        run: python scripts/run_temporal_checks.py --output artifacts/temporal
       - name: Mandatory synthetic CPU E2E
         run: python scripts/run_e2e.py --output artifacts/e2e
       - name: Package and test the frozen application (Linux X11)
@@ -106,6 +108,7 @@ jobs:
           name: m003-evidence-${{ runner.os }}-${{ env.STUDIO_IA_SOURCE_SHA }}
           path: |
             artifacts/e2e/
+            artifacts/temporal/
             artifacts/gui/
             artifacts/frozen-smoke-*/
             artifacts/pytest.xml

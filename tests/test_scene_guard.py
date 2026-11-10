@@ -140,3 +140,23 @@ def test_manual_exclusion_is_explicit_and_auditable(tmp_path, tools):
     assert scan.to_dict()["manual_exclusions"] == [100]
     with pytest.raises(StudioError, match="simultanément"):
         scan_scenes(source, tools, manual_boundaries=(100,), ignored_boundaries=(100,))
+
+
+def test_actual_analysis_cancellation_after_40_percent_leaves_no_result(tmp_path, tools):
+    from studio_ia.core import Cancellation, Cancelled
+
+    cancel = Cancellation()
+    source = make_clip(tools, tmp_path / "cancel.mp4")
+    before = sha256(source)
+    observed = []
+
+    def observe(index, sample):
+        observed.append(index)
+        if index == 79:
+            cancel.request()
+
+    with pytest.raises(Cancelled):
+        scan_scenes(source, tools, cancel=cancel, sample_observer=observe)
+    assert len(observed) == 80
+    assert sha256(source) == before
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["cancel.mp4"]

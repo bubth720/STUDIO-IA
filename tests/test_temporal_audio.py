@@ -70,6 +70,18 @@ def test_real_multitrack_copy_preserves_offsets_languages_and_packets(tmp_path, 
     )
     after = audit_audio(output, tools)
     comparison = compare_audio(before, after)
+    # Equal track counts/endpoints must not hide a layout, priming or internal cadence change.
+    import copy
+
+    for field, changed in [
+        ("channel_layout", "5.1"),
+        ("codec_delay_metadata", [{"skip_samples": 1024}]),
+        ("relative_packet_timing_sha256", "0" * 64),
+    ]:
+        invalid = copy.deepcopy(after)
+        invalid["tracks"][0][field] = changed
+        with pytest.raises(StudioError, match="Piste audio modifiée"):
+            compare_audio(before, invalid)
     assert all(Fraction(r["initial_offset_drift_seconds"]) == 0 for r in comparison["tracks"])
     assert sha256(source) == before_hash
     if vfr:

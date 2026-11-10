@@ -67,6 +67,12 @@ def main() -> None:
     process.add_argument("source")
     process.add_argument("destination")
     process.add_argument("--denoise", choices=["off", "light", "moderate"], default="light")
+    process.add_argument(
+        "--deband",
+        choices=["off", "light", "moderate"],
+        default="off",
+        help="Anti-banding CPU conservateur (désactivé par défaut)",
+    )
     process.add_argument("--scale", type=float, default=1)
     process.add_argument("--brightness", type=float, default=0)
     process.add_argument("--contrast", type=float, default=1)
@@ -129,6 +135,7 @@ def main() -> None:
                 args.source,
                 args.destination,
                 denoise=args.denoise,
+                deband=args.deband,
                 scale=args.scale,
                 brightness=args.brightness,
                 contrast=args.contrast,

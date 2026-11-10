@@ -244,6 +244,13 @@ class Window(QMainWindow):
         self.denoise.addItems(["Désactivé", "Léger", "Modéré"])
         self.denoise.setCurrentIndex(1)
         form.addRow("Débruitage", self.denoise)
+        self.deband = QComboBox()
+        self.deband.addItems(["Désactivé", "Léger", "Modéré"])
+        self.deband.setToolTip(
+            "Atténue les bandes dans les dégradés compressés. "
+            "Peut lisser les détails ; ce n’est pas un traitement neuronal."
+        )
+        form.addRow("Anti-banding CPU", self.deband)
         self.scale = QComboBox()
         self.scale.addItems(["× 0,5", "× 1 · Taille native", "× 2 · Lanczos", "× 4 · Lanczos"])
         self.scale.setCurrentIndex(1)
@@ -329,7 +336,7 @@ class Window(QMainWindow):
         layout.addLayout(history_row)
         self.profile.currentIndexChanged.connect(self.apply_profile)
         self.engine.currentIndexChanged.connect(self.apply_engine)
-        for control in (self.denoise, self.scale):
+        for control in (self.denoise, self.deband, self.scale):
             control.currentIndexChanged.connect(self.invalidate)
         for control in (self.brightness, self.contrast, self.saturation, self.crf):
             control.valueChanged.connect(self.invalidate)
@@ -362,6 +369,7 @@ class Window(QMainWindow):
         if self.engine.currentIndex() == 1:
             self.profile.setCurrentIndex(1)
             self.denoise.setCurrentIndex(0)
+            self.deband.setCurrentIndex(0)
             self.scale.setCurrentIndex(2)
             self.brightness.setValue(0)
             self.contrast.setValue(1)
@@ -437,6 +445,7 @@ class Window(QMainWindow):
         custom = self.profile.currentIndex() == 1
         for control in (
             self.denoise,
+            self.deband,
             self.scale,
             self.brightness,
             self.contrast,
@@ -446,6 +455,7 @@ class Window(QMainWindow):
             control.setEnabled(custom)
         if not custom:
             self.denoise.setCurrentIndex(1 if self.profile.currentIndex() == 0 else 0)
+            self.deband.setCurrentIndex(0)
             self.scale.setCurrentIndex(1)
             self.brightness.setValue(0)
             self.contrast.setValue(1)
@@ -498,6 +508,7 @@ class Window(QMainWindow):
             self.destination.text(),
             profile=("preservation", "custom", "control")[self.profile.currentIndex()],
             denoise=("off", "light", "moderate")[self.denoise.currentIndex()],
+            deband=("off", "light", "moderate")[self.deband.currentIndex()],
             scale=(0.5, 1, 2, 4)[self.scale.currentIndex()],
             brightness=self.brightness.value(),
             contrast=self.contrast.value(),
@@ -747,6 +758,7 @@ class Window(QMainWindow):
             control.setEnabled(not busy)
         for control in (
             self.denoise,
+            self.deband,
             self.scale,
             self.brightness,
             self.contrast,

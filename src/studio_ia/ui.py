@@ -111,6 +111,7 @@ class Window(QMainWindow):
         self.neural_cancel = Cancellation()
         self.last_neural_preview = None
         self.closing = False
+        self.temporal_windows = []
         self.preview_temp = tempfile.TemporaryDirectory(prefix="preview-", dir=self.root)
         self.setWindowTitle(f"STUDIO IA · {__version__} · ALPHA")
         self.resize(1180, 850)
@@ -196,7 +197,10 @@ class Window(QMainWindow):
         self.preview_button = QPushButton("Comparer les images")
         self.preview_button.clicked.connect(self.preview)
         preview_row.addWidget(self.preview_button)
+        self.temporal_button = QPushButton("Inspection temporelle")
+        self.temporal_button.clicked.connect(self.open_temporal_preview)
         left_layout.addLayout(preview_row)
+        left_layout.addWidget(self.temporal_button)
         splitter.addWidget(left)
         settings = QGroupBox("Traitement proposé")
         form = QFormLayout(settings)
@@ -557,6 +561,20 @@ class Window(QMainWindow):
         except StudioError as exc:
             self.status.setText(str(exc))
 
+    def open_temporal_preview(self):
+        if not self.source:
+            self.status.setText("Importer une vidéo avant l'inspection temporelle.")
+            return
+        from studio_ia.temporal_preview import TemporalPreview
+
+        reference = (
+            Path(self.last_result["plan"]["request"]["destination"]) if self.last_result else None
+        )
+        self.temporal_windows = [w for w in self.temporal_windows if not w.closing]
+        window = TemporalPreview(Path(self.source.path), reference)
+        self.temporal_windows.append(window)
+        window.show()
+
     def preview(self):
         if not self.source:
             return
@@ -879,6 +897,8 @@ class Window(QMainWindow):
         self.background("configured_tools", lambda: (tools, capabilities(tools)))
 
     def closeEvent(self, event):
+        for window in self.temporal_windows:
+            window.close()
         self.neural_cancel.request()
         active = [row for row in self.manager.store.list() if row["state"] not in TERMINAL]
         if active:

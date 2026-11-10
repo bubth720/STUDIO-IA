@@ -93,7 +93,7 @@ def capture_local(
                 if proc.returncode:
                     detail = b"".join(stderr_tail)[-3000:].decode("utf-8", "replace")
                     raise StudioError(f"{Path(args[0]).name} (code {proc.returncode}) : {detail}")
-                return b"".join(chunks).decode("utf-8", "replace")
+                return b"".join(chunks).decode("utf-8", "replace").replace("\r\n", "\n")
             finally:
                 stop_process(proc)
                 worker.join(timeout=5)

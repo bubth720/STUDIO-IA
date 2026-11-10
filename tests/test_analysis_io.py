@@ -13,7 +13,7 @@ from studio_ia.temporal import FrameRecord, parse_frame_timeline
 
 
 def test_capture_real_stdout_and_nonzero_stderr():
-    assert capture_local([sys.executable, "-c", 'print("réel")']) == "réel\n"
+    assert capture_local([sys.executable, "-X", "utf8", "-c", 'print("réel")']) == "réel\n"
     with pytest.raises(StudioError, match="code 3.*diagnostic"):
         capture_local(
             [sys.executable, "-c", 'import sys; sys.stderr.write("diagnostic"); sys.exit(3)']

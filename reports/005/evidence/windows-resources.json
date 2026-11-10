@@ -1,0 +1,49 @@
+{
+  "platform": "Windows-2022Server-10.0.20348-SP0",
+  "python": "3.12.10",
+  "cpu_logical_count": 4,
+  "application": {
+    "version": "0.3.0a2",
+    "source_sha": "277c50b44bcc1fc2d0eada3c05ffd52c77b60153"
+  },
+  "source_dirty": false,
+  "ffmpeg_version": "ffmpeg version 7.1.1-essentials_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers",
+  "measurements": [
+    {
+      "status": "PASS_CPU_ONLY",
+      "seconds_source": 30,
+      "frames": 750,
+      "wall_seconds": 0.6505626000000575,
+      "python_cpu_seconds": 0.34375,
+      "effective_analysis_fps": 1152.8483192853903,
+      "source_unchanged": true,
+      "memory": {
+        "self_lifetime_peak_rss_bytes": 24420352,
+        "children_lifetime_peak_rss_bytes": null,
+        "method": "Windows GetProcessMemoryInfo; child peak unavailable"
+      },
+      "motion_status": "PASS_CPU_DIAGNOSTIC",
+      "vram_bytes": null,
+      "neural_executed": false
+    },
+    {
+      "status": "PASS_CPU_ONLY",
+      "seconds_source": 180,
+      "frames": 4500,
+      "wall_seconds": 2.678939899999932,
+      "python_cpu_seconds": 2.1875,
+      "effective_analysis_fps": 1679.7689265071285,
+      "source_unchanged": true,
+      "memory": {
+        "self_lifetime_peak_rss_bytes": 30642176,
+        "children_lifetime_peak_rss_bytes": null,
+        "method": "Windows GetProcessMemoryInfo; child peak unavailable"
+      },
+      "motion_status": "PASS_CPU_DIAGNOSTIC",
+      "vram_bytes": null,
+      "neural_executed": false
+    }
+  ],
+  "gpu_tests": "BLOCKED_NO_QUALIFIED_GPU",
+  "m005_status": "PREPARATION"
+}

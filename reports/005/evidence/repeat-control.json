@@ -1,0 +1,9 @@
+{
+  "status": "PASS_NON_NEURAL_REPEAT_TRANSPORT",
+  "frames": 400,
+  "fps": "50",
+  "duration_seconds": "8",
+  "all_repeated_hashes_match": true,
+  "rife_executed": false,
+  "output_sha256": "daa39a4aecb901332f8cc5a2125d99dbb1e29ea232b86fe2339ac49f160be654"
+}

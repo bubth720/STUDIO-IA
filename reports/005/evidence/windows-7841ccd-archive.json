@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "source_commit": "7841ccd2767a6bb24e483e3c355be0a16ef138e1",
+  "file": "STUDIO-IA-M005-Windows-7841ccd-artifact.zip",
+  "sha256": "0d242f2b042f4fa92b208bb469290df53f6ef050f7e79087c20e9e7b6bacb16c",
+  "bytes": 41821759,
+  "application_zip_sha256": "5a72a37dfe0e9ba7d41988a440ce644a461f44fcbc6ec0658328fe4fdf96ca60",
+  "outer_crc": "PASS",
+  "inner_crc": "PASS",
+  "build": {
+    "application": "STUDIO IA",
+    "version": "0.3.0a2",
+    "label": "ALPHA / EXPERIMENTAL",
+    "source_commit": "7841ccd2767a6bb24e483e3c355be0a16ef138e1",
+    "source_dirty": false,
+    "platform": "Windows-2022Server-10.0.20348-SP0",
+    "glibc": null,
+    "python": "3.12.10",
+    "packager": "PyInstaller 6.13.0",
+    "qt_binding": "6.8.3",
+    "ffmpeg_bundled": false,
+    "neural_models_bundled": false
+  }
+}

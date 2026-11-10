@@ -127,6 +127,12 @@ def audit_audio(
                 if start is not None
                 else str(min(pts) * tb - timeline.first_time),
                 "packet_count": len(rows),
+                "relative_packet_timing_sha256": hashlib.sha256(
+                    "\n".join(
+                        f"{(pts[i] - pts[0]) * tb}:{_optional_time(packet, 'duration', tb)}"
+                        for i, packet in enumerate(rows)
+                    ).encode("ascii")
+                ).hexdigest(),
                 "packet_payload_sequence_sha256": hashlib.sha256(
                     "\n".join(payloads).encode("ascii")
                 ).hexdigest(),
@@ -166,6 +172,9 @@ def compare_audio(before: dict, after: dict, *, tolerance: Fraction = Fraction(1
             "codec",
             "sample_rate",
             "channels",
+            "channel_layout",
+            "codec_delay_metadata",
+            "relative_packet_timing_sha256",
             "language",
             "title",
             "packet_count",

@@ -1,0 +1,77 @@
+{
+  "status": "PASS",
+  "files_verified": 14,
+  "preserved": true,
+  "files": [
+    {
+      "name": "BILAN-M004.md",
+      "sha256": "018482b8055635f9d0b57332ca81bc12818cb61e72dfe8b3fd1efad67510ff1d",
+      "pass": true
+    },
+    {
+      "name": "COMMITS-ET-VERIFICATIONS.json",
+      "sha256": "59a47002f2109cff178ccb12a62a1d5eadda4d1aaea6d998bd6e881a36fb728d",
+      "pass": true
+    },
+    {
+      "name": "LIRE-DABORD.md",
+      "sha256": "0fbc0b5b6804aa83be6bea584b46e0cafd065aece9f5046535c181064f3e726a",
+      "pass": true
+    },
+    {
+      "name": "MANIFEST.json",
+      "sha256": "50ff51f760b0c7aad53d5d9385e61f0cb370b3065a1a3196e8d67208de475e75",
+      "pass": true
+    },
+    {
+      "name": "PUBLICATION-VERIFIEE.json",
+      "sha256": "c0d5c37c6f0d4bac2586e01d2a255f1a9bc371120b79c47ea82a1d04f2a15a34",
+      "pass": true
+    },
+    {
+      "name": "STUDIO-IA-M004-Linux-CPU-experimental-artifact.zip",
+      "sha256": "3bf28f222d98f28b149358f577b438e150371638b51dd87becfa2e558872c558",
+      "pass": true
+    },
+    {
+      "name": "STUDIO-IA-M004-Windows-CPU-experimental-artifact.zip",
+      "sha256": "a6cc65c5c8040dd681db7e98adde4a0713f35a1c3049ab16cffe818322fcb800",
+      "pass": true
+    },
+    {
+      "name": "STUDIO-IA-M004-commits.patch",
+      "sha256": "917ff24379cc948a7426e9605f669177a91cc96acde8e65a97f6b01dc4ac71dc",
+      "pass": true
+    },
+    {
+      "name": "STUDIO-IA-M004-complete.bundle",
+      "sha256": "a83fb8c0293fc08916aac15615ea4e19bdcf5f4982da17edbfff0333eef0e395",
+      "pass": true
+    },
+    {
+      "name": "STUDIO-IA-M004-rapports-et-preuves.zip",
+      "sha256": "a70f807b8d1a7e8ed7e0fdaa6f5d43ed72a7bda526321d64db86afa3c0b3bb37",
+      "pass": true
+    },
+    {
+      "name": "STUDIO-IA-M004-sources.zip",
+      "sha256": "c2852e8c537e88fa31455f3fd8f612796513cdbfde193e0df4a049926057ded9",
+      "pass": true
+    },
+    {
+      "name": "hardware.json",
+      "sha256": "1f58072a5b2b97dbc6a4506741bf7bd11fbe998f89abc56cba6f90e38c62b645",
+      "pass": true
+    },
+    {
+      "name": "nn-e2e-001.json",
+      "sha256": "f9ee275045177d5fc493786d3c9ad882d976893716d4565367612f86e94551fd",
+      "pass": true
+    },
+    {
+      "name": "verifier_livraison.py",
+      "sha256": "31139ec6b0b2a7d834daa5890094d2e48234a1b7256f86dfbffd917973b9eedc",
+      "pass": true
+    }
+  ]
+}

@@ -11,7 +11,7 @@ Périmètre exclusif : bubth720/STUDIO-IA. Aucun autre projet, aucune fusion.
 - [CI du parent M005](https://github.com/bubth720/STUDIO-IA/actions/runs/42709678348) :
   SUCCESS Windows/Linux au SHA 8da64eb.
 - Baseline locale ciblée au parent : **49 PASS, 1 SKIP**, 195,05 s
-  (temporal, policy, pipeline, Qt). Le SKIP concerne le plugin X11 local absent.
+  (temporal, policy, pipeline, Qt). Le SKIP concerne Video2X/modèles absents, sans qualification neuronale. Qt est testé en offscreen local ; X11 est qualifié en CI.
 - Baseline M004 historique rejouée séparément avant reprise du parent :
   **102 PASS, 1 SKIP**, 179,86 s. Ce nombre ne décrit pas le nouveau code.
 - Main observée : `61fe67ebb908da856964e88200e1220f83fc2bb8` ; PR #1–#5

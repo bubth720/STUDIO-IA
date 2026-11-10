@@ -120,6 +120,46 @@ def package():
     if smoke_report["status"] != "PASS" or not smoke_report["frozen"]:
         raise RuntimeError("A real successful frozen application smoke is required")
     shutil.copy2(smoke / "gui/gui-smoke.json", folder / "BUILD_SMOKE.json")
+    temporal = smoke / "temporal"
+    subprocess.run(
+        [str(executable), "--temporal-smoke", "--output", str(temporal)],
+        cwd=smoke,
+        env=env,
+        timeout=120,
+        check=True,
+    )
+    subprocess.run(
+        [
+            str(executable),
+            "--cli",
+            "temporal-audit",
+            str(temporal / "synthetic-source.mp4"),
+            "--audio",
+            "--motion",
+            "--json",
+            str(temporal / "audit.json"),
+        ],
+        cwd=smoke,
+        env=env,
+        timeout=120,
+        check=True,
+    )
+    subprocess.run(
+        [
+            str(executable),
+            "--cli",
+            "interpolation-plan",
+            str(temporal / "synthetic-source.mp4"),
+            "--x2",
+            "--json",
+            str(temporal / "x2-plan.json"),
+        ],
+        cwd=smoke,
+        env=env,
+        timeout=120,
+        check=True,
+    )
+    shutil.copy2(temporal / "temporal-smoke.json", folder / "BUILD_TEMPORAL_SMOKE.json")
     # Inventory every distributed binary/data file; archive checksum is emitted separately.
     files = {
         str(path.relative_to(folder)): sha256(path)

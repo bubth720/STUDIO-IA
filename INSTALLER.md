@@ -89,3 +89,27 @@ hors réseau est qualifiée et Python y est déjà fourni.
   Les médias source et exports ne sont pas supprimés avec l'historique.
 - Temps CPU dépendant du média et du matériel ; aucune estimation universelle.
   Pas de création vidéo, compte, télémétrie, service réseau, APK ou modèle inclus.
+
+## Outils temporels expérimentaux M005 (CPU)
+
+Cette distribution conserve le moteur CPU qualifié et ajoute des diagnostics.
+**Real-ESRGAN et RIFE ne sont pas qualifiés sur les machines de livraison.**
+Aucun modèle ni téléchargement automatique n'est inclus.
+
+Depuis une distribution extraite (Windows : `STUDIO-IA.exe` à la place de `./STUDIO-IA`) :
+
+```bash
+./STUDIO-IA --cli temporal-audit source.mkv --motion --audio --json nouveau-rapport.json
+./STUDIO-IA --cli interpolation-plan source.mp4 --x2 --cut 100 --json nouveau-plan.json
+./STUDIO-IA --cli temporal-preview source.mp4 --reference export.mp4
+```
+
+Depuis les sources installées, remplacer `./STUDIO-IA --cli` par `python -m studio_ia.cli`.
+Le rapport et le plan doivent utiliser de nouveaux fichiers. Le plan ×2 est une
+préparation sans rendu RIFE ; les sources VFR sont inspectées sans conversion de cadence.
+L'interface propose aussi **Inspection temporelle** après import. Elle compare les PTS
+réels, avec six paires en cache et une loupe d'aperçu limitée à 640×360.
+
+Les preuves CPU synthétiques sont reproductibles avec
+`python scripts/run_temporal_checks.py --output artifacts/temporal` depuis les sources.
+Les résultats ne prédisent pas les performances HD/4K et ne valident pas une IA absente.

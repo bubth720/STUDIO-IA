@@ -57,11 +57,35 @@ def main():
         check=True,
         timeout=180,
     )
+    subprocess.run(
+        [str(executable), "--temporal-smoke", "--output", str(output / "temporal")],
+        cwd=output,
+        env=env,
+        check=True,
+        timeout=120,
+    )
+    subprocess.run(
+        [
+            str(executable),
+            "--cli",
+            "temporal-audit",
+            str(output / "temporal/synthetic-source.mp4"),
+            "--audio",
+            "--motion",
+            "--json",
+            str(output / "temporal/audit.json"),
+        ],
+        cwd=output,
+        env=env,
+        check=True,
+        timeout=120,
+    )
     report = {
         "archive_sha256": expected,
         "file_hashes_verified": len(files),
         "zip_integrity": "PASS",
         "extracted_frozen_smoke": "PASS",
+        "extracted_temporal_smoke": "PASS_CPU_ONLY",
         "build": json.loads((folder / "BUILD_INFO.json").read_text(encoding="utf-8")),
     }
     (output / "archive-verification.json").write_text(

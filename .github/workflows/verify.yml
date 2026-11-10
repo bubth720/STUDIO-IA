@@ -52,10 +52,10 @@ jobs:
           python -m pip install -e ".[dev,gui,build]"
       - name: Lint and core types
         run: |
-          python -m ruff check src tests scripts
-          python -m ruff format --check src tests scripts
+          python -m ruff check src tests scripts quality ui
+          python -m ruff format --check src tests scripts quality ui
           python -m mypy src/studio_ia/core.py src/studio_ia/media.py src/studio_ia/pipeline.py src/studio_ia/jobs.py
-          python -m mypy src/studio_ia/files.py
+          python -m mypy src/studio_ia/files.py src/studio_ia/analysis_io.py src/studio_ia/temporal.py src/studio_ia/scene_detect.py src/studio_ia/interpolate.py src/studio_ia/motion.py src/studio_ia/temporal_audio.py src/studio_ia/models.py src/studio_ia/plans_v2.py
       - name: Check the actual Qt X11 plugin before pytest capture
         if: runner.os == 'Linux'
         run: |
@@ -116,6 +116,7 @@ jobs:
             artifacts/pytest.xml
             artifacts/dependencies.txt
             artifacts/extracted-package/gui/
+            artifacts/extracted-package/temporal/
             artifacts/extracted-package/archive-verification.json
             artifacts/installed-source-doctor.json
             artifacts/installed-source-gui/

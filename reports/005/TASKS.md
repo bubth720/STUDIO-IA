@@ -9,7 +9,7 @@ préservées. Aucun raccordement RIFE productif, aucune fusion dans main.
 | M5.05/.07/.08 : mouvement, audio, contrôles et mesures bornés | 1b50d48 | [#7](https://github.com/bubth720/STUDIO-IA/pull/7) | 42 tests temporels ciblés ; protocole FFmpeg réel |
 | M5.06 : inspection Qt par PTS | 7d2f028 | [#8](https://github.com/bubth720/STUDIO-IA/pull/8) | QTest réel et régression GUI ; six paires en cache |
 | Compléments M004 indépendants | 24e6c56 | [#9](https://github.com/bubth720/STUDIO-IA/pull/9) | 40 tests registre/plans ; vrais processus concurrents |
-| Qualification consolidée / distribution | Branche codex/studio-ia-m005-qualification | PR dédiée après publication | Smoke temporel source exécuté ; CI native/build/extraction à consigner dans FINAL.md |
+| Qualification consolidée / distribution | 277c50b + 7841ccd | [#10](https://github.com/bubth720/STUDIO-IA/pull/10) | PASS Windows/Linux, CPU E2E, Qt et exécutables extraits ; résultats dans FINAL.md |
 | M004 image/vidéo NN réelle | Aucun résultat produit | PR #3 préservée | BLOCKED : GPU, poids/droits et qualification réelle absents |
 | M5.03 et comparaison CPU/NN/stabilité NN | Plan ×2 seulement, jamais exécuté | Toutes les branches gardent la gate fermée | BLOCKED |
 | Occlusions, mains, visages, rotations rapides | Aucune validation réelle | — | BLOCKED ; aucun masque d'occlusion prétendu |

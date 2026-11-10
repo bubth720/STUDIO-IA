@@ -1,0 +1,17 @@
+{
+  "status": "PASS_REAL_CPU_TEMPORAL_SMOKE",
+  "application": {
+    "version": "0.3.0a2",
+    "source_sha": "7841ccd2767a6bb24e483e3c355be0a16ef138e1",
+    "source_dirty": false
+  },
+  "source_sha256": "4e854995b8a84cf7d82ff4d0af2dc3302ec4cc44ca77ff467351d80f03fb8286",
+  "source_unchanged": true,
+  "rapid_requests": 31,
+  "last_frame": 40,
+  "observed_pts_seconds": "8/5",
+  "qt_heartbeat_events": 155,
+  "cache_entries": 2,
+  "coalesced_requests": 29,
+  "neural_executed": false
+}

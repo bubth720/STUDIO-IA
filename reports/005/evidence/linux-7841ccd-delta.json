@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "source_commit": "7841ccd2767a6bb24e483e3c355be0a16ef138e1",
+  "file": "STUDIO-IA-M005-Linux-7841ccd.delta.zst",
+  "delta_bytes": 39014460,
+  "delta_sha256": "20b67d5ed0829bf4bbf339ac12b98f955aa53e78382cb2263e668e34e5892038",
+  "base_file": "STUDIO-IA-M004-Linux-CPU-experimental-artifact.zip",
+  "base_sha256": "3bf28f222d98f28b149358f577b438e150371638b51dd87becfa2e558872c558",
+  "restored_bytes": 103798944,
+  "restored_sha256": "33271e584c706843f0a956601800903235dbac4c0cc08c72194aa9d66768afc4",
+  "application_zip_sha256": "d301eba8fab56ebc714d1754c2a69250fcc6d7013d1d4ff985fbf0f1e0796aed",
+  "roundtrip": "PASS_BYTE_FOR_BYTE",
+  "outer_crc": "PASS",
+  "inner_crc": "PASS",
+  "build": {
+    "application": "STUDIO IA",
+    "version": "0.3.0a2",
+    "label": "ALPHA / EXPERIMENTAL",
+    "source_commit": "7841ccd2767a6bb24e483e3c355be0a16ef138e1",
+    "source_dirty": false,
+    "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+    "glibc": [
+      "glibc",
+      "2.39"
+    ],
+    "python": "3.12.16",
+    "packager": "PyInstaller 6.13.0",
+    "qt_binding": "6.8.3",
+    "ffmpeg_bundled": false,
+    "neural_models_bundled": false
+  }
+}

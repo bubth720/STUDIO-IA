@@ -101,7 +101,16 @@ def main() -> None:
     verify.add_argument("plan")
     verify.add_argument("output")
     sub.add_parser("gui", help="Ouvrir l'application de bureau")
+    temporal_gui = sub.add_parser("temporal-preview", help="Inspection Qt source/référence par PTS")
+    temporal_gui.add_argument("source", type=Path)
+    temporal_gui.add_argument("--reference", type=Path)
+
     args = parser.parse_args()
+    if args.command == "temporal-preview":
+        from studio_ia.temporal_preview import main as temporal_main
+
+        temporal_main(args.source, args.reference)
+        return
     if args.command == "gui":
         from studio_ia.ui import main as gui_main
 

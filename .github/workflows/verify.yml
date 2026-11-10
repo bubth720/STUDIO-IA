@@ -24,6 +24,7 @@ jobs:
     timeout-minutes: 30
     env:
       STUDIO_IA_HOME: ${{ github.workspace }}/artifacts/state
+      STUDIO_IA_TEMPORAL_GUI_EVIDENCE: ${{ github.workspace }}/artifacts/temporal-gui
       STUDIO_IA_GUI_EVIDENCE: ${{ github.workspace }}/artifacts/gui
       STUDIO_IA_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
@@ -109,6 +110,7 @@ jobs:
           path: |
             artifacts/e2e/
             artifacts/temporal/
+            artifacts/temporal-gui/
             artifacts/gui/
             artifacts/frozen-smoke-*/
             artifacts/pytest.xml

@@ -1,0 +1,16 @@
+{
+  "source_commit": "000a9801f16da9a855442eab7d864384570cf5c2",
+  "source_dirty": false,
+  "hardware": {
+    "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+    "gpu": {
+      "status": "BLOCKED",
+      "reason": "VULKAN_INSTANCE_FAILED",
+      "vk_result": -9,
+      "devices": []
+    }
+  },
+  "inference": "NOT_RUN",
+  "real_video_validated": false,
+  "status": "BLOCKED"
+}

@@ -1,6 +1,14 @@
 # STUDIO-IA
 
 Application de bureau locale de restauration vidéo — **0.3.0a2, ALPHA expérimentale consolidée**.
+
+**M004, 9 novembre 2026 :** registre sûr, plans v2 et raccordements NCNN/CLI/Qt
+développés sur une [branche dédiée](https://github.com/bubth720/STUDIO-IA/tree/codex/studio-ia-m004-neural-local),
+[PR #3 en brouillon](https://github.com/bubth720/STUDIO-IA/pull/3). CPU requalifié
+Windows/Linux ; **restauration neuronale BLOCKED et M005 NO_GO**, faute de GPU
+compatible et de qualification des poids/vidéos. [Rapport et preuves](reports/004/FINAL.md).
+Les paragraphes de consolidation ci-dessous conservent leur périmètre CPU.
+
 Import → analyse → plan → traitement CPU réel → vérification complète → comparaison
 → export. Interface Qt française, sans compte, crédits, serveur ou télémétrie.
 

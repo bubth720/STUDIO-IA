@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-11-08",
+  "repository": "bubth720/STUDIO-IA",
+  "base_branch": "codex/studio-ia-consolidation-v1",
+  "reference_head": "24f5c211cc96d7d6956d9e7452c4dc025693caa4",
+  "status": "DOCUMENTATION_ONLY",
+  "reference_alpha": "0.3.0a2",
+  "missions": [
+    {
+      "id": "M004",
+      "status": "NOT_STARTED",
+      "stage": "RESTORE",
+      "requires_approval": false
+    },
+    {
+      "id": "M005",
+      "status": "NOT_STARTED",
+      "stage": "RESTORE",
+      "requires_approval": false
+    },
+    {
+      "id": "M006",
+      "status": "NOT_STARTED",
+      "stage": "RESTORE",
+      "requires_approval": false
+    },
+    {
+      "id": "M007",
+      "status": "NOT_STARTED",
+      "stage": "RESTORE",
+      "requires_approval": false
+    },
+    {
+      "id": "M008",
+      "status": "NOT_STARTED",
+      "stage": "RESTORE",
+      "requires_approval": false
+    },
+    {
+      "id": "M009",
+      "status": "NOT_STARTED",
+      "stage": "RESTORE",
+      "requires_approval": false
+    },
+    {
+      "id": "M010",
+      "status": "NOT_STARTED",
+      "stage": "RESTORE",
+      "requires_approval": false
+    },
+    {
+      "id": "M011",
+      "status": "NOT_STARTED",
+      "stage": "RESTORE",
+      "requires_approval": false
+    },
+    {
+      "id": "M012",
+      "status": "NOT_STARTED",
+      "stage": "RESTORE",
+      "requires_approval": false
+    },
+    {
+      "id": "M013",
+      "status": "NOT_STARTED",
+      "stage": "RESTORE",
+      "requires_approval": false
+    },
+    {
+      "id": "M014",
+      "status": "NOT_STARTED",
+      "stage": "RESTORE",
+      "requires_approval": false
+    },
+    {
+      "id": "M015",
+      "status": "NOT_STARTED",
+      "stage": "CREATIVE_FUTURE",
+      "requires_approval": true
+    },
+    {
+      "id": "M016",
+      "status": "NOT_STARTED",
+      "stage": "CREATIVE_FUTURE",
+      "requires_approval": true
+    },
+    {
+      "id": "M017",
+      "status": "NOT_STARTED",
+      "stage": "CREATIVE_FUTURE",
+      "requires_approval": true
+    }
+  ]
+}

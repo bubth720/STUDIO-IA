@@ -11,6 +11,7 @@ import zipfile
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath, PureWindowsPath
+from typing import Any
 
 from studio_ia.core import StudioError
 from studio_ia.files import write_json
@@ -18,6 +19,27 @@ from studio_ia.media import sha256
 
 BACKEND = "realesrgan-ncnn-vulkan/0.2.0"
 OFFICIAL = "https://github.com/xinntao/Real-ESRGAN"
+# Closed list of official NCNN pairs accepted by this adapter. The CLI v0.2.0 resolves
+# realesr-animevideov3 to "<name>-x<scale>" and every other model to "<name>".
+CATALOG: dict[str, dict[str, Any]] = {
+    "realesr-animevideov3": {
+        "scale": 2,
+        "param": "realesr-animevideov3-x2.param",
+        "weights": "realesr-animevideov3-x2.bin",
+        "content": "animation",
+    },
+    "realesrgan-x4plus": {
+        "scale": 4,
+        "param": "realesrgan-x4plus.param",
+        "weights": "realesrgan-x4plus.bin",
+        "content": "live-action",
+    },
+}
+
+
+def native_scale(manifest: dict) -> int:
+    """Native NCNN factor of an already validated manifest."""
+    return CATALOG[manifest["name"]]["scale"]
 
 
 def canonical(data: dict) -> str:
@@ -62,10 +84,11 @@ def validate_manifest(data: dict) -> None:
             raise StudioError("Schéma/chargeur non accepté ; aucun pickle, PTH ou code Python.")
         if not re.fullmatch(r"[a-zA-Z0-9._-]{1,80}", data["id"]):
             raise StudioError("Identifiant de modèle invalide.")
-        if data["backend"] != BACKEND or data["name"] != "realesr-animevideov3":
+        if data["backend"] != BACKEND or data["name"] not in CATALOG:
             raise StudioError("Backend/modèle non pris en charge par cet adaptateur.")
-        if data["scale"] != 2 or type(data["scale"]) is not int:
-            raise StudioError("Ce contrat qualifie uniquement le modèle natif ×2.")
+        entry = CATALOG[data["name"]]
+        if type(data["scale"]) is not int or data["scale"] != entry["scale"]:
+            raise StudioError("Échelle différente de l'échelle native du modèle catalogué.")
         if not data["version"] or not data["source"]["source_ref"]:
             raise StudioError("Version et source_ref obligatoires.")
         origin = data["source"]["origin"]
@@ -81,10 +104,7 @@ def validate_manifest(data: dict) -> None:
         files = data["files"]
         if len(files) != 2 or {f["role"] for f in files} != {"param", "weights"}:
             raise StudioError("Paire NCNN .param/.bin obligatoire.")
-        expected_names = {
-            "param": "realesr-animevideov3-x2.param",
-            "weights": "realesr-animevideov3-x2.bin",
-        }
+        expected_names = {"param": entry["param"], "weights": entry["weights"]}
         for item in files:
             path = relative_path(item["path"])
             if str(path) != expected_names[item["role"]]:

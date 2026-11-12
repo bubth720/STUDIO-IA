@@ -24,7 +24,7 @@ from studio_ia.core import (
 from studio_ia.files import publish_no_replace, write_json
 from studio_ia.hardware import hardware_report
 from studio_ia.media import analyze, sha256
-from studio_ia.models import BACKEND, ModelRecord, inspect
+from studio_ia.models import BACKEND, ModelRecord, inspect, native_scale
 from studio_ia.pipeline import Request, build_plan, verify_output
 from studio_ia.plans_v2 import PlanV2, compare_timing, frame_table, load_plan
 
@@ -124,7 +124,7 @@ def image_command(
         "-o",
         str(output),
         "-s",
-        "2",
+        str(native_scale(model.manifest)),
         "-t",
         str(tile),
         "-m",
@@ -202,7 +202,8 @@ def qualify(
         timeout=120,
     )
     info = analyze(output, tools)
-    if (info.video["width"], info.video["height"]) != (64, 64):
+    expected = 32 * native_scale(model.manifest)
+    if (info.video["width"], info.video["height"]) != (expected, expected):
         raise StudioError("Inférence courte : dimensions incorrectes.")
     execute(
         [tools.ffmpeg, "-v", "error", "-xerror", "-i", str(output), "-f", "null", "-"],
@@ -246,7 +247,7 @@ def build_neural_plan(
         or (request.brightness, request.contrast, request.saturation) != (0, 1, 1)
     ):
         raise StudioError(
-            "NN initial : ×2 natif, débruitage et anti-banding désactivés ; "
+            "NN initial : sortie ×2, débruitage et anti-banding désactivés ; "
             "couleurs neutres obligatoires."
         )
     cpu = build_plan(request, tools)
@@ -263,7 +264,10 @@ def build_neural_plan(
     ):
         raise StudioError("NN initial : source SDR BT.709 limitée explicitement déclarée requise.")
     timing = frame_table(Path(cpu.media.path), tools, max_frames=max_frames)
-    pixels = cpu.media.video["width"] * cpu.media.video["height"] + cpu.width * cpu.height
+    native = native_scale(model.manifest)
+    source_pixels = cpu.media.video["width"] * cpu.media.video["height"]
+    # Extracted frame + native NCNN frame (×4 for x4plus is 16× the source pixels).
+    pixels = source_pixels + source_pixels * native * native
     estimate = len(timing["frames"]) * (pixels * 4 + 16384) + 64 * 1024**2
     if (
         estimate > workspace_budget
@@ -275,6 +279,10 @@ def build_neural_plan(
         "Neuronal expérimental : détails plausibles, identité historique non garantie.",
         "CFR SDR BT.709 uniquement ; VFR/offset vidéo/HDR/MKV non qualifiés.",
     ]
+    if native != request.scale:
+        cpu.warnings.append(
+            f"Modèle natif ×{native} : réduction Lanczos vers ×{request.scale} après inférence."
+        )
     return load_plan(
         {
             "schema_version": 2,
@@ -297,6 +305,11 @@ def build_neural_plan(
                 "audio": "MAP_ALL_SOURCE_STREAMS",
                 "color": "BT709_TV_TO_RGB24_TO_BT709_TV",
                 "preprocessing": "NONE",
+                "scaling": {
+                    "native_scale": native,
+                    "output_scale": 2,
+                    "post_inference": "NONE" if native == 2 else "LANCZOS_TO_OUTPUT",
+                },
                 "output": "ATOMIC_NO_CLOBBER",
                 "network": "NO_DOWNLOAD_OR_REMOTE_PROTOCOL",
             },
@@ -392,6 +405,13 @@ def run_neural_plan(
                 cancel,
             )
             frames = sorted(inputs.glob("*.png"))
+            native = data["policies"]["scaling"]["native_scale"]
+            native_size = (
+                cpu.media.video["width"] * native,
+                cpu.media.video["height"] * native,
+            )
+            if native == 2 and native_size != (cpu.width, cpu.height):
+                raise StudioError("Plan ×2 natif incohérent avec la taille de sortie.")
             if len(frames) != len(data["timing"]["frames"]):
                 raise StudioError("Extraction : nombre de frames incorrect.")
             ledger = []
@@ -415,7 +435,7 @@ def run_neural_plan(
                     timeout=120,
                 )
                 image = analyze(target, tools)
-                if (image.video["width"], image.video["height"]) != (cpu.width, cpu.height):
+                if (image.video["width"], image.video["height"]) != native_size:
                     raise StudioError("Frame neuronale invalide.")
                 ledger.append(
                     {
@@ -458,7 +478,8 @@ def run_neural_plan(
                 "-map_chapters",
                 "1",
                 "-vf",
-                "scale=in_range=pc:out_color_matrix=bt709:out_range=tv,format=yuv420p",
+                ("" if native == 2 else f"scale={cpu.width}:{cpu.height}:flags=lanczos,")
+                + "scale=in_range=pc:out_color_matrix=bt709:out_range=tv,format=yuv420p",
                 "-c:v",
                 "libx264",
                 "-threads",

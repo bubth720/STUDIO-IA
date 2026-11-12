@@ -7,16 +7,17 @@ import pytest
 
 from studio_ia.core import StudioError
 from studio_ia.media import sha256
-from studio_ia.models import BACKEND, inspect, inspect_archive, read_manifest, register
+from studio_ia.models import BACKEND, CATALOG, inspect, inspect_archive, read_manifest, register
 
 
-@pytest.fixture
-def model(tmp_path):
+def make_model(tmp_path, name="realesr-animevideov3"):
+    """Synthetic bytes named like a catalogued NCNN pair; never real weights."""
+    entry = CATALOG[name]
     root = tmp_path / "modèles 日本語"
     root.mkdir()
     files = []
-    for role, suffix in [("param", "param"), ("weights", "bin")]:
-        p = root / f"realesr-animevideov3-x2.{suffix}"
+    for role in ("param", "weights"):
+        p = root / entry[role]
         p.write_bytes(b"SYNTHETIC CONTRACT TEST ONLY " + role.encode())
         files.append({"role": role, "path": p.name, "bytes": p.stat().st_size, "sha256": sha256(p)})
     license_info = {
@@ -27,11 +28,11 @@ def model(tmp_path):
     manifest = {
         "schema_version": 2,
         "id": "synthetic-contract-test",
-        "name": "realesr-animevideov3",
+        "name": name,
         "version": "synthetic-not-a-model",
         "backend": BACKEND,
         "loader": "ncnn-param-bin",
-        "scale": 2,
+        "scale": entry["scale"],
         "source": {
             "origin": "https://github.com/xinntao/Real-ESRGAN/releases/tag/v0.2.5.0",
             "source_ref": "fixture-not-upstream-weights",
@@ -40,6 +41,11 @@ def model(tmp_path):
         "files": files,
     }
     return root, manifest
+
+
+@pytest.fixture
+def model(tmp_path):
+    return make_model(tmp_path)
 
 
 def test_unicode_inspection_snapshot_and_immutable_identity(model, tmp_path):

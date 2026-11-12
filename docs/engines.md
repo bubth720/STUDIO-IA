@@ -28,8 +28,11 @@ studio-ia verify plan-v2.json nouvelle_sortie.mp4
 Ces commandes ne téléchargent rien ; elles refusent un modèle absent, corrompu,
 non conforme au schéma ou sans licences code/poids/shaders déclarées séparément
 et revues. Un champ de licence n'est pas une attestation juridique automatique.
-Les fichiers acceptés sont seulement la paire NCNN exacte param/bin du modèle
-natif animevideov3 ×2. Les fichiers Python/PTH/pickle et les commandes arbitraires
+Les fichiers acceptés sont seulement les paires NCNN exactes param/bin du
+catalogue fermé (`CATALOG`, `src/studio_ia/models.py`) : `realesr-animevideov3`
+×2 natif (animation) et, depuis le LOT 03, `realesrgan-x4plus` ×4 natif (prises de
+vue réelles) réduit en Lanczos vers la sortie ×2. Manifestes revus prêts à l'emploi :
+`manifests/`. Les fichiers Python/PTH/pickle et les commandes arbitraires
 ne sont pas chargés. Voir [schéma](../schemas/model-manifest-v2.json),
 [plan v2](plan-v2.md) et [lock](../engines.lock.json).
 

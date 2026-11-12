@@ -14,7 +14,7 @@ from test_models import model as model
 from studio_ia import neural
 from studio_ia.core import Cancellation, Cancelled, StudioError, capture
 from studio_ia.media import sha256
-from studio_ia.models import BACKEND, inspect
+from studio_ia.models import BACKEND, inspect, native_scale
 from studio_ia.pipeline import Request
 from studio_ia.plans_v2 import compare_timing, frame_table
 
@@ -108,7 +108,8 @@ def neural_transport(request, tmp_path, tools, monkeypatch):
             "-i",
             str(source),
             "-vf",
-            "scale=iw*2:ih*2:flags=neighbor",
+            f"scale=iw*{native_scale(record.manifest)}:ih*{native_scale(record.manifest)}"
+            ":flags=neighbor",
             "-threads",
             "1",
             str(output),

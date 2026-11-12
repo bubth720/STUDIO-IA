@@ -23,7 +23,10 @@
       "pattern": "^[a-zA-Z0-9._-]{1,80}$"
     },
     "name": {
-      "const": "realesr-animevideov3"
+      "enum": [
+        "realesr-animevideov3",
+        "realesrgan-x4plus"
+      ]
     },
     "version": {
       "type": "string",
@@ -36,7 +39,10 @@
       "const": "ncnn-param-bin"
     },
     "scale": {
-      "const": 2
+      "enum": [
+        2,
+        4
+      ]
     },
     "source": {
       "type": "object",
@@ -90,7 +96,9 @@
           "path": {
             "enum": [
               "realesr-animevideov3-x2.param",
-              "realesr-animevideov3-x2.bin"
+              "realesr-animevideov3-x2.bin",
+              "realesrgan-x4plus.param",
+              "realesrgan-x4plus.bin"
             ]
           },
           "role": {
@@ -140,5 +148,63 @@
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "name": {
+            "const": "realesr-animevideov3"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "scale": {
+            "const": 2
+          },
+          "files": {
+            "items": {
+              "properties": {
+                "path": {
+                  "enum": [
+                    "realesr-animevideov3-x2.param",
+                    "realesr-animevideov3-x2.bin"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "name": {
+            "const": "realesrgan-x4plus"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "scale": {
+            "const": 4
+          },
+          "files": {
+            "items": {
+              "properties": {
+                "path": {
+                  "enum": [
+                    "realesrgan-x4plus.param",
+                    "realesrgan-x4plus.bin"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

@@ -35,8 +35,8 @@ de PC. Aucun test CI ne sera présenté comme une preuve d'IA.
 
 ### Laboratoire GPU facultatif sur le téléphone
 
-Les trois variantes du Poco X8 ont une puce graphique récente compatible Vulkan :
-X8 5G Adreno 710, X8 Pro Mali-G720, Pro Max Immortalis-G925.
+Appareil du propriétaire : **Poco X8 Pro 5G**, puce MediaTek Dimensity 8500-Ultra, GPU
+**Mali-G720 MC8**, 12 ou 16 Go de RAM LPDDR5X selon la version (fiche constructeur).
 NCNN/Vulkan — **le même moteur que sur PC** — fonctionne sur Android.
 
 - Option simple : l'application libre **RealSR-NCNN-Android** (licence MIT, tumuyan).
@@ -90,7 +90,6 @@ Rien dans le code ne dépend du téléphone. Le passage au PC ne demande donc au
 
 ## Décisions en attente du propriétaire
 
-1. GO pour démarrer le **LOT 03 côté code** (sans GPU) depuis la PR #11.
+1. ~~GO LOT 03 côté code~~ : accordé le 12/11/2026, voir `reports/lot03/REPORT.md`.
 2. Facultatif : essayer RealSR-NCNN-Android sur le Poco X8 pour juger les modèles à l'œil.
-3. Préciser le modèle exact du Poco X8 (X8 5G, X8 Pro ou Pro Max), seulement si le
-   laboratoire téléphone est utilisé.
+3. ~~Préciser le modèle du Poco X8~~ : X8 Pro 5G (12/11/2026).

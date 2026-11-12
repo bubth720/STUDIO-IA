@@ -4,6 +4,10 @@
 vérifié sans GPU physique, sans dépense et sans décision du propriétaire.
 Aucun binaire tiers n'a été exécuté, aucune protection du code n'a été modifiée.
 
+> **Mise à jour du même jour** : sur délégation du propriétaire, la licence des poids
+> (B2) est tranchée et les modèles sont sélectionnés. Voir [AI-DECISION.md](AI-DECISION.md).
+> Seul le GPU physique (B1) bloque encore G2 pour le modèle anime intégré.
+
 ## 1. Provenance vérifiée (téléchargement HTTPS officiel GitHub, recalcul SHA-256)
 
 | Fichier officiel | SHA-256 recalculé | Valeur épinglée dans le dépôt | Résultat |

@@ -1,0 +1,5 @@
+{"status": "PASS_CPU_ONLY", "output": "<scratch>/lot01/temporal", "m005_accepted": false}
+
+real	0m7.878s
+user	0m5.868s
+sys	0m1.655s

@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "machine": "Linux-6.18.44-fc-v378-x86_64-with-glibc2.39",
+  "source_commit": "dc1a056c0434b9a9cfc483b18cf4288a95428f1b",
+  "source_dirty": false,
+  "request": {
+    "source": "<scratch>/lot01/e2e/F01_with_audio.mp4",
+    "destination": "<scratch>/lot01/e2e/result_cpu.mp4",
+    "profile": "preservation",
+    "denoise": "light",
+    "scale": 2,
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "saturation": 1.0,
+    "crf": 18,
+    "schema_version": 1,
+    "deband": "off"
+  },
+  "assertions": {
+    "resolution": true,
+    "video_codec": true,
+    "pixel_format": true,
+    "audio_count": true,
+    "duration": true,
+    "audio_0_channels": true,
+    "audio_0_codec": true,
+    "audio_0_sample_rate": true,
+    "audio_0_sync": true,
+    "audio_0_duration": true,
+    "cadence": true,
+    "full_decode": true,
+    "source_unchanged": true
+  },
+  "source_sha256": "d93d5edd6b6d0258d2b021bc79e82b9dea44bcde9945f09f57a3998ce542752b",
+  "output_sha256": "9128d1ab78c79a79ac0c11671200baf58f2817af409f7f18cbd2fd83342f2188",
+  "elapsed_seconds": 1.4090293740000561,
+  "engine_version": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers"
+}
+
+real	0m2.565s
+user	0m3.556s
+sys	0m0.351s

@@ -1,8 +1,8 @@
 # LOT 01 — Consolidation du socle CPU sans régression
 
 12 novembre 2026. Mission directrice V1 IA, LOT 01, autorisé par le propriétaire.
-**Statut : PARTIAL**. Consolidation faite et requalifiée localement ; la qualification
-CI Windows/Linux est déclenchée par la PR brouillon (résultat à reporter).
+**Statut : PASS** (CPU). Consolidation faite, requalifiée localement et par la CI native
+Windows/Linux de la PR brouillon #11 (run 43294655171 annulé par concurrence, run 43295027960 retenu).
 Aucune fusion dans `main`, aucune PR existante modifiée, aucune dépense.
 
 ## Ce qui a été consolidé
@@ -44,6 +44,27 @@ référence de qualification reste la CI 3.12.
 
 Preuves : [evidence/](evidence/) (JUnit XML, résumé pytest, journaux E2E et temporel).
 
+## Qualification CI native (référence G1)
+
+[Run 43295027960](https://github.com/bubth720/STUDIO-IA/actions/runs/43295027960) — **success**,
+tête `6f38d6d` (code identique à `7ee80b2`), `BUILD_INFO source_dirty=false`.
+
+| Étape | Ubuntu 24.04 / Py 3.12.16 / Qt X11 | Windows Server 2022 / Py 3.12.10 / Qt natif |
+|---|---|---|
+| Lint + types | PASS | PASS |
+| pytest complet | PASS | PASS |
+| Contrôles temporels CPU | PASS (`neural_executed=false`) | PASS (`neural_executed=false`) |
+| E2E CPU synthétique (13 assertions, original intact) | PASS | PASS |
+| Build PyInstaller + lancement figé (vérifier/démarrer/annuler) | PASS | PASS |
+| ZIP extrait : intégrité + hashes | PASS, 610 fichiers | PASS, 382 fichiers |
+| Installateur source en chemin Unicode | — | PASS |
+
+ZIP applicatifs internes : Linux `aa3461f88f1fc42908152019b30c72b30e03fb1e220fa9cce1d275119de6d75c`,
+Windows `2205baa50fa8487f1701e1451d198522217dac2927f8499498ff9aa71ebf2a24`.
+Artefacts Actions (expirent le **26/11/2026**) : ALPHA-Linux `sha256:685e1f69…d55ed`,
+ALPHA-Windows `sha256:37276ff4…52faf8`, evidence-Linux `sha256:be703bc5…8ec8ea`,
+evidence-Windows `sha256:35349c50…4ffa`.
+
 ## Non couvert par ce lot (honnêteté des preuves)
 
 - Builds PyInstaller, lancement figé et ZIP extrait : non rejoués ici ; couverts par la CI de la PR.
@@ -54,7 +75,7 @@ Preuves : [evidence/](evidence/) (JUnit XML, résumé pytest, journaux E2E et te
 
 ## Décision
 
-G1 (CPU) : **PASS local, en attente de la CI Windows/Linux** de la PR brouillon.
+G1 (CPU) : **PASS** sur les runners Windows/Linux et en local (hors poste utilisateur physique).
 LOT 02 : **NO-GO tant que** le propriétaire n'a pas choisi la machine GPU (option A
 recommandée : son PC avec un pilote Vulkan) et tranché la licence des poids Real-ESRGAN.
 Les PR #1 à #10 restent ouvertes et intactes ; leur fermeture relève du propriétaire.

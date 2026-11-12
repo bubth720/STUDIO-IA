@@ -1,0 +1,44 @@
+{
+  "schema_version": 2,
+  "id": "realesr-animevideov3-x2-v0.2.5.0",
+  "name": "realesr-animevideov3",
+  "version": "v0.2.5.0 (realesrgan-ncnn-vulkan-20220424)",
+  "backend": "realesrgan-ncnn-vulkan/0.2.0",
+  "loader": "ncnn-param-bin",
+  "scale": 2,
+  "source": {
+    "origin": "https://github.com/xinntao/Real-ESRGAN/releases/tag/v0.2.5.0",
+    "source_ref": "realesrgan-ncnn-vulkan-20220424-ubuntu.zip sha256 e5aa6eb131234b87c0c51f82b89390f5e3e642b7b70f2b9bbe95b6a285a40c96"
+  },
+  "licenses": {
+    "code": {
+      "spdx": "MIT",
+      "source": "https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan/blob/master/LICENSE",
+      "reviewed": true
+    },
+    "weights": {
+      "spdx": "BSD-3-Clause",
+      "source": "https://github.com/xinntao/Real-ESRGAN/blob/master/LICENSE",
+      "reviewed": true
+    },
+    "shaders": {
+      "spdx": "MIT",
+      "source": "https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan/blob/master/LICENSE",
+      "reviewed": true
+    }
+  },
+  "files": [
+    {
+      "path": "realesr-animevideov3-x2.param",
+      "role": "param",
+      "bytes": 3173,
+      "sha256": "b88ff4f00ebf019a7fdac17fdd45a7fd3665d37509efc5baf2e4da2e24420a04"
+    },
+    {
+      "path": "realesr-animevideov3-x2.bin",
+      "role": "weights",
+      "bytes": 1247368,
+      "sha256": "548a36f9c3f4ab8da56cd3b13badf23968bee207b396dad14d04b830e5f2ab2d"
+    }
+  ]
+}

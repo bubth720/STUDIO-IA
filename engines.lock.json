@@ -18,20 +18,43 @@
         "bytes": 1247368,
         "sha256_observed": "548a36f9c3f4ab8da56cd3b13badf23968bee207b396dad14d04b830e5f2ab2d",
         "publisher_signature": null,
-        "weights_license": "NOT_ESTABLISHED_SEPARATELY"
+        "weights_license": "BSD-3-Clause"
       },
       {
         "name": "realesr-animevideov3-x2.param",
         "bytes": 3173,
         "sha256_observed": "b88ff4f00ebf019a7fdac17fdd45a7fd3665d37509efc5baf2e4da2e24420a04",
         "publisher_signature": null,
-        "weights_license": "NOT_ESTABLISHED_SEPARATELY"
+        "weights_license": "BSD-3-Clause"
       }
     ],
     "state": "DETECTED_NOT_INFERENCE_QUALIFIED",
     "binary_sha256_observed_windows_x86_64": "07e49f7cbb4ede01ae4dd4c399d3a7e5846e3d2085c3128eff881e55cb7b1a0c",
     "windows_release_zip_sha256_observed": "1bbbdb12d470af80b035c773682e144c6c2f6ece9210832a289af0a48ce3fa9a",
-    "windows_binary_execution": "NOT_RUN_LOCAL"
+    "windows_binary_execution": "NOT_RUN_LOCAL",
+    "weights_license_decision": {
+      "date": "2026-11-12",
+      "decision": "ACCEPTED_BY_OWNER_DELEGATION",
+      "basis": "Weights are published only by the copyright holder inside the BSD-3-Clause Real-ESRGAN repository releases; no separate or more restrictive weights terms exist.",
+      "residual_risk": "No explicit weights-specific clause; attribution (BSD-3 notice) must ship with any redistribution.",
+      "evidence": "reports/lot02/AI-DECISION.md"
+    },
+    "selected_models_v1": {
+      "realesr-animevideov3-x2": {
+        "use": "animation",
+        "state": "INTEGRATED_MANIFEST_VERIFIED_NO_GPU_RUN",
+        "manifest": "manifests/realesr-animevideov3-x2.json"
+      },
+      "realesrgan-x4plus": {
+        "use": "live-action / general",
+        "state": "SELECTED_NOT_INTEGRATED",
+        "files": {
+          "realesrgan-x4plus.param": "35330ececcea33b6c397a72548e788d5d53becee4734c50b7fada36e89f10a86",
+          "realesrgan-x4plus.bin": "713ee713b0353afaa27976f0563a64a5043bd70b9bd8936c2e26e25ebcdbcddf"
+        },
+        "weights_license": "BSD-3-Clause"
+      }
+    }
   },
   "alternative": {
     "backend": "Video2X",
@@ -46,6 +69,21 @@
     "technique": "VARIANT_DEPENDENT_NEVER_ASSUME_NEURAL"
   },
   "rife": {
-    "state": "NOT_STARTED_M005_GATE_CLOSED"
+    "state": "P2_RESERVE_NOT_V1",
+    "backend": "rife-ncnn-vulkan (nihui)",
+    "code_license": "MIT",
+    "weights_license": "MIT (hzwer RIFE)"
+  },
+  "realcugan": {
+    "backend": "realcugan-ncnn-vulkan (nihui)",
+    "code_license": "MIT",
+    "weights_license": "MIT (bilibili/ailab Real-CUGAN)",
+    "state": "RESERVE_ANIME_ALTERNATIVE_NOT_INSTALLED"
+  },
+  "excluded": {
+    "CodeFormer": "NTU S-Lab License 1.0: non-commercial only",
+    "GFPGAN": "PyTorch stack, FFHQ training data CC-BY-NC-SA uncertainty; no traceable NCNN build",
+    "Video2X": "AGPL-3.0 second native stack, not needed",
+    "third-party NCNN conversions (OpenModelDB etc.)": "per-model licenses and conversions not traceable to the original authors"
   }
 }

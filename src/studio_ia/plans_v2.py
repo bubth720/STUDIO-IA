@@ -142,14 +142,15 @@ def frame_table(path: Path, tools: Tools, *, max_frames: int = 10000) -> dict:
     expected = stream.get("nb_frames")
     if expected not in (None, "N/A") and int(expected) != len(frames):
         raise StudioError("Nombre de frames incomplet.")
-    if frames[0]["pts"] != 0:
-        raise StudioError("Origine PTS non nulle : mode neuronal initial non qualifié.")
+    if frames[0]["pts"] < 0:
+        raise StudioError("Origine PTS négative : mode neuronal non qualifié.")
     if len({r["duration"] for r in frames}) != 1:
         raise StudioError("VFR neuronal : refus explicite avant qualification spécifique.")
     return {
         "time_base": time_base,
         "frames": frames,
         "frame_rate": str(1 / (tb * frames[0]["duration"])),
+        "origin_pts": frames[0]["pts"],
         "policy": "EXACT_CFR_PTS_NO_RESAMPLE",
     }
 

@@ -38,6 +38,33 @@ filtre ajouté quand l'échelle native vaut 2).
   l'exécution en root, PASS en utilisateur normal (voir LOT 01).
 - CI Windows/Linux : celle de la PR #11 sur ce commit.
 
+## Étape 2 livrée : MKV et origine PTS non nulle (T02/T03)
+
+| Fichier | Changement |
+|---|---|
+| `src/studio_ia/plans_v2.py` | `frame_table` accepte une origine PTS **positive** et la consigne (`origin_pts`) ; origine négative et VFR toujours refusés |
+| `src/studio_ia/neural.py` | Export **MP4 ou MKV** ; options MP4 (`video_track_timescale`, `faststart`) seulement en MP4 ; si l'origine est non nulle : `-copyts` et décalage exact des images inférées (`-itsoffset`, µs) ; chemin à origine nulle **inchangé** |
+
+La vérification reste stricte : `compare_timing` exige l'**égalité exacte** de chaque PTS et
+de chaque durée en secondes rationnelles, origine comprise. Un arrondi qui dériverait
+serait refusé, jamais publié.
+
+Tests `tests/test_neural_timing.py` (même double FFmpeg non neuronal) :
+
+| Cas | Résultat |
+|---|---|
+| T03 : MP4 30000/1001, vidéo démarrant 15 images (≈0,5 s) après l'audio, 2 pistes AAC | PASS, PTS absolus identiques, synchro audio conservée |
+| T03b : MP4 25 i/s avec décalage global de 1 s | PASS, PTS absolus identiques |
+| T02 : MKV 25 i/s, deux pistes `fra`/`eng`, la seconde à +0,2 s, sortie MKV | PASS, langues et synchro conservées, 128×96 |
+| MKV en 30000/1001 | **Refus explicite** : la base de temps 1/1000 du MKV ne peut pas représenter ces durées exactement (VFR apparent), pas de rééchantillonnage silencieux |
+| Destination `.avi` | Refus |
+
+Suite complète locale après l'étape 2 : **179 PASS / 1 SKIP / 1 FAIL** (le même artefact root).
+
+Limite connue : une source **MKV** à cadence NTSC (29,97 / 23,976 i/s) est refusée en mode IA.
+Elle reste traitable en mode CPU. Une remuxe préalable en MP4 ne suffit pas, car les
+horodatages MKV sont déjà arrondis à la milliseconde.
+
 ## Ce qui n'est PAS prouvé
 
 Aucune inférence Real-ESRGAN n'a eu lieu. La qualité visuelle de x4plus, la VRAM, la
@@ -46,8 +73,7 @@ Jour J, puis LOT 04).
 
 ## Suite du LOT 03 (sans GPU)
 
-1. Élargir le contrat NN : conteneur **MKV** et **origine PTS non nulle** (T02/T03), déjà
-   gérés par la voie CPU.
+1. ~~MKV et origine PTS non nulle (T02/T03)~~ : livré (étape 2).
 2. **Reprise** sûre d'une tâche interrompue (frames déjà inférées et vérifiées par hash).
 3. Choix du modèle dans l'interface : « Animation » ou « Prises de vue réelles », lié au
    manifeste.

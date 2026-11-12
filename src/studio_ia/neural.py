@@ -251,8 +251,8 @@ def build_neural_plan(
             "couleurs neutres obligatoires."
         )
     cpu = build_plan(request, tools)
-    if Path(cpu.request.destination).suffix.lower() != ".mp4":
-        raise StudioError("NN initial : MP4 requis pour préserver exactement la timebase.")
+    if Path(cpu.request.destination).suffix.lower() not in (".mp4", ".mkv"):
+        raise StudioError("NN : export MP4 ou MKV requis.")
     if any(
         cpu.media.video.get(k) != v
         for k, v in (
@@ -277,7 +277,7 @@ def build_neural_plan(
     cpu.filters = []  # NCNN replaces the CPU upscale; never append Lanczos to neural SR.
     cpu.warnings = [
         "Neuronal expérimental : détails plausibles, identité historique non garantie.",
-        "CFR SDR BT.709 uniquement ; VFR/offset vidéo/HDR/MKV non qualifiés.",
+        "CFR SDR BT.709 uniquement ; VFR/HDR non qualifiés.",
     ]
     if native != request.scale:
         cpu.warnings.append(
@@ -450,8 +450,10 @@ def run_neural_plan(
                 job_dir / "frames.json",
                 {"time_base": data["timing"]["time_base"], "frames": ledger},
             )
-            temporary = owned / "export.mp4"
+            container = Path(cpu.request.destination).suffix.lower()
+            temporary = owned / ("export" + container)
             timebase = Fraction(data["timing"]["time_base"])
+            origin = data["timing"]["frames"][0]["pts"] * timebase
             args = [
                 tools.ffmpeg,
                 "-v",
@@ -463,8 +465,15 @@ def run_neural_plan(
                 "1",
                 "-protocol_whitelist",
                 "file,pipe",
-                "-framerate",
-                data["timing"]["frame_rate"],
+            ]
+            if origin:
+                # Keep source audio/video timestamps; shift inferred frames to the exact
+                # source video origin. compare_timing() refuses any residual drift.
+                args += ["-copyts"]
+            args += ["-framerate", data["timing"]["frame_rate"]]
+            if origin:
+                args += ["-itsoffset", f"{float(origin):.6f}"]  # microseconds
+            args += [
                 "-i",
                 str(outputs / "%08d.png"),
                 "-i",
@@ -492,8 +501,6 @@ def run_neural_plan(
                 "colorprim=bt709:transfer=bt709:colormatrix=bt709",
                 "-enc_time_base",
                 str(timebase),
-                "-video_track_timescale",
-                str(timebase.denominator),
                 "-fps_mode",
                 "passthrough",
                 "-c:a",
@@ -508,9 +515,14 @@ def run_neural_plan(
                 "tv",
                 "-avoid_negative_ts",
                 "disabled",
-                "-movflags",
-                "+faststart",
             ]
+            if container == ".mp4":
+                args += [
+                    "-video_track_timescale",
+                    str(timebase.denominator),
+                    "-movflags",
+                    "+faststart",
+                ]
             if cpu.audio_policy == "aac":
                 args += ["-b:a", "192k"]
             args.append(str(temporary))

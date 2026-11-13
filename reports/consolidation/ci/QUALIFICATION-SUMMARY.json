@@ -1,0 +1,88 @@
+{
+  "status": "PASS",
+  "source_commit": "4d42029f3bdbf260b72a6f2f0f81ed01be1265a9",
+  "run_id": 42420338324,
+  "run_url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42420338324",
+  "platforms": {
+    "Linux": {
+      "pytest": {
+        "tests": 62,
+        "errors": 0,
+        "failures": 0,
+        "skipped": 1,
+        "passed": 61,
+        "seconds": 43.261,
+        "skip_reasons": [
+          "Video2X et modèles absents ; aucun moteur neuronal qualifié."
+        ]
+      },
+      "archive_name": "STUDIO-IA-0.3.0a2-linux-x86_64-ALPHA.zip",
+      "archive_bytes": 104430239,
+      "archive_sha256": "06f2db51dcdf772d6b18695912d8c24cc7e434316a9fcb6e9234efdbeac29dfe",
+      "file_hashes_verified": 607,
+      "gui_ticks": 356,
+      "qt_platform": "xcb",
+      "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers"
+    },
+    "Windows": {
+      "pytest": {
+        "tests": 62,
+        "errors": 0,
+        "failures": 0,
+        "skipped": 3,
+        "passed": 59,
+        "seconds": 65.413,
+        "skip_reasons": [
+          "POSIX directory permissions are not Windows ACLs",
+          "Linux renameat2 fallback qualification",
+          "Video2X et modèles absents ; aucun moteur neuronal qualifié."
+        ]
+      },
+      "archive_name": "STUDIO-IA-0.3.0a2-windows-AMD64-ALPHA.zip",
+      "archive_bytes": 41852699,
+      "archive_sha256": "d171d9b1b7ebcca3e733231f2f7e9d85445f8b58e33033ce1bec20807215ad2f",
+      "file_hashes_verified": 381,
+      "gui_ticks": 755,
+      "qt_platform": "windows",
+      "ffmpeg": "ffmpeg version 7.1.1-essentials_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers",
+      "source_install_gui": {
+        "status": "PASS",
+        "frozen": false,
+        "module_location": "D:\\a\\STUDIO-IA\\STUDIO-IA\\artifacts\\installation source 日本語\\.venv\\Lib\\site-packages\\studio_ia\\smoke.py",
+        "qt_platform": "windows",
+        "source_sha256": "59eb933e6d9b22a5d9472f35d668c9e9102d219e78b120f4c1a36cee6823d3a4",
+        "output_sha256": "198b99393075c5dbe93f7cda35c99ae21fb4a00c42f09d1f920feb5e36452cdb",
+        "success_job": "29cf0940-8ee2-4008-bff6-347584f10331",
+        "cancel_job": "db66c0c4-0a4a-4c2f-b1fe-562f2735341c",
+        "assertions": {
+          "resolution": true,
+          "video_codec": true,
+          "pixel_format": true,
+          "audio_count": true,
+          "duration": true,
+          "audio_0_channels": true,
+          "audio_0_codec": true,
+          "audio_0_sample_rate": true,
+          "audio_0_sync": true,
+          "audio_0_duration": true,
+          "cadence": true,
+          "full_decode": true,
+          "source_unchanged": true
+        },
+        "widget_clicks": [
+          "verify_plan",
+          "start",
+          "cancel"
+        ],
+        "gui_timer_ticks": 726,
+        "cancel_state": "CANCELLED",
+        "no_cancelled_output": true
+      }
+    }
+  },
+  "checks": [
+    "native tests, E2E, frozen GUI, extracted ZIP",
+    "local CRC and every application inventory hash",
+    "Windows runtime-only source installation in Unicode path"
+  ]
+}

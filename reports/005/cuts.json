@@ -1,0 +1,144 @@
+{
+  "source_commit": "7841ccd2767a6bb24e483e3c355be0a16ef138e1",
+  "scope": "REAL_CPU_SYNTHETIC_CONTROL_ONLY",
+  "results": {
+    "status": "PASS_CONTROLLED_CORPUS_WITH_LIMITATIONS",
+    "threshold_percent": "10",
+    "cases": [
+      {
+        "fixture": "cut",
+        "source_sha256": "2f323c25136531f2e59e5e7324ef87cdc97c4d6925f1f88e8f9db7856d3e2612",
+        "hard_cut_truth": [
+          100
+        ],
+        "hard_cut_candidates": [
+          100
+        ],
+        "hard_cut_false_positives": 0,
+        "hard_cut_false_negatives": 0,
+        "boundaries": [
+          {
+            "frame_index": 100,
+            "pts": 51200,
+            "kind": "CUT_CANDIDATE",
+            "score_percent": "74.707",
+            "reason": "SCDET_THRESHOLD_CROSSED"
+          }
+        ]
+      },
+      {
+        "fixture": "flash",
+        "source_sha256": "0da7c9598fc0cd762048d944a6976135c6caa84ac448d536c058ce6cd5cde887",
+        "hard_cut_truth": [],
+        "hard_cut_candidates": [],
+        "hard_cut_false_positives": 0,
+        "hard_cut_false_negatives": 0,
+        "boundaries": [
+          {
+            "frame_index": 20,
+            "pts": 10240,
+            "kind": "FLASH_OR_SINGLE_FRAME_INSERT",
+            "score_percent": "74.707",
+            "reason": "RETURN_TO_IDENTICAL_ANALYSIS_FRAME"
+          },
+          {
+            "frame_index": 21,
+            "pts": 10752,
+            "kind": "FLASH_OR_SINGLE_FRAME_INSERT",
+            "score_percent": "74.707",
+            "reason": "RETURN_TO_IDENTICAL_ANALYSIS_FRAME"
+          }
+        ]
+      },
+      {
+        "fixture": "split",
+        "source_sha256": "a64f97caa4b5ce719a0b075eac8e072e3a151ee570b0505c0f139a84dda424ca",
+        "hard_cut_truth": [],
+        "hard_cut_candidates": [],
+        "hard_cut_false_positives": 0,
+        "hard_cut_false_negatives": 0,
+        "boundaries": []
+      },
+      {
+        "fixture": "fade",
+        "source_sha256": "12d8f71349e46fd26a2e350bd64ef06025542dc9cc0aab47d8c81077511d4e49",
+        "hard_cut_truth": [],
+        "hard_cut_candidates": [],
+        "hard_cut_false_positives": 0,
+        "hard_cut_false_negatives": 0,
+        "boundaries": [
+          {
+            "frame_index": 3,
+            "pts": 1536,
+            "kind": "GRADUAL_CHANGE_CANDIDATE",
+            "score_percent": "1.440",
+            "reason": "MONOTONE_LUMINANCE_CHANGE_NOT_PROOF_OF_A_DISSOLVE"
+          },
+          {
+            "frame_index": 11,
+            "pts": 5632,
+            "kind": "GRADUAL_CHANGE_CANDIDATE",
+            "score_percent": "1.465",
+            "reason": "MONOTONE_LUMINANCE_CHANGE_NOT_PROOF_OF_A_DISSOLVE"
+          },
+          {
+            "frame_index": 19,
+            "pts": 9728,
+            "kind": "GRADUAL_CHANGE_CANDIDATE",
+            "score_percent": "1.465",
+            "reason": "MONOTONE_LUMINANCE_CHANGE_NOT_PROOF_OF_A_DISSOLVE"
+          },
+          {
+            "frame_index": 27,
+            "pts": 13824,
+            "kind": "GRADUAL_CHANGE_CANDIDATE",
+            "score_percent": "1.196",
+            "reason": "MONOTONE_LUMINANCE_CHANGE_NOT_PROOF_OF_A_DISSOLVE"
+          },
+          {
+            "frame_index": 32,
+            "pts": 16384,
+            "kind": "GRADUAL_CHANGE_CANDIDATE",
+            "score_percent": "1.453",
+            "reason": "MONOTONE_LUMINANCE_CHANGE_NOT_PROOF_OF_A_DISSOLVE"
+          },
+          {
+            "frame_index": 40,
+            "pts": 20480,
+            "kind": "GRADUAL_CHANGE_CANDIDATE",
+            "score_percent": "1.221",
+            "reason": "MONOTONE_LUMINANCE_CHANGE_NOT_PROOF_OF_A_DISSOLVE"
+          },
+          {
+            "frame_index": 48,
+            "pts": 24576,
+            "kind": "GRADUAL_CHANGE_CANDIDATE",
+            "score_percent": "1.208",
+            "reason": "MONOTONE_LUMINANCE_CHANGE_NOT_PROOF_OF_A_DISSOLVE"
+          }
+        ]
+      },
+      {
+        "fixture": "pan",
+        "source_sha256": "fb28341a9f99528e40d62651fb4c385e43ac5ba78481cbfa728ae9bc32da9da6",
+        "hard_cut_truth": [],
+        "hard_cut_candidates": [
+          1
+        ],
+        "hard_cut_false_positives": 1,
+        "hard_cut_false_negatives": 0,
+        "boundaries": [
+          {
+            "frame_index": 1,
+            "pts": 40,
+            "kind": "CUT_CANDIDATE",
+            "score_percent": "25.430",
+            "reason": "SCDET_THRESHOLD_CROSSED"
+          }
+        ]
+      }
+    ],
+    "semantic_generalization": false,
+    "note": "False positives on high-texture pans are retained, not hidden."
+  }
+}

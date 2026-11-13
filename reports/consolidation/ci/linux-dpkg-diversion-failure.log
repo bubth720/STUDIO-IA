@@ -1,0 +1,18 @@
+2026-11-07T22:06:12.4566760Z Traceback (most recent call last):
+2026-11-07T22:06:12.4573780Z   File "/home/runner/work/STUDIO-IA/STUDIO-IA/scripts/package.py", line 146, in <module>
+2026-11-07T22:06:12.4574197Z     package()
+2026-11-07T22:06:12.4574491Z   File "/home/runner/work/STUDIO-IA/STUDIO-IA/scripts/package.py", line 65, in package
+2026-11-07T22:06:12.4574772Z     collect(ROOT / "build/STUDIO-IA/Analysis-00.toc", folder)
+2026-11-07T22:06:12.4575078Z   File "/home/runner/work/STUDIO-IA/STUDIO-IA/scripts/collect_binary_licenses.py", line 57, in collect
+2026-11-07T22:06:12.4575435Z     raise RuntimeError(f"Copyright file missing for distributed library: {owner}")
+2026-11-07T22:06:12.4575769Z RuntimeError: Copyright file missing for distributed library: diversion by libreadline8t64 from
+2026-11-07T22:06:12.4715707Z ##[error]Process completed with exit code 1.
+2026-11-07T22:06:12.4758809Z ##[group]Run python -m pip freeze --exclude-editable > artifacts/dependencies.txt
+2026-11-07T22:06:12.4759148Z [36;1mpython -m pip freeze --exclude-editable > artifacts/dependencies.txt[0m
+2026-11-07T22:06:12.4776401Z shell: /usr/bin/bash -e {0}
+2026-11-07T22:06:12.4776544Z env:
+2026-11-07T22:06:12.4776713Z   STUDIO_IA_HOME: /home/runner/work/STUDIO-IA/STUDIO-IA/artifacts/state
+2026-11-07T22:06:12.4776978Z   STUDIO_IA_GUI_EVIDENCE: /home/runner/work/STUDIO-IA/STUDIO-IA/artifacts/gui
+2026-11-07T22:06:12.4777225Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.16/x64
+2026-11-07T22:06:12.4777458Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.16/x64/lib/pkgconfig
+2026-11-07T22:06:12.4777692Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.16/x64

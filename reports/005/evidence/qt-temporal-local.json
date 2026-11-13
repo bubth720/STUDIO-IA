@@ -1,0 +1,14 @@
+{
+  "status": "PASS_REAL_CPU_QTEST",
+  "requests": 31,
+  "last_source_frame": 150,
+  "last_reference_frame": 300,
+  "observed_pts_seconds": "6",
+  "elapsed_seconds": 6.186758316000123,
+  "qt_heartbeat_events": 967,
+  "coalesced_requests": 30,
+  "submitted_decodes": 9,
+  "cache_entries": 6,
+  "source_unchanged": true,
+  "rife_executed": false
+}

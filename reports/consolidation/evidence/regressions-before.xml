@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="3" time="4.781" timestamp="2026-11-07T10:24:10.085984+00:00" hostname="297a5a8b0e14"><testcase classname="tests.test_consolidation" name="test_destination_added_as_symlink_cannot_redirect_export" time="2.006"><failure message="Failed: DID NOT RAISE &lt;class 'studio_ia.core.StudioError'&gt;">source = PosixPath('/tmp/pytest-of-agent/pytest-7/media0/entrée avec espaces.mp4')
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-7/test_destination_added_as_syml0')
+tools = Tools(ffmpeg='/usr/bin/ffmpeg', ffprobe='/usr/bin/ffprobe')
+
+    def test_destination_added_as_symlink_cannot_redirect_export(source, tmp_path, tools):
+        destination = tmp_path / "requested.mp4"
+        unexpected = tmp_path / "unexpected.mp4"
+        plan = build_plan(Request(str(source), str(destination)), tools)
+        try:
+            destination.symlink_to(unexpected)
+        except OSError:
+            pytest.skip("This account/filesystem cannot create symbolic links")
+&gt;       with pytest.raises(StudioError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE &lt;class 'studio_ia.core.StudioError'&gt;
+
+tests/test_consolidation.py:21: Failed</failure></testcase><testcase classname="tests.test_consolidation" name="test_failed_commit_never_leaves_success_report" time="1.338"><failure message="AssertionError: assert not True&#10; +  where True = exists()&#10; +    where exists = (PosixPath('/tmp/pytest-of-agent/pytest-7/test_failed_commit_never_leave0') / 'job/result.json').exists">source = PosixPath('/tmp/pytest-of-agent/pytest-7/media0/entrée avec espaces.mp4')
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-7/test_failed_commit_never_leave0')
+tools = Tools(ffmpeg='/usr/bin/ffmpeg', ffprobe='/usr/bin/ffprobe')
+
+    def test_failed_commit_never_leaves_success_report(source, tmp_path, tools):
+        destination = tmp_path / "conflict.mp4"
+        plan = build_plan(Request(str(source), str(destination)), tools)
+    
+        def conflict(stage):
+            if stage == "VERIFYING":
+                destination.write_bytes(b"file belonging to another application")
+    
+        with pytest.raises(StudioError):
+            run_plan(plan, tools, tmp_path / "job", on_stage=conflict)
+&gt;       assert not (tmp_path / "job/result.json").exists()
+E       AssertionError: assert not True
+E        +  where True = exists()
+E        +    where exists = (PosixPath('/tmp/pytest-of-agent/pytest-7/test_failed_commit_never_leave0') / 'job/result.json').exists
+
+tests/test_consolidation.py:37: AssertionError</failure></testcase><testcase classname="tests.test_consolidation" name="test_cleanup_failure_does_not_misreport_verified_export" time="1.342"><failure message="PermissionError: Cleanup temporarily denied">source = PosixPath('/tmp/pytest-of-agent/pytest-7/media0/entrée avec espaces.mp4')
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-7/test_cleanup_failure_does_not_0')
+tools = Tools(ffmpeg='/usr/bin/ffmpeg', ffprobe='/usr/bin/ffprobe')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7fce07fe2960&gt;
+
+    def test_cleanup_failure_does_not_misreport_verified_export(source, tmp_path, tools, monkeypatch):
+        import studio_ia.pipeline as pipeline
+    
+        original = shutil.rmtree
+    
+        def fail_owned_cleanup(path, *args, **kwargs):
+            if Path(path).name.startswith(".studio-ia-"):
+                raise PermissionError("Cleanup temporarily denied")
+            return original(path, *args, **kwargs)
+    
+        monkeypatch.setattr(pipeline.shutil, "rmtree", fail_owned_cleanup)
+        destination = tmp_path / "verified.mp4"
+        try:
+&gt;           result = run_plan(build_plan(Request(str(source), str(destination)), tools),
+                              tools, tmp_path / "job")
+
+tests/test_consolidation.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/studio_ia/pipeline.py:339: in run_plan
+    shutil.rmtree(temporary_dir)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/tmp/pytest-of-agent/pytest-7/test_cleanup_failure_does_not_0/.studio-ia-nwl5aq7h')
+args = (), kwargs = {}
+
+    def fail_owned_cleanup(path, *args, **kwargs):
+        if Path(path).name.startswith(".studio-ia-"):
+&gt;           raise PermissionError("Cleanup temporarily denied")
+E           PermissionError: Cleanup temporarily denied
+
+tests/test_consolidation.py:48: PermissionError</failure></testcase></testsuite></testsuites>

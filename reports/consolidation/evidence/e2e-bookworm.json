@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "machine": "Linux-6.18.57-x86_64-with-glibc2.36",
+  "source_commit": "f36fa05481c488558db258b2723cd3d51653e919",
+  "source_dirty": false,
+  "request": {
+    "source": "/app/artifacts/e2e/F01_with_audio.mp4",
+    "destination": "/app/artifacts/e2e/result_cpu.mp4",
+    "profile": "preservation",
+    "denoise": "light",
+    "scale": 2,
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "saturation": 1.0,
+    "crf": 18,
+    "schema_version": 1
+  },
+  "assertions": {
+    "resolution": true,
+    "video_codec": true,
+    "pixel_format": true,
+    "audio_count": true,
+    "duration": true,
+    "audio_0_channels": true,
+    "audio_0_codec": true,
+    "audio_0_sample_rate": true,
+    "audio_0_sync": true,
+    "audio_0_duration": true,
+    "cadence": true,
+    "full_decode": true,
+    "source_unchanged": true
+  },
+  "source_sha256": "bb464c4ec6e87dffe856395c9b4a199850ddc3be36d93db42d894fe0f98b11c2",
+  "output_sha256": "0262572ab6b0cb59b12200f8f6ca879a7fb5b68194995696f03be9725680bba8",
+  "elapsed_seconds": 2.788259272000687,
+  "engine_version": "ffmpeg version 5.1.9-0+deb12u1 Copyright (c) 2000-2026 the FFmpeg developers"
+}

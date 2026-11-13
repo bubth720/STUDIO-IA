@@ -1,0 +1,35 @@
+2026-11-07T22:11:57.9352846Z --- Logging error ---
+2026-11-07T22:11:57.9366134Z Traceback (most recent call last):
+2026-11-07T22:11:57.9377755Z   File "D:\a\STUDIO-IA\STUDIO-IA\artifacts\installation source \u65e5\u672c\u8a9e\.venv\Lib\site-packages\pip\_internal\utils\logging.py", line 230, in emit
+2026-11-07T22:11:57.9378595Z     self.console.print(renderable, overflow="ignore", crop=False, style=style)
+2026-11-07T22:11:57.9379358Z   File "D:\a\STUDIO-IA\STUDIO-IA\artifacts\installation source \u65e5\u672c\u8a9e\.venv\Lib\site-packages\pip\_vendor\rich\console.py", line 1704, in print
+2026-11-07T22:11:57.9379964Z     with self:
+2026-11-07T22:11:57.9380143Z          ^^^^
+2026-11-07T22:11:57.9380682Z   File "D:\a\STUDIO-IA\STUDIO-IA\artifacts\installation source \u65e5\u672c\u8a9e\.venv\Lib\site-packages\pip\_vendor\rich\console.py", line 864, in __exit__
+2026-11-07T22:11:57.9381274Z     self._exit_buffer()
+2026-11-07T22:11:57.9381909Z   File "D:\a\STUDIO-IA\STUDIO-IA\artifacts\installation source \u65e5\u672c\u8a9e\.venv\Lib\site-packages\pip\_vendor\rich\console.py", line 820, in _exit_buffer
+2026-11-07T22:11:57.9382506Z     self._check_buffer()
+2026-11-07T22:11:57.9385432Z   File "D:\a\STUDIO-IA\STUDIO-IA\artifacts\installation source \u65e5\u672c\u8a9e\.venv\Lib\site-packages\pip\_vendor\rich\console.py", line 2055, in _check_buffer
+2026-11-07T22:11:57.9386165Z     self._write_buffer()
+2026-11-07T22:11:57.9386808Z   File "D:\a\STUDIO-IA\STUDIO-IA\artifacts\installation source \u65e5\u672c\u8a9e\.venv\Lib\site-packages\pip\_vendor\rich\console.py", line 2091, in _write_buffer
+2026-11-07T22:11:57.9387509Z     legacy_windows_render(buffer, LegacyWindowsTerm(self.file))
+2026-11-07T22:11:57.9388266Z   File "D:\a\STUDIO-IA\STUDIO-IA\artifacts\installation source \u65e5\u672c\u8a9e\.venv\Lib\site-packages\pip\_vendor\rich\_windows_renderer.py", line 19, in legacy_windows_render
+2026-11-07T22:11:57.9388932Z     term.write_text(text)
+2026-11-07T22:11:57.9389542Z   File "D:\a\STUDIO-IA\STUDIO-IA\artifacts\installation source \u65e5\u672c\u8a9e\.venv\Lib\site-packages\pip\_vendor\rich\_win32_console.py", line 402, in write_text
+2026-11-07T22:11:57.9390148Z     self.write(text)
+2026-11-07T22:11:57.9390530Z   File "C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\encodings\cp1252.py", line 19, in encode
+2026-11-07T22:11:57.9391034Z     return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+2026-11-07T22:11:57.9391393Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-07T22:11:57.9391882Z UnicodeEncodeError: 'charmap' codec can't encode characters in position 43-45: character maps to <undefined>
+2026-11-07T22:11:57.9392336Z Call stack:
+2026-11-07T22:11:57.9393974Z   File "<frozen runpy>", line 198, in _run_module_as_main
+2026-11-07T22:11:57.9394500Z   File "<frozen runpy>", line 88, in _run_code
+2026-11-07T22:11:57.9395399Z   File "D:\a\STUDIO-IA\STUDIO-IA\artifacts\installation source \u65e5\u672c\u8a9e\.venv\Lib\site-packages\pip\__main__.py", line 24, in <module>
+2026-11-07T22:11:57.9396215Z     sys.exit(_main())
+2026-11-07T22:11:57.9396922Z   File "D:\a\STUDIO-IA\STUDIO-IA\artifacts\installation source \u65e5\u672c\u8a9e\.venv\Lib\site-packages\pip\_internal\cli\main.py", line 43, in cli
+2026-11-07T22:11:57.9397512Z     return _main(args, cli=True)
+2026-11-07T22:11:57.9398065Z   File "D:\a\STUDIO-IA\STUDIO-IA\artifacts\installation source \u65e5\u672c\u8a9e\.venv\Lib\site-packages\pip\_internal\cli\main.py", line 97, in _main
+2026-11-07T22:11:57.9398860Z     return command.main(cmd_args)
+2026-11-07T22:11:57.9399449Z   File "D:\a\STUDIO-IA\STUDIO-IA\artifacts\installation source \u65e5\u672c\u8a9e\.venv\Lib\site-packages\pip\_internal\commands\install.py", line 338, in main
+2026-11-07T22:11:57.9400041Z     return super().main(args)
+2026-11-07T22:11:57.9400620Z   File "D:\a\STUDIO-IA\STUDIO-IA\artifacts\installation source \u65e5\u672c\u8a9e\.venv\Lib\site-packages\pip\_internal\cli\base_command.py", line 177, in main

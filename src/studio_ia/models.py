@@ -1,0 +1,313 @@
+"""Local NCNN manifests. Never downloads, unpickles or executes model code."""
+
+import hashlib
+import json
+import os
+import re
+import stat
+import sys
+import time
+import zipfile
+from contextlib import contextmanager
+from dataclasses import dataclass
+from pathlib import Path, PurePosixPath, PureWindowsPath
+from typing import Any
+
+from studio_ia.core import StudioError
+from studio_ia.files import write_json
+from studio_ia.media import sha256
+
+BACKEND = "realesrgan-ncnn-vulkan/0.2.0"
+OFFICIAL = "https://github.com/xinntao/Real-ESRGAN"
+# Closed list of official NCNN pairs accepted by this adapter. The CLI v0.2.0 resolves
+# realesr-animevideov3 to "<name>-x<scale>" and every other model to "<name>".
+CATALOG: dict[str, dict[str, Any]] = {
+    "realesr-animevideov3": {
+        "scale": 2,
+        "param": "realesr-animevideov3-x2.param",
+        "weights": "realesr-animevideov3-x2.bin",
+        "content": "animation",
+    },
+    "realesrgan-x4plus": {
+        "scale": 4,
+        "param": "realesrgan-x4plus.param",
+        "weights": "realesrgan-x4plus.bin",
+        "content": "live-action",
+    },
+}
+
+
+def native_scale(manifest: dict) -> int:
+    """Native NCNN factor of an already validated manifest."""
+    return CATALOG[manifest["name"]]["scale"]
+
+
+def canonical(data: dict) -> str:
+    return json.dumps(
+        data, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False
+    )
+
+
+def unique_pairs(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise StudioError("Manifeste : clé JSON dupliquée.")
+        result[key] = value
+    return result
+
+
+def read_manifest(path: Path) -> dict:
+    if path.stat().st_size > 1024 * 1024:
+        raise StudioError("Manifeste trop volumineux.")
+    data = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=unique_pairs)
+    validate_manifest(data)
+    return data
+
+
+def relative_path(name: str) -> PurePosixPath:
+    if not isinstance(name, str) or not name or "\\" in name or ":" in name or "\x00" in name:
+        raise StudioError("Chemin de modèle relatif POSIX requis.")
+    path = PurePosixPath(name)
+    if (
+        path.is_absolute()
+        or PureWindowsPath(name).drive
+        or any(p in (".", "..", "") for p in name.split("/"))
+    ):
+        raise StudioError("Chemin hors racine interdit.")
+    return path
+
+
+def validate_manifest(data: dict) -> None:
+    try:
+        if data["schema_version"] != 2 or data["loader"] != "ncnn-param-bin":
+            raise StudioError("Schéma/chargeur non accepté ; aucun pickle, PTH ou code Python.")
+        if not re.fullmatch(r"[a-zA-Z0-9._-]{1,80}", data["id"]):
+            raise StudioError("Identifiant de modèle invalide.")
+        if data["backend"] != BACKEND or data["name"] not in CATALOG:
+            raise StudioError("Backend/modèle non pris en charge par cet adaptateur.")
+        entry = CATALOG[data["name"]]
+        if type(data["scale"]) is not int or data["scale"] != entry["scale"]:
+            raise StudioError("Échelle différente de l'échelle native du modèle catalogué.")
+        if not data["version"] or not data["source"]["source_ref"]:
+            raise StudioError("Version et source_ref obligatoires.")
+        origin = data["source"]["origin"]
+        if not (origin.startswith(OFFICIAL + "/") or origin.startswith(OFFICIAL + "-ncnn-vulkan/")):
+            raise StudioError("Origine officielle Real-ESRGAN requise.")
+        for component in ("code", "weights", "shaders"):
+            license_info = data["licenses"][component]
+            if license_info.get("spdx") in (None, "", "UNKNOWN", "UNVERIFIED") or not (
+                license_info.get("source", "").startswith("https://")
+                and license_info.get("reviewed") is True
+            ):
+                raise StudioError(f"Licence {component} absente ou non vérifiée.")
+        files = data["files"]
+        if len(files) != 2 or {f["role"] for f in files} != {"param", "weights"}:
+            raise StudioError("Paire NCNN .param/.bin obligatoire.")
+        expected_names = {"param": entry["param"], "weights": entry["weights"]}
+        for item in files:
+            path = relative_path(item["path"])
+            if str(path) != expected_names[item["role"]]:
+                raise StudioError("Noms NCNN exacts requis ; aucun fichier exécutable.")
+            if not re.fullmatch("[0-9a-f]{64}", item["sha256"]):
+                raise StudioError("SHA-256 attendu obligatoire.")
+            if type(item["bytes"]) is not int or not 0 < item["bytes"] <= 512 * 1024**2:
+                raise StudioError("Taille de modèle hors budget.")
+        if data["files"][0]["path"] == data["files"][1]["path"]:
+            raise StudioError("Fichier dupliqué.")
+    except (KeyError, TypeError, AttributeError) as exc:
+        raise StudioError("Manifeste incomplet ou mal typé.") from exc
+
+
+def safe_file(root: Path, relative: str) -> Path:
+    relative_path(relative)
+    if root.is_symlink() or (hasattr(root, "is_junction") and root.is_junction()):
+        raise StudioError("Racine de modèles liée interdite.")
+    root = root.resolve(strict=True)
+    path = root
+    for part in PurePosixPath(relative).parts:
+        path /= part
+        if path.is_symlink() or (hasattr(path, "is_junction") and path.is_junction()):
+            raise StudioError("Lien de modèle interdit.")
+    if not path.resolve(strict=True).is_relative_to(root) or not path.is_file():
+        raise StudioError("Fichier modèle absent ou hors racine.")
+    return path
+
+
+@dataclass(frozen=True)
+class ModelRecord:
+    root: str
+    manifest_json: str
+
+    @property
+    def manifest(self) -> dict:
+        return json.loads(self.manifest_json)
+
+    @property
+    def identity(self) -> str:
+        return hashlib.sha256(self.manifest_json.encode()).hexdigest()
+
+    def revalidate(self) -> None:
+        data = self.manifest
+        validate_manifest(data)
+        for item in data["files"]:
+            try:
+                path = safe_file(Path(self.root), item["path"])
+                if path.stat().st_size != item["bytes"] or sha256(path) != item["sha256"]:
+                    raise StudioError("Modèle modifié après validation : hash/taille incorrect.")
+            except OSError as exc:
+                raise StudioError("Modèle absent ou inaccessible.") from exc
+
+    def snapshot(self, destination: Path) -> None:
+        """Copy to an owned fresh job directory, then hash the bytes actually consumed."""
+        self.revalidate()
+        destination.mkdir(mode=0o700, exist_ok=False)
+        for item in self.manifest["files"]:
+            original = safe_file(Path(self.root), item["path"])
+            target = destination / item["path"]
+            with original.open("rb") as source, target.open("xb") as out:
+                while chunk := source.read(1024 * 1024):
+                    out.write(chunk)
+                    if out.tell() > item["bytes"]:
+                        raise StudioError("Modèle modifié pendant la copie.")
+            if target.stat().st_size != item["bytes"] or sha256(target) != item["sha256"]:
+                raise StudioError("Modèle modifié pendant la copie.")
+
+
+def inspect(root: Path, manifest: dict) -> ModelRecord:
+    validate_manifest(manifest)
+    # Preserve the entered root until symlink validation has completed.
+    if root.is_symlink() or (hasattr(root, "is_junction") and root.is_junction()):
+        raise StudioError("Racine de modèles liée interdite.")
+    record = ModelRecord(str(root.resolve(strict=True)), canonical(manifest))
+    record.revalidate()
+    return record
+
+
+@contextmanager
+def _registry_lock(registry: Path):
+    """OS-owned lock survives neither process exit nor crash; the marker is preserved."""
+    lock = registry.with_name(registry.name + ".lock")
+    if lock.is_symlink() or (hasattr(lock, "is_junction") and lock.is_junction()):
+        raise StudioError("Lien de verrou de registre interdit.")
+    flags = os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+    try:
+        fd = os.open(lock, flags, 0o600)
+        with os.fdopen(fd, "r+b") as owner:
+            opened, named = os.fstat(owner.fileno()), lock.lstat()
+            if (
+                not stat.S_ISREG(opened.st_mode)
+                or stat.S_ISLNK(named.st_mode)
+                or opened.st_ino != named.st_ino
+            ):
+                raise StudioError("Verrou de registre non régulier ou remplacé.")
+            if opened.st_size == 0:
+                owner.write(b"0")
+                owner.flush()
+            deadline = time.monotonic() + 5
+            while True:
+                try:
+                    if sys.platform == "win32":
+                        import msvcrt
+
+                        owner.seek(0)
+                        msvcrt.locking(owner.fileno(), msvcrt.LK_NBLCK, 1)
+                    else:
+                        import fcntl
+
+                        fcntl.flock(owner.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    break
+                except OSError:
+                    if time.monotonic() >= deadline:
+                        raise StudioError(
+                            "Registre utilisé par un autre processus ; réessayer."
+                        ) from None
+                    time.sleep(0.02)
+            yield
+    except OSError as exc:
+        raise StudioError("Verrou de registre inaccessible.") from exc
+
+
+def _registry_rows(registry: Path) -> tuple[list, bytes | None]:
+    if registry.is_symlink() or (hasattr(registry, "is_junction") and registry.is_junction()):
+        raise StudioError("Lien de registre interdit.")
+    if not registry.exists():
+        return [], None
+    try:
+        with registry.open("rb") as handle:
+            raw = handle.read(16 * 1024**2 + 1)
+        if len(raw) > 16 * 1024**2:
+            raise StudioError("Registre hors budget.")
+        rows = json.loads(raw.decode("utf-8"), object_pairs_hook=unique_pairs)
+        if not isinstance(rows, list):
+            raise StudioError("Registre invalide.")
+        identities = set()
+        for row in rows:
+            if (
+                not isinstance(row, dict)
+                or row.get("schema_version") != 2
+                or not isinstance(row.get("root"), str)
+                or not row["root"]
+                or type(row.get("real_video_validated")) is not bool
+            ):
+                raise StudioError("Entrée de registre invalide.")
+            validate_manifest(row["manifest"])
+            expected = hashlib.sha256(canonical(row["manifest"]).encode()).hexdigest()
+            if row.get("manifest_sha256") != expected or row["manifest"]["id"] in identities:
+                raise StudioError("Identité de registre incohérente ou dupliquée.")
+            identities.add(row["manifest"]["id"])
+        return rows, raw
+    except (ValueError, KeyError, TypeError, OSError) as exc:
+        raise StudioError("Registre illisible ou mal typé ; aucune modification.") from exc
+
+
+def register(root: Path, manifest: dict, registry: Path) -> dict:
+    record = inspect(root, manifest)
+    registry = registry.expanduser().absolute()
+    result = {
+        "schema_version": 2,
+        "root": record.root,
+        "manifest": record.manifest,
+        "manifest_sha256": record.identity,
+        "integrity": "VERIFIED_LOCAL_FILES",
+        "hardware": "NOT_TESTED",
+        "real_video_validated": False,
+    }
+    with _registry_lock(registry):
+        rows, original = _registry_rows(registry)
+        if any(r["manifest"]["id"] == manifest["id"] for r in rows):
+            raise StudioError("Identifiant de registre dupliqué.")
+        if (registry.read_bytes() if registry.exists() else None) != original:
+            raise StudioError("Registre modifié en dehors du verrou ; aucune écriture.")
+        write_json(registry, [*rows, result])
+    return result
+
+
+def inspect_archive(path: Path, *, max_bytes: int = 512 * 1024**2) -> list[str]:
+    """Validate a ZIP without extracting it. Import never executes or silently unpacks."""
+    try:
+        with zipfile.ZipFile(path) as archive:
+            entries = archive.infolist()
+            if len(entries) > 128 or sum(e.file_size for e in entries) > max_bytes:
+                raise StudioError("Archive hors budget.")
+            names = set()
+            for entry in entries:
+                name = str(relative_path(entry.filename.rstrip("/")))
+                if name.casefold() in names:
+                    raise StudioError("Archive : entrée dupliquée.")
+                names.add(name.casefold())
+                mode = entry.external_attr >> 16
+                if stat.S_ISLNK(mode) or entry.flag_bits & 1:
+                    raise StudioError("Archive liée/chiffrée interdite.")
+                if not entry.is_dir() and Path(name).suffix not in (
+                    ".param",
+                    ".bin",
+                    ".json",
+                    ".txt",
+                ):
+                    raise StudioError("Archive : type de fichier non accepté.")
+            if archive.testzip() is not None:
+                raise StudioError("Archive corrompue.")
+            return sorted(names)
+    except (zipfile.BadZipFile, OSError) as exc:
+        raise StudioError("Archive malformée ou inaccessible.") from exc

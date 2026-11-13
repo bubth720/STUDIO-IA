@@ -1,0 +1,19 @@
+{
+  "source_commit": "277c50b44bcc1fc2d0eada3c05ffd52c77b60153",
+  "source_dirty": false,
+  "environment": "Linux x86_64; Qt offscreen; FFmpeg 7.1.5; Python 3.12.14",
+  "command": "python -m pytest -q -ra --junitxml=full-final.xml",
+  "results": [
+    {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "1",
+      "tests": "165",
+      "time": "474.212",
+      "timestamp": "2026-11-10T10:01:20.218643+00:00",
+      "hostname": "5abe1183e35d"
+    }
+  ],
+  "benchmark_note": "Local resource probes ran concurrently with the full pytest run; no HD/4K inference claim."
+}

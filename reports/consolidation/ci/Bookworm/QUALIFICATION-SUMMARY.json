@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "source_commit": "4d42029f3bdbf260b72a6f2f0f81ed01be1265a9",
+  "source_dirty": false,
+  "pytest": {
+    "tests": 62,
+    "skipped": 1,
+    "passed": 61,
+    "seconds": 74.13
+  },
+  "archive_bytes": 86327157,
+  "archive_sha256": "16b4c3e3796c2a3edffa2477fdef790875078f246d848d2893f4614ceabbb494",
+  "file_hashes_verified": 578,
+  "native_host_ticks": 485,
+  "network_during_qualification": {},
+  "base_image": [
+    "python@sha256:392307d22300de8b5986851a12d9176dfc0fc073e65bf6523ebd7dcbeb23564e"
+  ]
+}

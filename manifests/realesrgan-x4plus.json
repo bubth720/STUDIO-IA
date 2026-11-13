@@ -1,0 +1,44 @@
+{
+  "schema_version": 2,
+  "id": "realesrgan-x4plus-v0.2.5.0",
+  "name": "realesrgan-x4plus",
+  "version": "v0.2.5.0 (realesrgan-ncnn-vulkan-20220424)",
+  "backend": "realesrgan-ncnn-vulkan/0.2.0",
+  "loader": "ncnn-param-bin",
+  "scale": 4,
+  "source": {
+    "origin": "https://github.com/xinntao/Real-ESRGAN/releases/tag/v0.2.5.0",
+    "source_ref": "realesrgan-ncnn-vulkan-20220424-ubuntu.zip sha256 e5aa6eb131234b87c0c51f82b89390f5e3e642b7b70f2b9bbe95b6a285a40c96"
+  },
+  "licenses": {
+    "code": {
+      "spdx": "MIT",
+      "source": "https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan/blob/master/LICENSE",
+      "reviewed": true
+    },
+    "weights": {
+      "spdx": "BSD-3-Clause",
+      "source": "https://github.com/xinntao/Real-ESRGAN/blob/master/LICENSE",
+      "reviewed": true
+    },
+    "shaders": {
+      "spdx": "MIT",
+      "source": "https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan/blob/master/LICENSE",
+      "reviewed": true
+    }
+  },
+  "files": [
+    {
+      "path": "realesrgan-x4plus.param",
+      "role": "param",
+      "bytes": 116029,
+      "sha256": "35330ececcea33b6c397a72548e788d5d53becee4734c50b7fada36e89f10a86"
+    },
+    {
+      "path": "realesrgan-x4plus.bin",
+      "role": "weights",
+      "bytes": 33424520,
+      "sha256": "713ee713b0353afaa27976f0563a64a5043bd70b9bd8936c2e26e25ebcdbcddf"
+    }
+  ]
+}

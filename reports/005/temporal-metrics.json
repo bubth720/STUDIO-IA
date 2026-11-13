@@ -1,0 +1,282 @@
+{
+  "source_commit": "7841ccd2767a6bb24e483e3c355be0a16ef138e1",
+  "scope": "REAL_CPU_SYNTHETIC_CONTROL_ONLY",
+  "results": {
+    "static": {
+      "schema_version": 1,
+      "status": "PASS_CPU_DIAGNOSTIC",
+      "source_sha256": "6412a3a3a26c3b6aaf4af6d427f3d5a9e36e9dc3acbd887df23a08424c8c9368",
+      "method": "GRAY8_32x32_PADDED_THEN_DECIMATED_16x16_TRANSLATION_SAD_FIXED_12x12_ROI",
+      "search_radius_sample_pixels": 2,
+      "sample_pixel_scale": "2 pixels of the 32x32 analysis plane",
+      "measured_pairs": 7,
+      "excluded_transitions": 0,
+      "mean_aligned_mae_percent": "0",
+      "mean_aligned_luma_bias_percent": "0",
+      "pairs": [
+        {
+          "frame_index": 1,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "0",
+          "aligned_mae_percent": "0",
+          "aligned_luma_bias_percent": "0",
+          "winner_margin_sad": 4086
+        },
+        {
+          "frame_index": 2,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "0",
+          "aligned_mae_percent": "0",
+          "aligned_luma_bias_percent": "0",
+          "winner_margin_sad": 4086
+        },
+        {
+          "frame_index": 3,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "0",
+          "aligned_mae_percent": "0",
+          "aligned_luma_bias_percent": "0",
+          "winner_margin_sad": 4086
+        },
+        {
+          "frame_index": 4,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "0",
+          "aligned_mae_percent": "0",
+          "aligned_luma_bias_percent": "0",
+          "winner_margin_sad": 4086
+        },
+        {
+          "frame_index": 5,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "0",
+          "aligned_mae_percent": "0",
+          "aligned_luma_bias_percent": "0",
+          "winner_margin_sad": 4086
+        },
+        {
+          "frame_index": 6,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "0",
+          "aligned_mae_percent": "0",
+          "aligned_luma_bias_percent": "0",
+          "winner_margin_sad": 4086
+        },
+        {
+          "frame_index": 7,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "0",
+          "aligned_mae_percent": "0",
+          "aligned_luma_bias_percent": "0",
+          "winner_margin_sad": 4086
+        }
+      ],
+      "neural_executed": false,
+      "ghosting": "NOT_APPLICABLE_NO_ALIGNED_REFERENCE_OR_NEURAL_OUTPUT",
+      "limitations": [
+        "Translation only: neither dense optical flow nor an occlusion mask.",
+        "Low resolution may miss fine edges; ambiguous matches stay unknown, not zero.",
+        "Luma bias may be exposure/lighting/motion; it is not proof of perceptual flicker.",
+        "No automatic smoothing, frame replacement or change of model/profile."
+      ]
+    },
+    "pan": {
+      "schema_version": 1,
+      "status": "PASS_CPU_DIAGNOSTIC",
+      "source_sha256": "30a51119ba401580ede9820cb22c1041b213d8921ff941576ab849a8dcb0699c",
+      "method": "GRAY8_32x32_PADDED_THEN_DECIMATED_16x16_TRANSLATION_SAD_FIXED_12x12_ROI",
+      "search_radius_sample_pixels": 2,
+      "sample_pixel_scale": "2 pixels of the 32x32 analysis plane",
+      "measured_pairs": 6,
+      "excluded_transitions": 1,
+      "mean_aligned_mae_percent": "0",
+      "mean_aligned_luma_bias_percent": "0",
+      "pairs": [
+        {
+          "frame_index": 1,
+          "status": "EXCLUDED_SCENE_TRANSITION",
+          "dx_sample_pixels": null,
+          "dy_sample_pixels": null,
+          "unaligned_mae_percent": "12095/459",
+          "aligned_mae_percent": null,
+          "aligned_luma_bias_percent": null,
+          "winner_margin_sad": 3846
+        },
+        {
+          "frame_index": 2,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 1,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "4100/153",
+          "aligned_mae_percent": "0",
+          "aligned_luma_bias_percent": "0",
+          "winner_margin_sad": 4056
+        },
+        {
+          "frame_index": 3,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 1,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "710/27",
+          "aligned_mae_percent": "0",
+          "aligned_luma_bias_percent": "0",
+          "winner_margin_sad": 4284
+        },
+        {
+          "frame_index": 4,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 1,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "475/18",
+          "aligned_mae_percent": "0",
+          "aligned_luma_bias_percent": "0",
+          "winner_margin_sad": 4578
+        },
+        {
+          "frame_index": 5,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 1,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "24325/918",
+          "aligned_mae_percent": "0",
+          "aligned_luma_bias_percent": "0",
+          "winner_margin_sad": 4800
+        },
+        {
+          "frame_index": 6,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 1,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "710/27",
+          "aligned_mae_percent": "0",
+          "aligned_luma_bias_percent": "0",
+          "winner_margin_sad": 4954
+        },
+        {
+          "frame_index": 7,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 1,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "12020/459",
+          "aligned_mae_percent": "0",
+          "aligned_luma_bias_percent": "0",
+          "winner_margin_sad": 4766
+        }
+      ],
+      "neural_executed": false,
+      "ghosting": "NOT_APPLICABLE_NO_ALIGNED_REFERENCE_OR_NEURAL_OUTPUT",
+      "limitations": [
+        "Translation only: neither dense optical flow nor an occlusion mask.",
+        "Low resolution may miss fine edges; ambiguous matches stay unknown, not zero.",
+        "Luma bias may be exposure/lighting/motion; it is not proof of perceptual flicker.",
+        "No automatic smoothing, frame replacement or change of model/profile."
+      ]
+    },
+    "exposure": {
+      "schema_version": 1,
+      "status": "PASS_CPU_DIAGNOSTIC",
+      "source_sha256": "6e1c0f6258b6cf9a4e2e91a4af18f873853e7e8ea2e400d2285ad47f1f4002e9",
+      "method": "GRAY8_32x32_PADDED_THEN_DECIMATED_16x16_TRANSLATION_SAD_FIXED_12x12_ROI",
+      "search_radius_sample_pixels": 2,
+      "sample_pixel_scale": "2 pixels of the 32x32 analysis plane",
+      "measured_pairs": 7,
+      "excluded_transitions": 0,
+      "mean_aligned_mae_percent": "400/51",
+      "mean_aligned_luma_bias_percent": "400/51",
+      "pairs": [
+        {
+          "frame_index": 1,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "400/51",
+          "aligned_mae_percent": "400/51",
+          "aligned_luma_bias_percent": "400/51",
+          "winner_margin_sad": 1948
+        },
+        {
+          "frame_index": 2,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "400/51",
+          "aligned_mae_percent": "400/51",
+          "aligned_luma_bias_percent": "400/51",
+          "winner_margin_sad": 1866
+        },
+        {
+          "frame_index": 3,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "400/51",
+          "aligned_mae_percent": "400/51",
+          "aligned_luma_bias_percent": "400/51",
+          "winner_margin_sad": 1948
+        },
+        {
+          "frame_index": 4,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "400/51",
+          "aligned_mae_percent": "400/51",
+          "aligned_luma_bias_percent": "400/51",
+          "winner_margin_sad": 1866
+        },
+        {
+          "frame_index": 5,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "400/51",
+          "aligned_mae_percent": "400/51",
+          "aligned_luma_bias_percent": "400/51",
+          "winner_margin_sad": 1948
+        },
+        {
+          "frame_index": 6,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "400/51",
+          "aligned_mae_percent": "400/51",
+          "aligned_luma_bias_percent": "400/51",
+          "winner_margin_sad": 1866
+        },
+        {
+          "frame_index": 7,
+          "status": "MEASURED_TRANSLATION",
+          "dx_sample_pixels": 0,
+          "dy_sample_pixels": 0,
+          "unaligned_mae_percent": "400/51",
+          "aligned_mae_percent": "400/51",
+          "aligned_luma_bias_percent": "400/51",
+          "winner_margin_sad": 1948
+        }
+      ],
+      "neural_executed": false,
+      "ghosting": "NOT_APPLICABLE_NO_ALIGNED_REFERENCE_OR_NEURAL_OUTPUT",
+      "limitations": [
+        "Translation only: neither dense optical flow nor an occlusion mask.",
+        "Low resolution may miss fine edges; ambiguous matches stay unknown, not zero.",
+        "Luma bias may be exposure/lighting/motion; it is not proof of perceptual flicker.",
+        "No automatic smoothing, frame replacement or change of model/profile."
+      ]
+    }
+  }
+}

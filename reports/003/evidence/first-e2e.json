@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "machine": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "source_commit": "95696ba2e27b4e13485063cba89dfea1aefde358",
+  "request": {
+    "source": "/workspace/STUDIO-IA/artifacts/first-e2e/F01_with_audio.mp4",
+    "destination": "/workspace/STUDIO-IA/artifacts/first-e2e/result_cpu.mp4",
+    "profile": "preservation",
+    "denoise": "light",
+    "scale": 2,
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "saturation": 1.0,
+    "crf": 18,
+    "schema_version": 1
+  },
+  "assertions": {
+    "resolution": true,
+    "video_codec": true,
+    "pixel_format": true,
+    "audio_count": true,
+    "duration": true,
+    "audio_0_channels": true,
+    "audio_0_codec": true,
+    "audio_0_duration": true,
+    "cadence": true,
+    "full_decode": true,
+    "source_unchanged": true
+  },
+  "source_sha256": "c5121233b22b532e5e940b3d312c14e87900325f64ac343bd99895a710f318d5",
+  "output_sha256": "dfab7a182d6497169e1e0a154a10eefc5483d1c0a5f16fdece592cda30b3f3f6",
+  "elapsed_seconds": 4.442846853999981,
+  "engine_version": "ffmpeg version 7.1.5-0+deb13u1 Copyright (c) 2000-2026 the FFmpeg developers"
+}

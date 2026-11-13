@@ -1,0 +1,533 @@
+{
+  "distribution": "debian",
+  "library_count": 75,
+  "package_count": 69,
+  "libraries": {
+    "libcrypto.so.3": {
+      "binary_package": "libssl3:amd64",
+      "source_package": "openssl",
+      "source_version": "3.0.20-1~deb12u2",
+      "corresponding_source": "https://snapshot.debian.org/package/openssl/3.0.20-1~deb12u2/",
+      "copyright": "licenses/system-libraries/libssl3.copyright"
+    },
+    "libssl.so.3": {
+      "binary_package": "libssl3:amd64",
+      "source_package": "openssl",
+      "source_version": "3.0.20-1~deb12u2",
+      "corresponding_source": "https://snapshot.debian.org/package/openssl/3.0.20-1~deb12u2/",
+      "copyright": "licenses/system-libraries/libssl3.copyright"
+    },
+    "libpng16.so.16": {
+      "binary_package": "libpng16-16:amd64",
+      "source_package": "libpng1.6",
+      "source_version": "1.6.39-2+deb12u6",
+      "corresponding_source": "https://snapshot.debian.org/package/libpng1.6/1.6.39-2%2Bdeb12u6/",
+      "copyright": "licenses/system-libraries/libpng16-16.copyright"
+    },
+    "libsystemd.so.0": {
+      "binary_package": "libsystemd0:amd64",
+      "source_package": "systemd",
+      "source_version": "252.39-1~deb12u2",
+      "corresponding_source": "https://snapshot.debian.org/package/systemd/252.39-1~deb12u2/",
+      "copyright": "licenses/system-libraries/libsystemd0.copyright"
+    },
+    "libz.so.1": {
+      "binary_package": "zlib1g:amd64",
+      "source_package": "zlib",
+      "source_version": "1:1.2.13.dfsg-1",
+      "corresponding_source": "https://snapshot.debian.org/package/zlib/1%3A1.2.13.dfsg-1/",
+      "copyright": "licenses/system-libraries/zlib1g.copyright"
+    },
+    "libpcre2-8.so.0": {
+      "binary_package": "libpcre2-8-0:amd64",
+      "source_package": "pcre2",
+      "source_version": "10.42-1+deb12u1",
+      "corresponding_source": "https://snapshot.debian.org/package/pcre2/10.42-1%2Bdeb12u1/",
+      "copyright": "licenses/system-libraries/libpcre2-8-0.copyright"
+    },
+    "libbrotlidec.so.1": {
+      "binary_package": "libbrotli1:amd64",
+      "source_package": "brotli",
+      "source_version": "1.0.9-2+deb12u1",
+      "corresponding_source": "https://snapshot.debian.org/package/brotli/1.0.9-2%2Bdeb12u1/",
+      "copyright": "licenses/system-libraries/libbrotli1.copyright"
+    },
+    "libbrotlicommon.so.1": {
+      "binary_package": "libbrotli1:amd64",
+      "source_package": "brotli",
+      "source_version": "1.0.9-2+deb12u1",
+      "corresponding_source": "https://snapshot.debian.org/package/brotli/1.0.9-2%2Bdeb12u1/",
+      "copyright": "licenses/system-libraries/libbrotli1.copyright"
+    },
+    "libexpat.so.1": {
+      "binary_package": "libexpat1:amd64",
+      "source_package": "expat",
+      "source_version": "2.5.0-1+deb12u5",
+      "corresponding_source": "https://snapshot.debian.org/package/expat/2.5.0-1%2Bdeb12u5/",
+      "copyright": "licenses/system-libraries/libexpat1.copyright"
+    },
+    "libcap.so.2": {
+      "binary_package": "libcap2:amd64",
+      "source_package": "libcap2",
+      "source_version": "1:2.66-4+deb12u3",
+      "corresponding_source": "https://snapshot.debian.org/package/libcap2/1%3A2.66-4%2Bdeb12u3/",
+      "copyright": "licenses/system-libraries/libcap2.copyright"
+    },
+    "liblzma.so.5": {
+      "binary_package": "liblzma5:amd64",
+      "source_package": "xz-utils",
+      "source_version": "5.4.1-1+deb12u2",
+      "corresponding_source": "https://snapshot.debian.org/package/xz-utils/5.4.1-1%2Bdeb12u2/",
+      "copyright": "licenses/system-libraries/liblzma5.copyright"
+    },
+    "libgcc_s.so.1": {
+      "binary_package": "libgcc-s1:amd64",
+      "source_package": "gcc-12",
+      "source_version": "12.2.0-14+deb12u1",
+      "corresponding_source": "https://snapshot.debian.org/package/gcc-12/12.2.0-14%2Bdeb12u1/",
+      "copyright": "licenses/system-libraries/libgcc-s1.copyright"
+    },
+    "libbsd.so.0": {
+      "binary_package": "libbsd0:amd64",
+      "source_package": "libbsd",
+      "source_version": "0.11.7-2",
+      "corresponding_source": "https://snapshot.debian.org/package/libbsd/0.11.7-2/",
+      "copyright": "licenses/system-libraries/libbsd0.copyright"
+    },
+    "liblz4.so.1": {
+      "binary_package": "liblz4-1:amd64",
+      "source_package": "lz4",
+      "source_version": "1.9.4-1",
+      "corresponding_source": "https://snapshot.debian.org/package/lz4/1.9.4-1/",
+      "copyright": "licenses/system-libraries/liblz4-1.copyright"
+    },
+    "libmd.so.0": {
+      "binary_package": "libmd0:amd64",
+      "source_package": "libmd",
+      "source_version": "1.0.4-2",
+      "corresponding_source": "https://snapshot.debian.org/package/libmd/1.0.4-2/",
+      "copyright": "licenses/system-libraries/libmd0.copyright"
+    },
+    "libzstd.so.1": {
+      "binary_package": "libzstd1:amd64",
+      "source_package": "libzstd",
+      "source_version": "1.5.4+dfsg2-5",
+      "corresponding_source": "https://snapshot.debian.org/package/libzstd/1.5.4%2Bdfsg2-5/",
+      "copyright": "licenses/system-libraries/libzstd1.copyright"
+    },
+    "libXau.so.6": {
+      "binary_package": "libxau6:amd64",
+      "source_package": "libxau",
+      "source_version": "1:1.0.9-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libxau/1%3A1.0.9-1/",
+      "copyright": "licenses/system-libraries/libxau6.copyright"
+    },
+    "libgthread-2.0.so.0": {
+      "binary_package": "libglib2.0-0:amd64",
+      "source_package": "glib2.0",
+      "source_version": "2.74.6-2+deb12u9",
+      "corresponding_source": "https://snapshot.debian.org/package/glib2.0/2.74.6-2%2Bdeb12u9/",
+      "copyright": "licenses/system-libraries/libglib2.0-0.copyright"
+    },
+    "libglib-2.0.so.0": {
+      "binary_package": "libglib2.0-0:amd64",
+      "source_package": "glib2.0",
+      "source_version": "2.74.6-2+deb12u9",
+      "corresponding_source": "https://snapshot.debian.org/package/glib2.0/2.74.6-2%2Bdeb12u9/",
+      "copyright": "licenses/system-libraries/libglib2.0-0.copyright"
+    },
+    "libffi.so.8": {
+      "binary_package": "libffi8:amd64",
+      "source_package": "libffi",
+      "source_version": "3.4.4-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libffi/3.4.4-1/",
+      "copyright": "licenses/system-libraries/libffi8.copyright"
+    },
+    "libfreetype.so.6": {
+      "binary_package": "libfreetype6:amd64",
+      "source_package": "freetype",
+      "source_version": "2.12.1+dfsg-5+deb12u4",
+      "corresponding_source": "https://snapshot.debian.org/package/freetype/2.12.1%2Bdfsg-5%2Bdeb12u4/",
+      "copyright": "licenses/system-libraries/libfreetype6.copyright"
+    },
+    "libdbus-1.so.3": {
+      "binary_package": "libdbus-1-3:amd64",
+      "source_package": "dbus",
+      "source_version": "1.14.10-1~deb12u1",
+      "corresponding_source": "https://snapshot.debian.org/package/dbus/1.14.10-1~deb12u1/",
+      "copyright": "licenses/system-libraries/libdbus-1-3.copyright"
+    },
+    "libX11.so.6": {
+      "binary_package": "libx11-6:amd64",
+      "source_package": "libx11",
+      "source_version": "2:1.8.4-2+deb12u2",
+      "corresponding_source": "https://snapshot.debian.org/package/libx11/2%3A1.8.4-2%2Bdeb12u2/",
+      "copyright": "licenses/system-libraries/libx11-6.copyright"
+    },
+    "libXdmcp.so.6": {
+      "binary_package": "libxdmcp6:amd64",
+      "source_package": "libxdmcp",
+      "source_version": "1:1.1.2-3",
+      "corresponding_source": "https://snapshot.debian.org/package/libxdmcp/1%3A1.1.2-3/",
+      "copyright": "licenses/system-libraries/libxdmcp6.copyright"
+    },
+    "libgpg-error.so.0": {
+      "binary_package": "libgpg-error0:amd64",
+      "source_package": "libgpg-error",
+      "source_version": "1.46-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libgpg-error/1.46-1/",
+      "copyright": "licenses/system-libraries/libgpg-error0.copyright"
+    },
+    "libxkbcommon.so.0": {
+      "binary_package": "libxkbcommon0:amd64",
+      "source_package": "libxkbcommon",
+      "source_version": "1.5.0-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libxkbcommon/1.5.0-1/",
+      "copyright": "licenses/system-libraries/libxkbcommon0.copyright"
+    },
+    "libstdc++.so.6": {
+      "binary_package": "libstdc++6:amd64",
+      "source_package": "gcc-12",
+      "source_version": "12.2.0-14+deb12u1",
+      "corresponding_source": "https://snapshot.debian.org/package/gcc-12/12.2.0-14%2Bdeb12u1/",
+      "copyright": "licenses/system-libraries/libstdc++6.copyright"
+    },
+    "libfontconfig.so.1": {
+      "binary_package": "libfontconfig1:amd64",
+      "source_package": "fontconfig",
+      "source_version": "2.14.1-4",
+      "corresponding_source": "https://snapshot.debian.org/package/fontconfig/2.14.1-4/",
+      "copyright": "licenses/system-libraries/libfontconfig1.copyright"
+    },
+    "libgcrypt.so.20": {
+      "binary_package": "libgcrypt20:amd64",
+      "source_package": "libgcrypt20",
+      "source_version": "1.10.1-3+deb12u1",
+      "corresponding_source": "https://snapshot.debian.org/package/libgcrypt20/1.10.1-3%2Bdeb12u1/",
+      "copyright": "licenses/system-libraries/libgcrypt20.copyright"
+    },
+    "libX11-xcb.so.1": {
+      "binary_package": "libx11-xcb1:amd64",
+      "source_package": "libx11",
+      "source_version": "2:1.8.4-2+deb12u2",
+      "corresponding_source": "https://snapshot.debian.org/package/libx11/2%3A1.8.4-2%2Bdeb12u2/",
+      "copyright": "licenses/system-libraries/libx11-xcb1.copyright"
+    },
+    "libxcb-cursor.so.0": {
+      "binary_package": "libxcb-cursor0:amd64",
+      "source_package": "xcb-util-cursor",
+      "source_version": "0.1.4-1",
+      "corresponding_source": "https://snapshot.debian.org/package/xcb-util-cursor/0.1.4-1/",
+      "copyright": "licenses/system-libraries/libxcb-cursor0.copyright"
+    },
+    "libxcb-xkb.so.1": {
+      "binary_package": "libxcb-xkb1:amd64",
+      "source_package": "libxcb",
+      "source_version": "1.15-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libxcb/1.15-1/",
+      "copyright": "licenses/system-libraries/libxcb-xkb1.copyright"
+    },
+    "libxcb-render.so.0": {
+      "binary_package": "libxcb-render0:amd64",
+      "source_package": "libxcb",
+      "source_version": "1.15-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libxcb/1.15-1/",
+      "copyright": "licenses/system-libraries/libxcb-render0.copyright"
+    },
+    "libxcb-image.so.0": {
+      "binary_package": "libxcb-image0:amd64",
+      "source_package": "xcb-util-image",
+      "source_version": "0.4.0-2",
+      "corresponding_source": "https://snapshot.debian.org/package/xcb-util-image/0.4.0-2/",
+      "copyright": "licenses/system-libraries/libxcb-image0.copyright"
+    },
+    "libxcb-shape.so.0": {
+      "binary_package": "libxcb-shape0:amd64",
+      "source_package": "libxcb",
+      "source_version": "1.15-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libxcb/1.15-1/",
+      "copyright": "licenses/system-libraries/libxcb-shape0.copyright"
+    },
+    "libxcb-util.so.1": {
+      "binary_package": "libxcb-util1:amd64",
+      "source_package": "xcb-util",
+      "source_version": "0.4.0-1",
+      "corresponding_source": "https://snapshot.debian.org/package/xcb-util/0.4.0-1/",
+      "copyright": "licenses/system-libraries/libxcb-util1.copyright"
+    },
+    "libxcb-render-util.so.0": {
+      "binary_package": "libxcb-render-util0:amd64",
+      "source_package": "xcb-util-renderutil",
+      "source_version": "0.3.9-1",
+      "corresponding_source": "https://snapshot.debian.org/package/xcb-util-renderutil/0.3.9-1/",
+      "copyright": "licenses/system-libraries/libxcb-render-util0.copyright"
+    },
+    "libxcb-xfixes.so.0": {
+      "binary_package": "libxcb-xfixes0:amd64",
+      "source_package": "libxcb",
+      "source_version": "1.15-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libxcb/1.15-1/",
+      "copyright": "licenses/system-libraries/libxcb-xfixes0.copyright"
+    },
+    "libxcb-sync.so.1": {
+      "binary_package": "libxcb-sync1:amd64",
+      "source_package": "libxcb",
+      "source_version": "1.15-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libxcb/1.15-1/",
+      "copyright": "licenses/system-libraries/libxcb-sync1.copyright"
+    },
+    "libxcb-glx.so.0": {
+      "binary_package": "libxcb-glx0:amd64",
+      "source_package": "libxcb",
+      "source_version": "1.15-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libxcb/1.15-1/",
+      "copyright": "licenses/system-libraries/libxcb-glx0.copyright"
+    },
+    "libxkbcommon-x11.so.0": {
+      "binary_package": "libxkbcommon-x11-0:amd64",
+      "source_package": "libxkbcommon",
+      "source_version": "1.5.0-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libxkbcommon/1.5.0-1/",
+      "copyright": "licenses/system-libraries/libxkbcommon-x11-0.copyright"
+    },
+    "libxcb-randr.so.0": {
+      "binary_package": "libxcb-randr0:amd64",
+      "source_package": "libxcb",
+      "source_version": "1.15-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libxcb/1.15-1/",
+      "copyright": "licenses/system-libraries/libxcb-randr0.copyright"
+    },
+    "libxcb-shm.so.0": {
+      "binary_package": "libxcb-shm0:amd64",
+      "source_package": "libxcb",
+      "source_version": "1.15-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libxcb/1.15-1/",
+      "copyright": "licenses/system-libraries/libxcb-shm0.copyright"
+    },
+    "libk5crypto.so.3": {
+      "binary_package": "libk5crypto3:amd64",
+      "source_package": "krb5",
+      "source_version": "1.20.1-2+deb12u5",
+      "corresponding_source": "https://snapshot.debian.org/package/krb5/1.20.1-2%2Bdeb12u5/",
+      "copyright": "licenses/system-libraries/libk5crypto3.copyright"
+    },
+    "libkrb5.so.3": {
+      "binary_package": "libkrb5-3:amd64",
+      "source_package": "krb5",
+      "source_version": "1.20.1-2+deb12u5",
+      "corresponding_source": "https://snapshot.debian.org/package/krb5/1.20.1-2%2Bdeb12u5/",
+      "copyright": "licenses/system-libraries/libkrb5-3.copyright"
+    },
+    "libcom_err.so.2": {
+      "binary_package": "libcom-err2:amd64",
+      "source_package": "e2fsprogs",
+      "source_version": "1.47.0-2",
+      "corresponding_source": "https://snapshot.debian.org/package/e2fsprogs/1.47.0-2/",
+      "copyright": "licenses/system-libraries/libcom-err2.copyright"
+    },
+    "libkrb5support.so.0": {
+      "binary_package": "libkrb5support0:amd64",
+      "source_package": "krb5",
+      "source_version": "1.20.1-2+deb12u5",
+      "corresponding_source": "https://snapshot.debian.org/package/krb5/1.20.1-2%2Bdeb12u5/",
+      "copyright": "licenses/system-libraries/libkrb5support0.copyright"
+    },
+    "libgssapi_krb5.so.2": {
+      "binary_package": "libgssapi-krb5-2:amd64",
+      "source_package": "krb5",
+      "source_version": "1.20.1-2+deb12u5",
+      "corresponding_source": "https://snapshot.debian.org/package/krb5/1.20.1-2%2Bdeb12u5/",
+      "copyright": "licenses/system-libraries/libgssapi-krb5-2.copyright"
+    },
+    "libkeyutils.so.1": {
+      "binary_package": "libkeyutils1:amd64",
+      "source_package": "keyutils",
+      "source_version": "1.6.3-2",
+      "corresponding_source": "https://snapshot.debian.org/package/keyutils/1.6.3-2/",
+      "copyright": "licenses/system-libraries/libkeyutils1.copyright"
+    },
+    "libgio-2.0.so.0": {
+      "binary_package": "libglib2.0-0:amd64",
+      "source_package": "glib2.0",
+      "source_version": "2.74.6-2+deb12u9",
+      "corresponding_source": "https://snapshot.debian.org/package/glib2.0/2.74.6-2%2Bdeb12u9/",
+      "copyright": "licenses/system-libraries/libglib2.0-0.copyright"
+    },
+    "libfribidi.so.0": {
+      "binary_package": "libfribidi0:amd64",
+      "source_package": "fribidi",
+      "source_version": "1.0.8-2.1",
+      "corresponding_source": "https://snapshot.debian.org/package/fribidi/1.0.8-2.1/",
+      "copyright": "licenses/system-libraries/libfribidi0.copyright"
+    },
+    "libjpeg.so.62": {
+      "binary_package": "libjpeg62-turbo:amd64",
+      "source_package": "libjpeg-turbo",
+      "source_version": "1:2.1.5-2",
+      "corresponding_source": "https://snapshot.debian.org/package/libjpeg-turbo/1%3A2.1.5-2/",
+      "copyright": "licenses/system-libraries/libjpeg62-turbo.copyright"
+    },
+    "libpangocairo-1.0.so.0": {
+      "binary_package": "libpangocairo-1.0-0:amd64",
+      "source_package": "pango1.0",
+      "source_version": "1.50.12+ds-1",
+      "corresponding_source": "https://snapshot.debian.org/package/pango1.0/1.50.12%2Bds-1/",
+      "copyright": "licenses/system-libraries/libpangocairo-1.0-0.copyright"
+    },
+    "libpango-1.0.so.0": {
+      "binary_package": "libpango-1.0-0:amd64",
+      "source_package": "pango1.0",
+      "source_version": "1.50.12+ds-1",
+      "corresponding_source": "https://snapshot.debian.org/package/pango1.0/1.50.12%2Bds-1/",
+      "copyright": "licenses/system-libraries/libpango-1.0-0.copyright"
+    },
+    "libcairo.so.2": {
+      "binary_package": "libcairo2:amd64",
+      "source_package": "cairo",
+      "source_version": "1.16.0-7",
+      "corresponding_source": "https://snapshot.debian.org/package/cairo/1.16.0-7/",
+      "copyright": "licenses/system-libraries/libcairo2.copyright"
+    },
+    "libblkid.so.1": {
+      "binary_package": "libblkid1:amd64",
+      "source_package": "util-linux",
+      "source_version": "2.38.1-5+deb12u3",
+      "corresponding_source": "https://snapshot.debian.org/package/util-linux/2.38.1-5%2Bdeb12u3/",
+      "copyright": "licenses/system-libraries/libblkid1.copyright"
+    },
+    "libXext.so.6": {
+      "binary_package": "libxext6:amd64",
+      "source_package": "libxext",
+      "source_version": "2:1.3.4-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libxext/2%3A1.3.4-1/",
+      "copyright": "licenses/system-libraries/libxext6.copyright"
+    },
+    "libcairo-gobject.so.2": {
+      "binary_package": "libcairo-gobject2:amd64",
+      "source_package": "cairo",
+      "source_version": "1.16.0-7",
+      "corresponding_source": "https://snapshot.debian.org/package/cairo/1.16.0-7/",
+      "copyright": "licenses/system-libraries/libcairo-gobject2.copyright"
+    },
+    "libthai.so.0": {
+      "binary_package": "libthai0:amd64",
+      "source_package": "libthai",
+      "source_version": "0.1.29-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libthai/0.1.29-1/",
+      "copyright": "licenses/system-libraries/libthai0.copyright"
+    },
+    "libharfbuzz.so.0": {
+      "binary_package": "libharfbuzz0b:amd64",
+      "source_package": "harfbuzz",
+      "source_version": "6.0.0+dfsg-3",
+      "corresponding_source": "https://snapshot.debian.org/package/harfbuzz/6.0.0%2Bdfsg-3/",
+      "copyright": "licenses/system-libraries/libharfbuzz0b.copyright"
+    },
+    "libpangoft2-1.0.so.0": {
+      "binary_package": "libpangoft2-1.0-0:amd64",
+      "source_package": "pango1.0",
+      "source_version": "1.50.12+ds-1",
+      "corresponding_source": "https://snapshot.debian.org/package/pango1.0/1.50.12%2Bds-1/",
+      "copyright": "licenses/system-libraries/libpangoft2-1.0-0.copyright"
+    },
+    "libdatrie.so.1": {
+      "binary_package": "libdatrie1:amd64",
+      "source_package": "libdatrie",
+      "source_version": "0.2.13-2",
+      "corresponding_source": "https://snapshot.debian.org/package/libdatrie/0.2.13-2/",
+      "copyright": "licenses/system-libraries/libdatrie1.copyright"
+    },
+    "libpixman-1.so.0": {
+      "binary_package": "libpixman-1-0:amd64",
+      "source_package": "pixman",
+      "source_version": "0.42.2-1",
+      "corresponding_source": "https://snapshot.debian.org/package/pixman/0.42.2-1/",
+      "copyright": "licenses/system-libraries/libpixman-1-0.copyright"
+    },
+    "libgraphite2.so.3": {
+      "binary_package": "libgraphite2-3:amd64",
+      "source_package": "graphite2",
+      "source_version": "1.3.14-1+deb12u1",
+      "corresponding_source": "https://snapshot.debian.org/package/graphite2/1.3.14-1%2Bdeb12u1/",
+      "copyright": "licenses/system-libraries/libgraphite2-3.copyright"
+    },
+    "libgobject-2.0.so.0": {
+      "binary_package": "libglib2.0-0:amd64",
+      "source_package": "glib2.0",
+      "source_version": "2.74.6-2+deb12u9",
+      "corresponding_source": "https://snapshot.debian.org/package/glib2.0/2.74.6-2%2Bdeb12u9/",
+      "copyright": "licenses/system-libraries/libglib2.0-0.copyright"
+    },
+    "libselinux.so.1": {
+      "binary_package": "libselinux1:amd64",
+      "source_package": "libselinux",
+      "source_version": "3.4-1",
+      "corresponding_source": "https://snapshot.debian.org/package/libselinux/3.4-1/",
+      "copyright": "licenses/system-libraries/libselinux1.copyright"
+    },
+    "libXrender.so.1": {
+      "binary_package": "libxrender1:amd64",
+      "source_package": "libxrender",
+      "source_version": "1:0.9.10-1.1",
+      "corresponding_source": "https://snapshot.debian.org/package/libxrender/1%3A0.9.10-1.1/",
+      "copyright": "licenses/system-libraries/libxrender1.copyright"
+    },
+    "libgdk_pixbuf-2.0.so.0": {
+      "binary_package": "libgdk-pixbuf-2.0-0:amd64",
+      "source_package": "gdk-pixbuf",
+      "source_version": "2.42.10+dfsg-1+deb12u4",
+      "corresponding_source": "https://snapshot.debian.org/package/gdk-pixbuf/2.42.10%2Bdfsg-1%2Bdeb12u4/",
+      "copyright": "licenses/system-libraries/libgdk-pixbuf-2.0-0.copyright"
+    },
+    "libgmodule-2.0.so.0": {
+      "binary_package": "libglib2.0-0:amd64",
+      "source_package": "glib2.0",
+      "source_version": "2.74.6-2+deb12u9",
+      "corresponding_source": "https://snapshot.debian.org/package/glib2.0/2.74.6-2%2Bdeb12u9/",
+      "copyright": "licenses/system-libraries/libglib2.0-0.copyright"
+    },
+    "libmount.so.1": {
+      "binary_package": "libmount1:amd64",
+      "source_package": "util-linux",
+      "source_version": "2.38.1-5+deb12u3",
+      "corresponding_source": "https://snapshot.debian.org/package/util-linux/2.38.1-5%2Bdeb12u3/",
+      "copyright": "licenses/system-libraries/libmount1.copyright"
+    },
+    "libbz2.so.1.0": {
+      "binary_package": "libbz2-1.0:amd64",
+      "source_package": "bzip2",
+      "source_version": "1.0.8-5",
+      "corresponding_source": "https://snapshot.debian.org/package/bzip2/1.0.8-5/",
+      "copyright": "licenses/system-libraries/libbz2-1.0.copyright"
+    },
+    "libreadline.so.8": {
+      "binary_package": "libreadline8:amd64",
+      "source_package": "readline",
+      "source_version": "8.2-1.3",
+      "corresponding_source": "https://snapshot.debian.org/package/readline/8.2-1.3/",
+      "copyright": "licenses/system-libraries/libreadline8.copyright"
+    },
+    "libtinfo.so.6": {
+      "binary_package": "libtinfo6:amd64",
+      "source_package": "ncurses",
+      "source_version": "6.4-4",
+      "corresponding_source": "https://snapshot.debian.org/package/ncurses/6.4-4/",
+      "copyright": "licenses/system-libraries/libtinfo6.copyright"
+    },
+    "libsqlite3.so.0": {
+      "binary_package": "libsqlite3-0:amd64",
+      "source_package": "sqlite3",
+      "source_version": "3.40.1-2+deb12u2",
+      "corresponding_source": "https://snapshot.debian.org/package/sqlite3/3.40.1-2%2Bdeb12u2/",
+      "copyright": "licenses/system-libraries/libsqlite3-0.copyright"
+    },
+    "libuuid.so.1": {
+      "binary_package": "libuuid1:amd64",
+      "source_package": "util-linux",
+      "source_version": "2.38.1-5+deb12u3",
+      "corresponding_source": "https://snapshot.debian.org/package/util-linux/2.38.1-5%2Bdeb12u3/",
+      "copyright": "licenses/system-libraries/libuuid1.copyright"
+    }
+  },
+  "note": "Qt/PySide, ICU, Python and bootloader have separate included notices."
+}

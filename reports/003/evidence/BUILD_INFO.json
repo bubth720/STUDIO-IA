@@ -1,0 +1,13 @@
+{
+  "application": "STUDIO IA",
+  "version": "0.3.0a1",
+  "label": "ALPHA / EXPERIMENTAL",
+  "source_commit": "843efdde4a6aeeb7f11fa94b440e2cb80c15c1ec",
+  "source_dirty": false,
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "packager": "PyInstaller 6.13.0",
+  "qt_binding": "6.8.3",
+  "ffmpeg_bundled": false,
+  "neural_models_bundled": false
+}

@@ -1,0 +1,98 @@
+[
+  {
+    "id": 42795714469,
+    "sha": "277c50b44bcc1fc2d0eada3c05ffd52c77b60153",
+    "branch": "codex/studio-ia-m005-qualification",
+    "url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42795714469",
+    "status": "completed",
+    "result": "success"
+  },
+  {
+    "id": 42795573092,
+    "sha": "277c50b44bcc1fc2d0eada3c05ffd52c77b60153",
+    "branch": "codex/studio-ia-m005-qualification",
+    "url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42795573092",
+    "status": "completed",
+    "result": "cancelled"
+  },
+  {
+    "id": 42795394547,
+    "sha": "24e6c568aa68fca32d7f4b06238afa17f27990c4",
+    "branch": "codex/studio-ia-m004-registry-hardening",
+    "url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42795394547",
+    "status": "completed",
+    "result": "success"
+  },
+  {
+    "id": 42795101560,
+    "sha": "24e6c568aa68fca32d7f4b06238afa17f27990c4",
+    "branch": "codex/studio-ia-m004-registry-hardening",
+    "url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42795101560",
+    "status": "completed",
+    "result": "cancelled"
+  },
+  {
+    "id": 42794930229,
+    "sha": "7d2f028b02f608f6921413942dc23a598fa0273f",
+    "branch": "codex/studio-ia-m005-temporal-preview",
+    "url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42794930229",
+    "status": "completed",
+    "result": "success"
+  },
+  {
+    "id": 42794726518,
+    "sha": "7d2f028b02f608f6921413942dc23a598fa0273f",
+    "branch": "codex/studio-ia-m005-temporal-preview",
+    "url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42794726518",
+    "status": "completed",
+    "result": "cancelled"
+  },
+  {
+    "id": 42794160358,
+    "sha": "1b50d4838e0a733e5a30604381e649723dd00caa",
+    "branch": "codex/studio-ia-m005-motion-audio",
+    "url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42794160358",
+    "status": "completed",
+    "result": "success"
+  },
+  {
+    "id": 42793759113,
+    "sha": "1b50d4838e0a733e5a30604381e649723dd00caa",
+    "branch": "codex/studio-ia-m005-motion-audio",
+    "url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42793759113",
+    "status": "completed",
+    "result": "cancelled"
+  },
+  {
+    "id": 42793494302,
+    "sha": "e879b6eb6f9895f38e0219d1e1a25804ecac73c7",
+    "branch": "codex/studio-ia-m005-scenes-guard",
+    "url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42793494302",
+    "status": "completed",
+    "result": "success"
+  },
+  {
+    "id": 42793487023,
+    "sha": "e879b6eb6f9895f38e0219d1e1a25804ecac73c7",
+    "branch": "codex/studio-ia-m005-scenes-guard",
+    "url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42793487023",
+    "status": "completed",
+    "result": "cancelled"
+  },
+  {
+    "id": 42792499583,
+    "sha": "02a8754dc1dcef519bfdd2cf3be63ecd09c049ad",
+    "branch": "codex/studio-ia-m005-scenes-guard",
+    "url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42792499583",
+    "status": "completed",
+    "result": "failure"
+  },
+  {
+    "id": 42792370435,
+    "sha": "02a8754dc1dcef519bfdd2cf3be63ecd09c049ad",
+    "branch": "codex/studio-ia-m005-scenes-guard",
+    "url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42792370435",
+    "status": "completed",
+    "result": "cancelled"
+  }
+]

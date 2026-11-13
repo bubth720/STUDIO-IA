@@ -1,0 +1,35 @@
+{
+  "mission": "M004",
+  "task_id": "M4.01",
+  "status": "PASS",
+  "tested_commit_sha": "24f5c211cc96d7d6956d9e7452c4dc025693caa4",
+  "baseline_ci_commit": "21b11b355e34309ad7c43a9bcc3696d18f17af66",
+  "baseline_ci_tree_identical_to": "24f5c211cc96d7d6956d9e7452c4dc025693caa4",
+  "os_arch": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "hardware": {
+    "cpu": "Intel Xeon Platinum 8370C",
+    "gpu": null
+  },
+  "engine": {
+    "name": "FFmpeg CPU",
+    "version": "7.1.5",
+    "model_sha256": null
+  },
+  "source_sha256": null,
+  "output_sha256": null,
+  "tests": {
+    "passed": 61,
+    "failed": 0,
+    "skipped": 1
+  },
+  "evidence_paths": [
+    "baseline-local.xml",
+    "baseline-cpu-e2e.txt"
+  ],
+  "limitations": [
+    "Qt offscreen, no physical display; initial read-only default state error preserved outside Git",
+    "CPU CI uses an empty commit to trigger an identical source tree because original message contains skip ci"
+  ],
+  "ci_run_url": "https://github.com/bubth720/STUDIO-IA/actions/runs/42638932666",
+  "measured_at_utc": "2026-11-09T15:08:37.070401+00:00"
+}

@@ -1,0 +1,62 @@
+{
+  "read_date_utc": "2026-11-07",
+  "runtime_installed": false,
+  "models_downloaded": false,
+  "video2x_release_observed": "6.4.0",
+  "sources": [
+    {
+      "url": "https://github.com/xinntao/Real-ESRGAN/blob/master/README.md",
+      "title": "README.md",
+      "modified_date": "2022-09-20T11:59:08Z",
+      "scope": "README inspected; no engine/model installed"
+    },
+    {
+      "url": "https://github.com/bloc97/Anime4K/blob/master/README.md",
+      "title": "README.md",
+      "modified_date": "2024-04-25T23:24:25Z",
+      "scope": "README inspected; no engine/model installed"
+    },
+    {
+      "url": "https://github.com/hzwer/ECCV2022-RIFE/blob/main/README.md",
+      "title": "README.md",
+      "modified_date": "2025-09-06T14:48:21Z",
+      "scope": "README inspected; no engine/model installed"
+    },
+    {
+      "url": "https://github.com/xinntao/Real-ESRGAN/blob/master/LICENSE",
+      "title": "LICENSE",
+      "modified_date": "2021-07-25T16:33:08Z",
+      "scope": "Code license inspected; weights rights require separate verification"
+    },
+    {
+      "url": "https://github.com/bloc97/Anime4K/blob/master/LICENSE",
+      "title": "LICENSE",
+      "modified_date": "2019-08-13T22:51:31Z",
+      "scope": "Code license inspected; weights rights require separate verification"
+    },
+    {
+      "url": "https://github.com/hzwer/ECCV2022-RIFE/blob/main/LICENSE",
+      "title": "LICENSE",
+      "modified_date": "2022-07-11T10:16:26Z",
+      "scope": "Code license inspected; weights rights require separate verification"
+    },
+    {
+      "url": "https://github.com/nihui/rife-ncnn-vulkan/blob/master/README.md",
+      "title": "README.md",
+      "modified_date": "2022-10-16T13:09:43Z",
+      "scope": "Upstream documentation/release only; no runtime execution"
+    },
+    {
+      "url": "https://github.com/k4yt3x/video2x/blob/master/README.md",
+      "title": "README.md",
+      "modified_date": "2025-03-26T00:00:00Z",
+      "scope": "Upstream documentation/release only; no runtime execution"
+    },
+    {
+      "url": "https://api.github.com/repos/k4yt3x/video2x/releases/latest",
+      "title": "latest",
+      "modified_date": null,
+      "scope": "Upstream documentation/release only; no runtime execution"
+    }
+  ]
+}

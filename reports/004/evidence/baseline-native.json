@@ -1,0 +1,28 @@
+[
+  {
+    "os": "Windows",
+    "archive_sha256": "4260d9aafb02bf10166ffb78db50335ab8add10dd0be84f0c8e814e2679b3a03",
+    "artifact_id": 13685026297,
+    "junit": {
+      "tests": 62,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3
+    },
+    "source_commit": "21b11b355e34309ad7c43a9bcc3696d18f17af66",
+    "tree_identical_to": "24f5c211cc96d7d6956d9e7452c4dc025693caa4"
+  },
+  {
+    "os": "Linux",
+    "archive_sha256": "b1520549416884538212be77e43b9b85620e65939552ff640ac9d51338ce5b6a",
+    "artifact_id": 13683869288,
+    "junit": {
+      "tests": 62,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    "source_commit": "21b11b355e34309ad7c43a9bcc3696d18f17af66",
+    "tree_identical_to": "24f5c211cc96d7d6956d9e7452c4dc025693caa4"
+  }
+]

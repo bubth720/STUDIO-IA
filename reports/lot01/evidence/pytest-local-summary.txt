@@ -1,0 +1,4 @@
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_policy.py:250: Video2X et modèles absents ; aucun moteur neuronal qualifié.
+FAILED tests/test_failures.py::test_unwritable_destination - Failed: DID NOT ...
+1 failed, 163 passed, 1 skipped in 93.15s (0:01:33)

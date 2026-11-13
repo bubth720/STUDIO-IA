@@ -50,6 +50,10 @@ def parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure:  # Windows consoles may not encode accents/CJK: never crash on output
+            reconfigure(errors="backslashreplace")
     args = parser().parse_args(argv)
     try:
         if args.command == "doctor":

@@ -7,8 +7,8 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from PySide6.QtCore import QObject, QRect, Qt, QTimer, QUrl, Signal
-from PySide6.QtGui import QColor, QDesktopServices, QPainter, QPixmap
+from PySide6.QtCore import QObject, QPointF, QRect, QRectF, Qt, QTimer, QUrl, Signal
+from PySide6.QtGui import QColor, QDesktopServices, QImage, QPainter, QPixmap
 from PySide6.QtWidgets import (
     QApplication,
     QButtonGroup,
@@ -32,6 +32,7 @@ from PySide6.QtWidgets import (
     QSlider,
     QSpinBox,
     QSplitter,
+    QTabWidget,
     QTextEdit,
     QVBoxLayout,
     QWidget,
@@ -51,13 +52,118 @@ class Bridge(QObject):
 
 
 class Comparison(QWidget):
+    """Before/after wipe with synchronised zoom and pan (LOT 04).
+
+    Zoom and pan are expressed in normalised image coordinates, so both images show
+    exactly the same region even when the result has a higher resolution.
+    """
+
     def __init__(self):
         super().__init__()
         self.before = QPixmap()
         self.after = QPixmap()
         self.fraction = 0.5
+        self.zoom = 1.0
+        self.center = QPointF(0.5, 0.5)
+        self._drag: QPointF | None = None
         self.setMinimumSize(450, 240)
         self.setAccessibleName("Comparaison avant après à l'instant sélectionné")
+
+    def set_zoom(self, value: float, anchor: QPointF | None = None):
+        self.zoom = max(1.0, min(8.0, value))
+        if anchor is not None:
+            self.center = anchor
+        self._clamp()
+        self.update()
+
+    def _clamp(self):
+        half = 0.5 / self.zoom
+        self.center = QPointF(
+            min(1 - half, max(half, self.center.x())), min(1 - half, max(half, self.center.y()))
+        )
+
+    def _source(self, pixmap: QPixmap) -> QRectF:
+        w, h = pixmap.width() / self.zoom, pixmap.height() / self.zoom
+        return QRectF(
+            self.center.x() * pixmap.width() - w / 2,
+            self.center.y() * pixmap.height() - h / 2,
+            w,
+            h,
+        )
+
+    def _target(self) -> QRect:
+        aspect = self.before.width() / max(1, self.before.height())
+        width = min(self.width(), round(self.height() * aspect))
+        height = round(width / aspect)
+        return QRect((self.width() - width) // 2, (self.height() - height) // 2, width, height)
+
+    def wheelEvent(self, event):
+        if self.before.isNull():
+            return
+        target = self._target()
+        position = event.position()
+        if target.contains(position.toPoint()):
+            # Keep the point under the cursor where it is while zooming.
+            source = self._source(self.before)
+            anchor = QPointF(
+                (source.x() + (position.x() - target.x()) / target.width() * source.width())
+                / self.before.width(),
+                (source.y() + (position.y() - target.y()) / target.height() * source.height())
+                / self.before.height(),
+            )
+        else:
+            anchor = None
+        step = 1.25 if event.angleDelta().y() > 0 else 0.8
+        self.set_zoom(self.zoom * step, anchor)
+
+    def mousePressEvent(self, event):
+        self._drag = event.position()
+
+    def mouseMoveEvent(self, event):
+        if self._drag is None or self.zoom == 1.0 or self.before.isNull():
+            return
+        target = self._target()
+        delta = event.position() - self._drag
+        self._drag = event.position()
+        self.center = QPointF(
+            self.center.x() - delta.x() / target.width() / self.zoom,
+            self.center.y() - delta.y() / target.height() / self.zoom,
+        )
+        self._clamp()
+        self.update()
+
+    def mouseReleaseEvent(self, event):
+        self._drag = None
+
+    def info(self) -> str:
+        parts = []
+        if not self.before.isNull():
+            parts.append(f"Avant {self.before.width()}×{self.before.height()}")
+        if not self.after.isNull():
+            parts.append(f"Après {self.after.width()}×{self.after.height()}")
+        parts.append(f"zoom ×{self.zoom:.2f}".rstrip("0").rstrip("."))
+        return " · ".join(parts)
+
+    def composite(self) -> QImage:
+        """Side-by-side export of the current region, both at the result's resolution."""
+        if self.before.isNull():
+            return QImage()
+        reference = self.after if not self.after.isNull() else self.before
+        region_b, region_a = self._source(self.before), self._source(reference)
+        width, height = round(region_a.width()), round(region_a.height())
+        image = QImage(width * 2 + 8, height + 28, QImage.Format.Format_RGB32)
+        image.fill(QColor("#10161d"))
+        painter = QPainter(image)
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+        painter.drawPixmap(QRectF(0, 28, width, height), self.before, region_b)
+        painter.drawPixmap(QRectF(width + 8, 28, width, height), reference, region_a)
+        painter.setPen(QColor("#ffc477"))
+        painter.drawText(6, 19, f"AVANT · {self.before.width()}×{self.before.height()}")
+        painter.drawText(
+            width + 14, 19, f"APRÈS · {reference.width()}×{reference.height()} · {self.info()}"
+        )
+        painter.end()
+        return image
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -70,28 +176,21 @@ class Comparison(QWidget):
                 "Importez une vidéo pour afficher son image réelle",
             )
             return
-        image = self.before.scaled(
-            self.size(),
-            Qt.AspectRatioMode.KeepAspectRatio,
-            Qt.TransformationMode.SmoothTransformation,
-        )
-        target = QRect(
-            (self.width() - image.width()) // 2,
-            (self.height() - image.height()) // 2,
-            image.width(),
-            image.height(),
-        )
-        painter.drawPixmap(target, self.before)
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+        target = self._target()
+        painter.drawPixmap(QRectF(target), self.before, self._source(self.before))
         if not self.after.isNull():
             split = target.x() + round(target.width() * self.fraction)
             painter.save()
             painter.setClipRect(
                 QRect(split, target.y(), target.right() - split + 1, target.height())
             )
-            painter.drawPixmap(target, self.after)
+            painter.drawPixmap(QRectF(target), self.after, self._source(self.after))
             painter.restore()
             painter.setPen(QColor("#ffc477"))
             painter.drawLine(split, target.y(), split, target.bottom())
+        painter.setPen(QColor("#e8edf2"))
+        painter.drawText(target.adjusted(8, 6, -8, -6), Qt.AlignmentFlag.AlignTop, self.info())
 
 
 class Window(QMainWindow):
@@ -143,7 +242,24 @@ class Window(QMainWindow):
 
     def build_ui(self):
         base = QWidget()
-        self.setCentralWidget(base)
+        self.tabs = QTabWidget()
+        self.tabs.setDocumentMode(True)
+        self.tabs.addTab(base, "RESTORE · Restauration vidéo")
+        self.extra_panels = []
+        try:
+            from studio_create.ui_panel import CreatePanel
+
+            create = CreatePanel(self.root)
+            self.extra_panels.append(create)
+            self.tabs.addTab(create, "CREATE · Scènes et caméras")
+        except Exception as exc:  # CREATE must never break RESTORE
+            self.tabs.addTab(QLabel(f"CREATE indisponible : {exc}"), "CREATE · indisponible")
+        from studio_ia.hardware_panel import HardwarePanel
+
+        hardware = HardwarePanel(self.root)
+        self.extra_panels.append(hardware)
+        self.tabs.addTab(hardware, "Matériel et diagnostic")
+        self.setCentralWidget(self.tabs)
         layout = QVBoxLayout(base)
         layout.setContentsMargins(24, 20, 24, 18)
         header = QHBoxLayout()
@@ -189,6 +305,19 @@ class Window(QMainWindow):
         self.wipe.setAccessibleName("Répartition avant après")
         self.wipe.valueChanged.connect(self.set_wipe)
         left_layout.addWidget(self.wipe)
+        zoom_row = QHBoxLayout()
+        for label, callback in (
+            ("Zoom +", lambda: self.comparison.set_zoom(self.comparison.zoom * 1.5)),
+            ("Zoom −", lambda: self.comparison.set_zoom(self.comparison.zoom / 1.5)),
+            ("Vue entière", lambda: self.comparison.set_zoom(1.0, QPointF(0.5, 0.5))),
+        ):
+            button = QPushButton(label)
+            button.clicked.connect(callback)
+            zoom_row.addWidget(button)
+        self.export_comparison_button = QPushButton("Exporter la comparaison…")
+        self.export_comparison_button.clicked.connect(self.export_comparison)
+        zoom_row.addWidget(self.export_comparison_button)
+        left_layout.addLayout(zoom_row)
         preview_row = QHBoxLayout()
         self.timestamp = QDoubleSpinBox()
         self.timestamp.setRange(0, 86400)
@@ -381,6 +510,23 @@ class Window(QMainWindow):
         control.setSingleStep(0.01)
         control.setValue(value)
         return control
+
+    def export_comparison(self):
+        image = self.comparison.composite()
+        if image.isNull():
+            self.status.setText("Aucune image à comparer : importer une vidéo et comparer d'abord.")
+            return
+        path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Exporter la comparaison avant/après",
+            str(Path.home() / "studio-ia-comparaison.png"),
+            "PNG (*.png)",
+        )
+        if path:
+            if image.save(path, "PNG"):
+                self.status.setText(f"Comparaison exportée : {path} ({self.comparison.info()})")
+            else:
+                self.status.setText(f"Export impossible : {path}")
 
     def set_wipe(self, value):
         self.comparison.fraction = value / 100
@@ -1002,6 +1148,8 @@ class Window(QMainWindow):
         self.timer.stop()
         self.manager.close()
         self.pool.shutdown(wait=True)
+        for panel in self.extra_panels:
+            panel.shutdown()
         self.preview_temp.cleanup()
         event.accept()
 

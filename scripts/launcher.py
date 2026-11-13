@@ -21,6 +21,23 @@ elif "--temporal-smoke" in sys.argv:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     print(json.dumps(run_temporal_smoke(args.output), indent=2))
+elif "--machine" in sys.argv:
+    from studio_ia.files import write_json
+    from studio_ia.system_profile import profile
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--machine", action="store_true")
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    data = profile(args.output.parent)
+    write_json(args.output, data)
+    print(json.dumps(data["capabilities"], indent=2))
+elif "--create" in sys.argv:
+    from studio_create.cli import main as create_main
+
+    sys.argv.remove("--create")
+    raise SystemExit(create_main(sys.argv[1:]))
 elif "--cli" in sys.argv:
     from studio_ia.cli import main
 

@@ -88,6 +88,23 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: python scripts/check_archive.py dist/STUDIO-IA-0.3.0a2-windows-AMD64-ALPHA.zip --output artifacts/extracted-package
+      - name: Frozen machine profile and CREATE smoke (extracted Windows build)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $exe = Join-Path $env:GITHUB_WORKSPACE 'artifacts/extracted-package/STUDIO-IA/STUDIO-IA.exe'
+          $out = Join-Path $env:GITHUB_WORKSPACE 'artifacts/frozen-smoke-create'
+          & $exe --machine --output (Join-Path $out 'machine-profile.json')
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $exe --create scene (Join-Path $out 'scene.json') --seed 2048 --blocks-x 6 --blocks-y 1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $project = Join-Path $out 'projet été 日本語'
+          & $exe --create new-project $project
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $script = Join-Path $project 'Content/Python/studio_create_unreal/build_city.py'
+          if (-not (Test-Path -LiteralPath $script)) { Write-Error 'Unreal template missing'; exit 1 }
+          & $exe --create build-city $project (Join-Path $out 'scene.json')
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Test the supplied Windows source installer in a Unicode path
         if: runner.os == 'Windows'
         shell: pwsh

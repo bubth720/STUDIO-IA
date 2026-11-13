@@ -44,6 +44,26 @@ class PhysicalProperties(C.Structure):
     ]
 
 
+class MemoryType(C.Structure):
+    _fields_ = [("propertyFlags", C.c_uint32), ("heapIndex", C.c_uint32)]
+
+
+class MemoryHeap(C.Structure):
+    _fields_ = [("size", C.c_uint64), ("flags", C.c_uint32)]
+
+
+class MemoryProperties(C.Structure):
+    _fields_ = [
+        ("memoryTypeCount", C.c_uint32),
+        ("memoryTypes", MemoryType * 32),
+        ("memoryHeapCount", C.c_uint32),
+        ("memoryHeaps", MemoryHeap * 16),
+    ]
+
+
+DEVICE_TYPES = {0: "OTHER", 1: "INTEGRATED_GPU", 2: "DISCRETE_GPU", 3: "VIRTUAL_GPU", 4: "CPU"}
+
+
 def vulkan_devices() -> dict:
     instance = C.c_void_p()
     lib = None
@@ -91,15 +111,24 @@ def vulkan_devices() -> dict:
         props = lib.vkGetPhysicalDeviceProperties
         props.argtypes = [C.c_void_p, C.POINTER(PhysicalProperties)]
         props.restype = None
+        memory = lib.vkGetPhysicalDeviceMemoryProperties
+        memory.argtypes = [C.c_void_p, C.POINTER(MemoryProperties)]
+        memory.restype = None
         rows = []
         for index, device in enumerate(devices):
             p = PhysicalProperties()
             props(device, C.byref(p))
+            m = MemoryProperties()
+            memory(device, C.byref(m))
+            heaps = [m.memoryHeaps[i] for i in range(min(m.memoryHeapCount, 16))]
             rows.append(
                 {
                     "index": index,
                     "name": p.deviceName.decode("utf-8", "replace"),
                     "device_type": p.deviceType,
+                    "device_type_name": DEVICE_TYPES.get(p.deviceType, "UNKNOWN"),
+                    # DEVICE_LOCAL heaps: dedicated VRAM on a discrete GPU, shared RAM on iGPU.
+                    "device_local_bytes": sum(h.size for h in heaps if h.flags & 1),
                     "physical_gpu": p.deviceType in (1, 2),
                     "vendor_id": p.vendorID,
                     "device_id": p.deviceID,

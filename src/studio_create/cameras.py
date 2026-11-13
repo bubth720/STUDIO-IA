@@ -64,14 +64,15 @@ def shot(
         keys = [(Fraction(0), start, rotation), (duration, end, rotation)]
     elif preset == "orbit":
         radius = span * 0.75
-        for step in range(5):  # 0°, 90°, 180°, 270°, 360°
-            angle = math.radians(step * 90)
+        steps = 16  # dense keys: the interpolated path stays close to a circle
+        for step in range(steps + 1):
+            angle = math.radians(step * 360 / steps)
             location = [
                 round(cx + radius * math.cos(angle), 1),
                 round(cy + radius * math.sin(angle), 1),
                 float(height_cm * 3),
             ]
-            keys.append((duration * step / 4, location, _look_at(location, centre)))
+            keys.append((duration * step / steps, location, _look_at(location, centre)))
     elif preset == "wide":
         location = [round(cx - span, 1), cy, float(height_cm * 4)]
         keys = [(Fraction(0), location, _look_at(location, centre))]
@@ -83,6 +84,15 @@ def shot(
             (Fraction(0), base, _look_at(base, target)),
             (duration, top, _look_at(top, target)),
         ]
+    # Unwrap yaw so interpolation never spins the camera through ±180°.
+    for index in range(1, len(keys)):
+        previous_yaw = keys[index - 1][2][1]
+        rotation = list(keys[index][2])
+        while rotation[1] - previous_yaw > 180:
+            rotation[1] -= 360
+        while rotation[1] - previous_yaw < -180:
+            rotation[1] += 360
+        keys[index] = (keys[index][0], keys[index][1], rotation)
     return {
         "name": name,
         "preset": preset,

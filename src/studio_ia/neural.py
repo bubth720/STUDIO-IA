@@ -28,6 +28,7 @@ from studio_ia.media import analyze, sha256
 from studio_ia.models import BACKEND, ModelRecord, inspect, native_scale
 from studio_ia.pipeline import Request, build_plan, verify_output
 from studio_ia.plans_v2 import PlanV2, compare_timing, frame_table, load_plan
+from studio_ia.system_profile import pick_gpu
 
 _ACTIVE = threading.Lock()
 TRUSTED_BINARIES = frozenset(
@@ -170,7 +171,8 @@ def qualify(
     if hardware["vulkan"]["status"] != "COMPATIBLE":
         report["reason"] = hardware["vulkan"]["reason"]
         return report
-    gpu = next(d["index"] for d in hardware["vulkan"]["devices"] if d["physical_gpu"])
+    # Gaming laptops often list the integrated GPU first: prefer the discrete one.
+    gpu = pick_gpu(hardware["vulkan"]["devices"])["index"]
     directory.mkdir(parents=True, exist_ok=False)
     log = directory / "inference.log"
     model.snapshot(directory / "models")

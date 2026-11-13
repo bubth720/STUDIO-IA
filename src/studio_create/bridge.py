@@ -24,7 +24,17 @@ REQUIRED_PLUGINS = (
     "MovieRenderPipeline",
 )
 TARGET_VERSIONS = ((5, 6), (5, 7), (5, 8))  # targeted, NOT yet tested on hardware
-TEMPLATE = Path(__file__).resolve().parents[2] / "unreal-template"
+
+
+def _template_dir() -> Path:
+    """Source tree: <repo>/unreal-template ; frozen build: bundled data directory."""
+    bundled = getattr(sys, "_MEIPASS", None)
+    if getattr(sys, "frozen", False) and bundled:
+        return Path(bundled) / "unreal-template"
+    return Path(__file__).resolve().parents[2] / "unreal-template"
+
+
+TEMPLATE = _template_dir()
 ENV_ROOTS = "STUDIO_CREATE_UNREAL_ROOTS"
 
 

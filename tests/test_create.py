@@ -274,3 +274,12 @@ def test_cli_scene_doctor_and_project(tmp_path, capsys, monkeypatch):
     assert main(["build-city", str(tmp_path / "p 1"), str(out)]) == 0
     assert main(["new-project", str(tmp_path / "p 1")]) == 1
     assert "existe déjà" in capsys.readouterr().err
+
+
+def test_orbit_is_dense_and_yaw_never_jumps():
+    layout = city.generate(city.CityParams())
+    orbit = cameras.shot(layout, "orbit", name="Orbite")
+    yaws = [k["rotation"][1] for k in orbit["keyframes"]]
+    assert len(yaws) == 17
+    assert all(abs(b - a) <= 180 for a, b in zip(yaws, yaws[1:], strict=False))
+    assert abs(yaws[-1] - yaws[0]) == 360  # one full, continuous turn

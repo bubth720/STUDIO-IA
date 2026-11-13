@@ -48,6 +48,11 @@ def main() -> None:
     neural_plan.add_argument("--binary", required=True)
     neural_plan.add_argument("--tile", type=int, default=64)
     neural_plan.add_argument("--workspace-mib", type=int, default=2048)
+    neural_plan.add_argument(
+        "--profile",
+        choices=["animation", "live-action"],
+        help="Type de contenu ; déduit du modèle si absent, refusé s'il ne correspond pas",
+    )
     neural_plan.add_argument("--json", dest="json_output")
     neural_run = sub.add_parser("process-neural", help="Qualifier puis exécuter un plan v2 local")
     neural_run.add_argument("plan")
@@ -251,6 +256,7 @@ def main() -> None:
                 Path(args.binary),
                 tile=args.tile,
                 workspace_budget=args.workspace_mib * 1024**2,
+                content_profile=args.profile,
             )
             emit(plan.to_dict(), args.json_output)
         elif args.command in ("process-neural", "preview-neural"):

@@ -11,6 +11,7 @@ from PySide6.QtCore import QObject, QRect, Qt, QTimer, QUrl, Signal
 from PySide6.QtGui import QColor, QDesktopServices, QPainter, QPixmap
 from PySide6.QtWidgets import (
     QApplication,
+    QButtonGroup,
     QComboBox,
     QDoubleSpinBox,
     QFileDialog,
@@ -25,6 +26,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QProgressBar,
     QPushButton,
+    QRadioButton,
     QScrollArea,
     QSizePolicy,
     QSlider,
@@ -35,7 +37,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from studio_ia import __version__
+from studio_ia import __version__, content_profiles
 from studio_ia.core import Cancellation, StudioError, Tools, capabilities, sibling_probe, state_dir
 from studio_ia.files import write_json
 from studio_ia.jobs import TERMINAL, Manager
@@ -221,6 +223,27 @@ class Window(QMainWindow):
         self.model_label = QLabel("Aucun modèle neuronal sélectionné ou validé.")
         self.model_label.setWordWrap(True)
         form.addRow("Modèle local", self.model_label)
+        content_row = QVBoxLayout()
+        self.content_group = QButtonGroup(self)
+        self.content_buttons = {}
+        for profile_id, data in content_profiles.PROFILES.items():
+            button = QRadioButton(data["label"])
+            button.setAccessibleName(f"Type de contenu : {data['label']}")
+            self.content_group.addButton(button)
+            self.content_buttons[profile_id] = button
+            content_row.addWidget(button)
+        form.addRow("Contenu (IA)", content_row)
+        self.content_summary = QLabel()
+        self.content_summary.setWordWrap(True)
+        self.content_summary.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        form.addRow(self.content_summary)
+        self.content_resolution = QLabel()
+        self.content_resolution.setWordWrap(True)
+        self.content_resolution.setSizePolicy(
+            QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum
+        )
+        self.content_resolution.setStyleSheet("color: #ffc477;")
+        form.addRow(self.content_resolution)
         self.configure_neural_button = QPushButton("Choisir et diagnostiquer un modèle NCNN…")
         self.configure_neural_button.clicked.connect(self.configure_neural)
         form.addRow(self.configure_neural_button)
@@ -340,6 +363,10 @@ class Window(QMainWindow):
         layout.addLayout(history_row)
         self.profile.currentIndexChanged.connect(self.apply_profile)
         self.engine.currentIndexChanged.connect(self.apply_engine)
+        saved = content_profiles.load_settings(self.root)["content_profile"]
+        self.content_buttons[saved].setChecked(True)
+        self.content_group.buttonToggled.connect(self.apply_content_profile)
+        self.show_content_profile()
         for control in (self.denoise, self.deband, self.scale):
             control.currentIndexChanged.connect(self.invalidate)
         for control in (self.brightness, self.contrast, self.saturation, self.crf):
@@ -368,6 +395,45 @@ class Window(QMainWindow):
         self.last_neural_preview = None
         self.versions["neural_preview"] = self.versions.get("neural_preview", 0) + 1
         self.neural_cancel.request()
+
+    def content_profile(self) -> str:
+        for profile_id, button in self.content_buttons.items():
+            if button.isChecked():
+                return profile_id
+        return content_profiles.DEFAULT_PROFILE
+
+    def show_content_profile(self):
+        profile = self.content_profile()
+        self.content_summary.setText(content_profiles.PROFILES[profile]["summary"])
+        missing = self.neural_configuration is None
+        self.content_resolution.setText(content_profiles.resolution(profile) if missing else "")
+        self.content_resolution.setVisible(missing)
+        # Wrapped labels change height with their text: re-layout the scrolled form.
+        self.content_summary.updateGeometry()
+        self.content_resolution.updateGeometry()
+        self.settings_scroll.widget().adjustSize()
+
+    def apply_content_profile(self, button, checked):
+        if not checked:
+            return
+        profile = self.content_profile()
+        try:
+            content_profiles.save_settings(self.root, content_profile=profile)
+        except (OSError, StudioError) as exc:
+            self.status.setText(f"Préférence non enregistrée : {exc}")
+        config = self.neural_configuration
+        if config is not None:
+            try:
+                content_profiles.check_model(profile, config["model"].manifest)
+            except StudioError as exc:
+                # Never keep a model that does not belong to the chosen profile.
+                self.neural_configuration = None
+                self.engine.setCurrentIndex(0)
+                self.engine.model().item(1).setEnabled(False)
+                self.model_label.setText("Modèle précédent incompatible avec ce type de contenu.")
+                self.status.setText(str(exc))
+        self.show_content_profile()
+        self.invalidate()
 
     def apply_engine(self, *_):
         if self.engine.currentIndex() == 1:
@@ -400,6 +466,7 @@ class Window(QMainWindow):
         self.neural_cancel = Cancellation()
         cancel = self.neural_cancel
         directory = self.root / "neural-qualification" / str(uuid.uuid4())
+        profile = self.content_profile()
 
         def check():
             from studio_ia.models import inspect, read_manifest
@@ -407,6 +474,7 @@ class Window(QMainWindow):
 
             manifest = Path(manifest_path)
             model = inspect(manifest.parent, read_manifest(manifest))
+            content_profiles.check_model(profile, model.manifest)
             engine = probe(Path(binary_path))
             receipt = qualify(engine, model, Tools.discover(), directory, cancel)
             return {"model": model, "engine": engine, "receipt": receipt}
@@ -530,10 +598,16 @@ class Window(QMainWindow):
                 config = self.neural_configuration
                 if config is None:
                     raise StudioError("Modèle neuronal non qualifié.")
+                profile = self.content_profile()
+                content_profiles.check_model(profile, config["model"].manifest)
                 self.background(
                     "plan",
                     lambda: build_neural_plan(
-                        request, Tools.discover(), config["model"], Path(config["engine"]["path"])
+                        request,
+                        Tools.discover(),
+                        config["model"],
+                        Path(config["engine"]["path"]),
+                        content_profile=profile,
                     ),
                 )
             else:
@@ -664,6 +738,7 @@ class Window(QMainWindow):
             receipt = value["receipt"]
             manifest = value["model"].manifest
             self.model_label.setText(
+                f"{content_profiles.PROFILES[self.content_profile()]['label']} · "
                 f"{manifest['id']} · {manifest['version']} · "
                 f"{sum(f['bytes'] for f in manifest['files']) / 1024**2:.1f} Mio\n"
                 f"{receipt['status']} : {receipt.get('reason', 'inférence courte réussie')}"
@@ -679,6 +754,7 @@ class Window(QMainWindow):
                 if ready
                 else "BLOCKED : GPU/modèle non qualifié. CPU conservé."
             )
+            self.show_content_profile()
         elif name == "neural_preview":
             self.last_neural_preview = value
             self.compare_neural_cpu.setEnabled(True)
@@ -772,6 +848,7 @@ class Window(QMainWindow):
             self.destination,
             self.engine,
             self.configure_neural_button,
+            *self.content_buttons.values(),
         ):
             control.setEnabled(not busy)
         for control in (

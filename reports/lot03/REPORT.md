@@ -1,5 +1,8 @@
 # LOT 03 — Parcours IA de bout en bout (partie code, sans GPU)
 
+> Étapes 1 à 3 livrées sans GPU. Étape 4 (vraie restauration IA) : **NO-GO tant
+> qu'aucun GPU physique n'est disponible** (voir `docs/PLAN-POCO-VERS-PC.md`).
+
 12 novembre 2026. GO du propriétaire le même jour. **Statut : PARTIAL**.
 Le modèle « prises de vue réelles » est intégré et testé par contrats. La première vraie
 vidéo inférée (G3) attend un GPU physique de PC (voir `docs/PLAN-POCO-VERS-PC.md`).
@@ -65,6 +68,35 @@ Limite connue : une source **MKV** à cadence NTSC (29,97 / 23,976 i/s) est refu
 Elle reste traitable en mode CPU. Une remuxe préalable en MP4 ne suffit pas, car les
 horodatages MKV sont déjà arrondis à la milliseconde.
 
+## Étape 3 livrée : types de contenu « Animation » / « Vidéos réelles »
+
+Autorisée par le propriétaire le 13/11/2026 (mission maître LOT 03, phase A).
+
+| Fichier | Changement |
+|---|---|
+| `src/studio_ia/content_profiles.py` (nouveau, sans Qt) | Deux profils, **chacun lié à un seul modèle du catalogue** : Animation → `realesr-animevideov3`, Vidéos réelles → `realesrgan-x4plus` ; explication courte ; message de résolution concret (manifeste, fichiers, archive, GPU) ; préférence enregistrée de façon atomique dans `restore-settings.json`, avec retour aux valeurs par défaut si le fichier est corrompu |
+| `src/studio_ia/neural.py` | `build_neural_plan(content_profile=…)` : profil déduit du modèle s'il est absent, **refus explicite** s'il ne correspond pas ; profil écrit dans le plan (`content_profile`), donc dans le job, `result.json` et le rapport ; un plan dont le profil a été altéré est refusé à l'exécution |
+| `src/studio_ia/cli.py` | `neural-plan --profile animation\|live-action` |
+| `src/studio_ia/ui.py` | Deux choix exclusifs « Contenu (IA) », explication, message de résolution en orange tant qu'aucun modèle n'est qualifié ; choix mémorisé à la réouverture ; modifiable avant lancement, verrouillé pendant un traitement ; un modèle déjà diagnostiqué qui ne correspond plus au profil est retiré et le moteur IA reste grisé |
+
+Le libellé « Contenu (IA) » évite la confusion avec le « Profil » existant (préréglages CPU).
+L'explication ne prétend rien de faux : les deux types utilisent réellement deux modèles
+différents.
+
+Tests `tests/test_content_profiles.py` (9) : liaison profil ↔ modèle, refus d'un profil
+inconnu, message de résolution, persistance (chemin Unicode, fichier corrompu, valeur
+inconnue), profil inscrit dans le plan puis dans `result.json`, refus d'un profil
+incompatible, refus d'un plan altéré, test d'interface (exclusivité, mémorisation après
+fermeture et réouverture, modification, moteur IA toujours grisé sans modèle qualifié).
+
+Captures : [Vidéos réelles](evidence/lot03-profile-live-action.png),
+[Animation](evidence/lot03-profile-animation.png). La CI les régénère à chaque exécution.
+Un défaut de mise en page (texte coupé, barre de défilement horizontale d'un pixel) a
+été vu sur les captures et corrigé avant livraison.
+
+Suite complète locale : **188 PASS / 1 SKIP / 1 FAIL** (le même artefact root). Pas de
+régression sur MKV, origine PTS non nulle, audio, chemins Unicode ni interface existante.
+
 ## Ce qui n'est PAS prouvé
 
 Aucune inférence Real-ESRGAN n'a eu lieu. La qualité visuelle de x4plus, la VRAM, la
@@ -75,5 +107,4 @@ Jour J, puis LOT 04).
 
 1. ~~MKV et origine PTS non nulle (T02/T03)~~ : livré (étape 2).
 2. **Reprise** sûre d'une tâche interrompue (frames déjà inférées et vérifiées par hash).
-3. Choix du modèle dans l'interface : « Animation » ou « Prises de vue réelles », lié au
-   manifeste.
+3. ~~Choix du modèle dans l'interface~~ : livré (étape 3).

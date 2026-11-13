@@ -11,6 +11,7 @@ from dataclasses import replace
 from fractions import Fraction
 from pathlib import Path
 
+from studio_ia.content_profiles import check_model, describe, profile_for_model
 from studio_ia.core import (
     Cancellation,
     StudioError,
@@ -234,12 +235,15 @@ def build_neural_plan(
     tile: int = 64,
     max_frames: int = 10000,
     workspace_budget: int = 2 * 1024**3,
+    content_profile: str | None = None,
 ) -> PlanV2:
     if type(tile) is not int or tile not in (32, 64, 128, 256, 512):
         raise StudioError("Tuile NCNN invalide.")
     if type(workspace_budget) is not int or not 64 * 1024**2 <= workspace_budget <= 16 * 1024**3:
         raise StudioError("Budget disque invalide.")
     model.revalidate()
+    profile = profile_for_model(model.manifest) if content_profile is None else content_profile
+    check_model(profile, model.manifest)
     if (
         request.scale != 2
         or request.denoise != "off"
@@ -287,6 +291,7 @@ def build_neural_plan(
         {
             "schema_version": 2,
             "kind": "neural-ncnn",
+            "content_profile": describe(profile),
             "cpu_plan": cpu.to_dict(),
             "source_sha256": sha256(Path(cpu.media.path)),
             "engine": probe(binary),
@@ -344,6 +349,7 @@ def run_neural_plan(
         tile=data["budgets"]["tile"],
         max_frames=data["budgets"]["max_frames"],
         workspace_budget=data["budgets"]["workspace_bytes"],
+        content_profile=data.get("content_profile", {}).get("id"),
     )
     if rebuilt.identity != plan.identity:
         raise StudioError("Plan/binaire/média modifié ; recréer le plan explicitement.")
@@ -662,7 +668,12 @@ def preview_neural(
     )
     request = replace(plan.request, source=str(segment), destination=str(directory / "neural.mp4"))
     sliced = build_neural_plan(
-        request, tools, model, Path(data["engine"]["path"]), tile=data["budgets"]["tile"]
+        request,
+        tools,
+        model,
+        Path(data["engine"]["path"]),
+        tile=data["budgets"]["tile"],
+        content_profile=data.get("content_profile", {}).get("id"),
     )
     result = run_neural_plan(sliced, tools, directory / "job", cancel)
     cpu = build_plan(replace(request, destination=str(directory / "cpu.mp4")), tools)

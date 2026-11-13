@@ -63,8 +63,15 @@ def package():
     for name in ("INSTALLER.md", "LICENSE", "THIRD_PARTY_NOTICES.md", "requirements-runtime.lock"):
         shutil.copy2(ROOT / name, folder / name)
     shutil.copytree(ROOT / "licenses", folder / "licenses", dirs_exist_ok=True)
-    for extra in ("Lancer-STUDIO-IA.sh", "Lancer-STUDIO-IA.cmd", "PREMIER-LANCEMENT.txt"):
+    for extra in (
+        "Lancer-STUDIO-IA.sh",
+        "Lancer-STUDIO-IA.cmd",
+        "PREMIER-LANCEMENT.txt",
+        "Premier-test-IA.ps1",
+        "Premier-test-IA.cmd",
+    ):
         shutil.copy2(ROOT / "packaging" / extra, folder / extra)
+    shutil.copytree(ROOT / "manifests", folder / "manifests", dirs_exist_ok=True)
     if os.name != "nt":
         (folder / "Lancer-STUDIO-IA.sh").chmod(0o755)
     if platform.system() == "Linux":

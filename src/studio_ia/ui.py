@@ -746,6 +746,16 @@ class Window(QMainWindow):
                     raise StudioError("Modèle neuronal non qualifié.")
                 profile = self.content_profile()
                 content_profiles.check_model(profile, config["model"].manifest)
+                # Tile from the detected GPU memory (estimate); 64 when unknown.
+                machine = next(
+                    (
+                        p.data
+                        for p in self.extra_panels
+                        if getattr(p, "data", None) and "gpu" in p.data
+                    ),
+                    None,
+                )
+                tile = (machine or {}).get("recommendations", {}).get("ncnn_tile") or 64
                 self.background(
                     "plan",
                     lambda: build_neural_plan(
@@ -754,6 +764,7 @@ class Window(QMainWindow):
                         config["model"],
                         Path(config["engine"]["path"]),
                         content_profile=profile,
+                        tile=tile,
                     ),
                 )
             else:

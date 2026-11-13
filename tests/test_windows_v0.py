@@ -132,3 +132,80 @@ def test_window_has_restore_create_and_hardware_tabs(tmp_path, qapp):
         qapp.processEvents()
         window.manager.close()
         window.close()
+
+
+def test_neural_test_cli_refuses_unpinned_binary_before_anything(tmp_path, capsys):
+    from test_models import make_model
+
+    from studio_ia.cli import main
+
+    root, manifest = make_model(tmp_path)
+    manifest_path = tmp_path / "manifeste.json"
+    manifest_path.write_text(__import__("json").dumps(manifest), encoding="utf-8")
+    binary = tmp_path / "realesrgan-ncnn-vulkan"
+    binary.write_bytes(b"not the pinned official binary")
+    output = tmp_path / "rapport"
+    import sys
+
+    sys.argv = [
+        "studio-ia",
+        "neural-test",
+        "--manifest",
+        str(manifest_path),
+        "--model-root",
+        str(root),
+        "--binary",
+        str(binary),
+        "--output",
+        str(output),
+    ]
+    with pytest.raises(SystemExit) as exit_info:
+        main()
+    assert exit_info.value.code != 0
+    assert "épinglé" in capsys.readouterr().err
+    assert not output.exists()
+
+
+def test_neural_test_cli_reports_blocked_honestly(tmp_path, monkeypatch, capsys):
+    import json
+    import sys
+
+    from test_models import make_model
+
+    from studio_ia import neural
+    from studio_ia.cli import main
+
+    root, manifest = make_model(tmp_path)
+    manifest_path = tmp_path / "manifeste.json"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    monkeypatch.setattr(neural, "probe", lambda path: {"sha256": "0" * 64, "path": str(path)})
+    monkeypatch.setattr(
+        neural,
+        "qualify",
+        lambda *a, **k: {
+            "status": "BLOCKED",
+            "reason": "NO_PHYSICAL_VULKAN_GPU",
+            "inference": "NOT_RUN",
+        },
+    )
+    report_path = tmp_path / "test-ia.json"
+    sys.argv = [
+        "studio-ia",
+        "neural-test",
+        "--manifest",
+        str(manifest_path),
+        "--model-root",
+        str(root),
+        "--binary",
+        str(tmp_path / "x"),
+        "--output",
+        str(tmp_path / "rapport"),
+        "--json",
+        str(report_path),
+    ]
+    with pytest.raises(SystemExit) as exit_info:
+        main()
+    assert exit_info.value.code == 2
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["status"] == "BLOCKED" and report["memory_measured"] is False
+    assert report["machine"]["schema_version"] == 1

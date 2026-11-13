@@ -38,6 +38,15 @@ def main() -> None:
     models.add_argument("root")
     models.add_argument("--register", metavar="REGISTRY_JSON")
     models.add_argument("--json", dest="json_output")
+    neural_test = sub.add_parser(
+        "neural-test",
+        help="Premier essai IA réel : inférence courte sur une petite image (GPU Vulkan)",
+    )
+    neural_test.add_argument("--manifest", required=True)
+    neural_test.add_argument("--model-root", required=True)
+    neural_test.add_argument("--binary", required=True)
+    neural_test.add_argument("--output", required=True, help="Dossier neuf pour le rapport")
+    neural_test.add_argument("--json", dest="json_output")
     neural_plan = sub.add_parser(
         "neural-plan", help="Figer le plan ×2 NCNN, sans exécuter de modèle"
     )
@@ -160,6 +169,38 @@ def main() -> None:
             emit(report, args.json_output)
             if not report["cpu_ready"]:
                 sys.exit(1)
+        elif args.command == "neural-test":
+            from studio_ia.models import inspect, read_manifest
+            from studio_ia.neural import probe, qualify
+            from studio_ia.system_profile import profile
+
+            output = Path(args.output)
+            if output.exists():
+                raise StudioError("Dossier de rapport déjà existant : en choisir un nouveau.")
+            machine = profile(output.parent)
+            model = inspect(Path(args.model_root), read_manifest(Path(args.manifest)))
+            engine = probe(Path(args.binary))
+            tile = machine["recommendations"]["ncnn_tile"] or 32
+            receipt = qualify(
+                engine, model, tools, output / "qualification", Cancellation(), tile=tile
+            )
+            report = {
+                "schema_version": 1,
+                "test": "SHORT_INFERENCE_32x32_SYNTHETIC_IMAGE",
+                "status": receipt["status"],
+                "model": model.manifest["name"],
+                "manifest_sha256": model.identity,
+                "engine_sha256": engine["sha256"],
+                "tile": tile,
+                "machine": machine,
+                "qualification": receipt,
+                "memory_measured": False,
+                "note": "Durée mesurée ; mémoire maximale non instrumentée. Une image synthétique "
+                "32×32 ne qualifie ni la qualité ni une vidéo complète.",
+            }
+            emit(report, args.json_output)
+            if receipt["status"] != "PASS_SHORT_INFERENCE":
+                sys.exit(2)
         elif args.command in ("temporal-audit", "interpolation-plan"):
             from studio_ia.interpolate import plan_x2
             from studio_ia.motion import TranslationTracker

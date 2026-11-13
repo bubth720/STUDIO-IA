@@ -17,6 +17,7 @@ build = ["pyinstaller==6.13.0"]
 
 [project.scripts]
 studio-ia = "studio_ia.cli:main"
+studio-create = "studio_create.cli:main"
 
 [project.gui-scripts]
 studio-ia-gui = "studio_ia.ui:main"
